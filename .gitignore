@@ -1,0 +1,9 @@
+build/
+*~
+*.moc
+moc_*
+*.qrc
+*.orig
+*.kdev4
+.kdev4/
+apidocs/
