@@ -18,30 +18,48 @@
 
 */
 
-#include "InputDevice_p.h"
+#ifndef BASESIGNAL_H
+#define BASESIGNAL_H
 
+#include <QtCore/QDateTime>
+#include <QtCore/QUuid>
+
+struct QUuid;
 namespace KetaRoller {
 
-InputDevice::InputDevice(QObject* parent)
-    : QIODevice(parent)
-    , d_ptr(new InputDevicePrivate)
+class BaseSignalPrivate : public QSharedData
 {
+    public:
+        BaseSignalPrivate(uint t);
+        BaseSignalPrivate(const BaseSignalPrivate &other);
+        virtual ~BaseSignalPrivate();
 
-}
+        QUuid uuid;
+        QDateTime dtime;
+        uint type;
+};
 
-InputDevice::~InputDevice()
+class BaseSignal
 {
-    delete d_ptr;
+    public:
+        enum Type {
+            InvalidType = 0,
+            NoteType = 1,
+            ModulationType = 2
+        };
+
+        BaseSignal(Type type);
+        BaseSignal(const BaseSignal &other);
+        virtual ~BaseSignal();
+
+        QUuid uuid() const;
+        QDateTime dateTime() const;
+        Type type() const;
+
+    private:
+        QSharedDataPointer<BaseSignalPrivate> d;
+};
+
 }
 
-void InputDevice::addSignal(BaseSignal signal)
-{
-    Q_D(InputDevice);
-
-    d->sigs.insert(signal.uuid(), signal);
-    emit newSignal(signal);
-}
-
-}
-
-#include "InputDevice.moc"
+#endif // BASESIGNAL_H

@@ -18,30 +18,63 @@
 
 */
 
-#include "InputDevice_p.h"
+#include "BaseSignal.h"
 
 namespace KetaRoller {
 
-InputDevice::InputDevice(QObject* parent)
-    : QIODevice(parent)
-    , d_ptr(new InputDevicePrivate)
+BaseSignalPrivate::BaseSignalPrivate(uint t)
+        : uuid(QUuid::createUuid())
+        , dtime(QDateTime::currentDateTime())
+        , type(t)
 {
 
 }
 
-InputDevice::~InputDevice()
+BaseSignalPrivate::BaseSignalPrivate(const KetaRoller::BaseSignalPrivate& other)
+    : QSharedData(other)
+    , uuid(other.uuid)
+    , dtime(other.dtime)
+    , type(other.type)
 {
-    delete d_ptr;
+
 }
 
-void InputDevice::addSignal(BaseSignal signal)
+BaseSignalPrivate::~BaseSignalPrivate()
 {
-    Q_D(InputDevice);
-
-    d->sigs.insert(signal.uuid(), signal);
-    emit newSignal(signal);
-}
 
 }
 
-#include "InputDevice.moc"
+
+BaseSignal::BaseSignal(BaseSignal::Type type)
+    : d(new BaseSignalPrivate(type))
+{
+
+}
+
+BaseSignal::BaseSignal(const KetaRoller::BaseSignal& other)
+    : d(other.d)
+{
+
+}
+
+BaseSignal::~BaseSignal()
+{
+}
+
+QDateTime BaseSignal::dateTime() const
+{
+    return d.constData()->dtime;
+}
+
+BaseSignal::Type BaseSignal::type() const
+{
+    return (Type)d.constData()->type;
+}
+
+QUuid BaseSignal::uuid() const
+{
+    return d.constData()->uuid;
+}
+
+
+}

@@ -18,30 +18,22 @@
 
 */
 
-#include "InputDevice_p.h"
+#ifndef INPUTDEVICE_P_H
+#define INPUTDEVICE_P_H
+
+#include "InputDevice.h"
+
+#include <QtCore/QHash>
+#include <QtCore/QUuid>
 
 namespace KetaRoller {
 
-InputDevice::InputDevice(QObject* parent)
-    : QIODevice(parent)
-    , d_ptr(new InputDevicePrivate)
+class InputDevicePrivate
 {
+    public:
+        QHash< QUuid, BaseSignal > sigs;
+};
 
 }
 
-InputDevice::~InputDevice()
-{
-    delete d_ptr;
-}
-
-void InputDevice::addSignal(BaseSignal signal)
-{
-    Q_D(InputDevice);
-
-    d->sigs.insert(signal.uuid(), signal);
-    emit newSignal(signal);
-}
-
-}
-
-#include "InputDevice.moc"
+#endif
