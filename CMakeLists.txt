@@ -8,3 +8,4 @@ find_package(Automoc4 REQUIRED)
 
 add_subdirectory(src)
 add_subdirectory(plugins)
+add_subdirectory(3rdparty)
