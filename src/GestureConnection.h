@@ -18,32 +18,23 @@
 
 */
 
-#ifndef INPUTDEVICE_P_H
-#define INPUTDEVICE_P_H
+#ifndef KETAROLLER_GESTURECONNECTION_H
+#define KETAROLLER_GESTURECONNECTION_H
 
-#include "InputDevice.h"
+#include <Connection.h>
 
-#include <QtCore/QHash>
-#include <QtCore/QUuid>
 
 namespace KetaRoller {
 
-class InputDevicePrivate
+class GestureConnection : public KetaRoller::Connection
 {
+    Q_OBJECT
+    Q_DISABLE_COPY(GestureConnection)
 public:
-    
-};
-
-class GesturedInputDevicePrivate : public InputDevicePrivate
-{
-public:
-    QHash< Qt::GestureType, qint16 > gestureCount;
-
-    // Q_PRIVATE_SLOTS
-    void onConnectionCreated(KetaRoller::InputPort *port, KetaRoller::Connection *connection);
-    void onConnectionSevered(KetaRoller::InputPort *port, KetaRoller::Connection *connection);
+    GestureConnection(InputPort* input, QObject* parent = 0);
+    virtual ~GestureConnection();
 };
 
 }
 
-#endif
+#endif // KETAROLLER_GESTURECONNECTION_H

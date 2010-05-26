@@ -18,48 +18,27 @@
 
 */
 
-#ifndef BASESIGNAL_H
-#define BASESIGNAL_H
+#ifndef ABSTRACTDEVICE_H
+#define ABSTRACTDEVICE_H
 
-#include <QtCore/QDateTime>
-#include <QtCore/QUuid>
+#include <QtCore/QObject>
 
 struct QUuid;
+
 namespace KetaRoller {
 
-class BaseSignalPrivate : public QSharedData
+class AbstractDevice : public QObject
 {
-    public:
-        BaseSignalPrivate(uint t);
-        BaseSignalPrivate(const BaseSignalPrivate &other);
-        virtual ~BaseSignalPrivate();
+    Q_OBJECT
+public:
+    virtual ~AbstractDevice();
 
-        QUuid uuid;
-        QDateTime dtime;
-        uint type;
-};
+    QUuid uuid() const;
 
-class BaseSignal
-{
-    public:
-        enum Type {
-            InvalidType = 0,
-            NoteType = 1,
-            ModulationType = 2
-        };
-
-        BaseSignal(Type type);
-        BaseSignal(const BaseSignal &other);
-        virtual ~BaseSignal();
-
-        QUuid uuid() const;
-        QDateTime dateTime() const;
-        Type type() const;
-
-    private:
-        QSharedDataPointer<BaseSignalPrivate> d;
+protected:
+    AbstractDevice(QObject* parent = 0);
 };
 
 }
 
-#endif // BASESIGNAL_H
+#endif // ABSTRACTDEVICE_H

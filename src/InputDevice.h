@@ -21,34 +21,66 @@
 #ifndef INPUTDEVICE_H
 #define INPUTDEVICE_H
 
-#include <QtCore/QIODevice>
-
-#include "BaseSignal.h"
+#include "AbstractDevice.h"
 
 namespace KetaRoller {
 
+class Connection;
+
+
+class InputPort;
+
 class InputDevicePrivate;
-class InputDevice : public QIODevice
+/**
+ * \class InputDevice InputDevice.h
+ * \brief Base class for input devices
+ *
+ */
+class InputDevice : public AbstractDevice
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(InputDevice)
     Q_DISABLE_COPY(InputDevice)
-    public:
-        InputDevice(QObject *parent = 0);
-        virtual ~InputDevice();
+public:
+    InputDevice(QObject *parent = 0);
+    virtual ~InputDevice();
 
-        QList< BaseSignal > cachedSignals() const;
+    QList< InputPort* > inputPorts() const;
+    QList< InputPort* > connectedPorts() const;
 
-    Q_SIGNALS:
-        void newSignal(BaseSignal signal);
+protected:
+    void setOutgoingPorts(const QList< InputPort* > &ports);
+    void addOutgoingPort(InputPort *port);
+    void removeOutgoingPort(InputPort *port);
 
-    protected:
-        void addSignal(BaseSignal signal);
+Q_SIGNALS:
+    void connectionCreated(KetaRoller::InputPort *port, KetaRoller::Connection *connection);
+    void connectionSevered(KetaRoller::InputPort *port, KetaRoller::Connection *connection);
 
-    private:
-        InputDevicePrivate * const d_ptr;
+protected:
+    InputDevicePrivate * const d_ptr;
+};
+
+class GesturedInputDevicePrivate;
+class GesturedInputDevice : public InputDevice
+{
+    Q_OBJECT
+    Q_DECLARE_PRIVATE(GesturedInputDevice)
+    Q_DISABLE_COPY(GesturedInputDevice)
+
+    Q_PRIVATE_SLOT(d_func(), void onConnectionCreated(KetaRoller::InputPort *port, KetaRoller::Connection *connection))
+    Q_PRIVATE_SLOT(d_func(), void onConnectionSevered(KetaRoller::InputPort *port, KetaRoller::Connection *connection))
+
+public:
+    GesturedInputDevice(QObject* parent = 0);
+    virtual ~GesturedInputDevice();
+
+    virtual void grabGesture(Qt::GestureType type) = 0;
+    virtual void ungrabGesture(Qt::GestureType type) = 0;
 };
 
 }
+
+Q_DECLARE_INTERFACE(KetaRoller::InputDevice, "org.ketamina.InputDevice/0.1")
 
 #endif // INPUTDEVICE_H

@@ -23,7 +23,7 @@
 namespace KetaRoller {
 
 InputDevice::InputDevice(QObject* parent)
-    : QIODevice(parent)
+    : AbstractDevice(parent)
     , d_ptr(new InputDevicePrivate)
 {
 
@@ -34,13 +34,47 @@ InputDevice::~InputDevice()
     delete d_ptr;
 }
 
-void InputDevice::addSignal(BaseSignal signal)
+void InputDevice::addOutgoingPort(InputPort* port)
 {
-    Q_D(InputDevice);
 
-    d->sigs.insert(signal.uuid(), signal);
-    emit newSignal(signal);
 }
+QList< InputPort* > InputDevice::connectedPorts() const
+{
+
+}
+QList< InputPort* > InputDevice::inputPorts() const
+{
+
+}
+void InputDevice::removeOutgoingPort(InputPort* port)
+{
+
+}
+void InputDevice::setOutgoingPorts(const QList< InputPort* >& ports)
+{
+
+}
+
+void GesturedInputDevicePrivate::onConnectionCreated(KetaRoller::InputPort *port, KetaRoller::Connection *connection)
+{
+    
+}
+
+void GesturedInputDevicePrivate::onConnectionSevered(KetaRoller::InputPort *port, KetaRoller::Connection *connection)
+{
+
+}
+
+GesturedInputDevice::GesturedInputDevice(QObject* parent): InputDevice(parent)
+{
+
+}
+GesturedInputDevice::~GesturedInputDevice()
+{
+
+}
+
+
 
 }
 

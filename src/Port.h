@@ -18,63 +18,47 @@
 
 */
 
-#include "BaseSignal.h"
+#ifndef KETAROLLER_PORT_H
+#define KETAROLLER_PORT_H
 
 namespace KetaRoller {
 
-BaseSignalPrivate::BaseSignalPrivate(uint t)
-        : uuid(QUuid::createUuid())
-        , dtime(QDateTime::currentDateTime())
-        , type(t)
+class Connection;
+class Port
 {
+public:
+    enum Type {
+        UnknownType = 0,
+        GestureType = 1,
+        TUIOType = 2,
+        MIDIType = 3
+    };
 
-}
+    Port();
+    virtual ~Port();
 
-BaseSignalPrivate::BaseSignalPrivate(const KetaRoller::BaseSignalPrivate& other)
-    : QSharedData(other)
-    , uuid(other.uuid)
-    , dtime(other.dtime)
-    , type(other.type)
+    Connection *connection();
+    Type type();
+};
+
+class InputPort : public Port
 {
+public:
+    InputPort();
+    virtual ~InputPort();
 
-}
 
-BaseSignalPrivate::~BaseSignalPrivate()
+};
+
+class OutputPort : public Port
 {
+public:
+    OutputPort();
+    virtual ~OutputPort();
+
+
+};
 
 }
 
-
-BaseSignal::BaseSignal(BaseSignal::Type type)
-    : d(new BaseSignalPrivate(type))
-{
-
-}
-
-BaseSignal::BaseSignal(const KetaRoller::BaseSignal& other)
-    : d(other.d)
-{
-
-}
-
-BaseSignal::~BaseSignal()
-{
-}
-
-QDateTime BaseSignal::dateTime() const
-{
-    return d.constData()->dtime;
-}
-
-BaseSignal::Type BaseSignal::type() const
-{
-    return (Type)d.constData()->type;
-}
-
-QUuid BaseSignal::uuid() const
-{
-    return d.constData()->uuid;
-}
-
-
-}
+#endif // KETAROLLER_PORT_H
