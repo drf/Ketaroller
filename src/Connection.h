@@ -48,25 +48,29 @@ public:
     Connection(InputPort *input, QObject* parent = 0);
     virtual ~Connection();
 
+    bool isValid() const;
+
     InputPort *input();
     QList< OutputPort* > outputs() const;
 
-    virtual void addOutput(OutputPort *output) = 0;
+    bool addOutput(OutputPort *output);
 
-    virtual void disconnectOutput(OutputPort *output);
-    void setOutputs(OutputPort *output);
+    virtual bool disconnectOutput(OutputPort *output);
+    bool setOutputs(const QList< OutputPort* > &output);
 
-    void disconnectInput();
+    bool disconnectInput();
 
 protected:
     void setIsValid(bool validity);
+
+    virtual bool validateAddOutput(OutputPort *output) = 0;
 
 Q_SIGNALS:
     void outputsChanged(QList< OutputPort* >);
 
 private:
     class Private;
-    Private const * d;
+    Private * const d;
 };
 
 }

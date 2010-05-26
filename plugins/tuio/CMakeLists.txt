@@ -7,6 +7,7 @@ include_directories(
 
 set(tuio_plugin_SRCS
     TuioInputDevice.cpp
+    FiducialObject.cpp
 )
 
 automoc4_add_library(ketaroller_tuio SHARED ${tuio_plugin_SRCS})

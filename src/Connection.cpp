@@ -20,5 +20,134 @@
 
 #include "Connection.h"
 
-using namespace KetaRoller;
+#include <QSet>
+#include <QTimer>
 
+namespace KetaRoller
+{
+
+class Connection::Private
+{
+public:
+    Private() : valid(false) {}
+
+    InputPort *port;
+    QList< OutputPort* > outputs;
+    bool valid;
+};
+
+Connection::Connection(InputPort* input, QObject* parent)
+        : QObject(parent)
+        , d(new Private)
+{
+    d->port = input;
+}
+
+bool Connection::disconnectInput()
+{
+    QList< OutputPort* > allOutputs = d->outputs;
+
+    Q_FOREACH (OutputPort *port, allOutputs) {
+        if (!disconnectOutput(port)) {
+            return false;
+        }
+    }
+
+    QTimer::singleShot(0, this, SLOT(deleteLater()));
+
+    return true;
+}
+
+bool Connection::disconnectOutput(OutputPort* output)
+{
+    if (!isValid()) {
+        return false;
+    }
+
+    if (d->outputs.contains(output)) {
+        d->outputs.removeOne(output);
+        emit outputsChanged(d->outputs);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+InputPort* Connection::input()
+{
+    if (!isValid()) {
+        return 0;
+    }
+
+    return d->port;
+}
+
+bool Connection::isValid() const
+{
+    return d->valid;
+}
+
+QList< OutputPort* > Connection::outputs() const
+{
+    if (!isValid()) {
+        return QList< OutputPort* >();
+    }
+
+    return d->outputs;
+}
+
+void Connection::setIsValid(bool validity)
+{
+    d->valid = validity;
+}
+
+bool Connection::setOutputs(const QList< OutputPort* > &outputs)
+{
+    if (!isValid()) {
+        return false;
+    }
+
+    QSet< OutputPort* > oldOutputs = d->outputs.toSet();
+    QSet< OutputPort* > newOutputs = outputs.toSet();
+
+    QSet< OutputPort* > addedOutputs = newOutputs.subtract(oldOutputs);
+    QSet< OutputPort* > removedOutputs = oldOutputs.subtract(newOutputs);
+
+    Q_FOREACH (OutputPort *port, addedOutputs) {
+        if (!validateAddOutput(port)) {
+            return false;
+        }
+    }
+
+    d->outputs = outputs;
+
+    if (!addedOutputs.isEmpty() || !removedOutputs.isEmpty()) {
+        emit outputsChanged(outputs);
+    }
+
+    return true;
+}
+
+bool Connection::addOutput(OutputPort* output)
+{
+    if (!isValid()) {
+        return false;
+    }
+
+    if (d->outputs.contains(output)) {
+        return false;
+    }
+
+    if (!validateAddOutput(output)) {
+        return false;
+    }
+
+    d->outputs.append(output);
+
+    return true;
+}
+
+
+}
+
+#include "Connection.moc"

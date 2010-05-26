@@ -20,6 +20,8 @@
 
 #include "TuioInputDevice.h"
 
+#include "FiducialObject.h"
+
 #include <QtPlugin>
 #include <QRunnable>
 #include <QApplication>
@@ -27,6 +29,7 @@
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
 #include <QGesture>
+#include <QDebug>
 
 GrabberWidget::GrabberWidget(QWidget* parent, Qt::WindowFlags f)
         : QWidget(parent, f)
@@ -102,12 +105,18 @@ void TuioInputDevice::addTuioCursor(TUIO::TuioCursor* tcur)
 
 void TuioInputDevice::addTuioObject(TUIO::TuioObject* tobj)
 {
+    TuioInputPort *port = m_portForSymbol.value(tobj->getSymbolID(), 0);
+    if (!port) {
+        qDebug() << "Got an add object for an ignored fiducial";
+        return;
+    }
 
+    FiducialObject fidobj(tobj);
 }
 
 void TuioInputDevice::refresh(TUIO::TuioTime ftime)
 {
-
+    TUIO::TuioListener::refresh(ftime);
 }
 
 void TuioInputDevice::removeTuioCursor(TUIO::TuioCursor* tcur)
@@ -191,6 +200,7 @@ QTouchEvent::TouchPoint TuioInputDevice::tuioCursorToTouchPoint(TUIO::TuioCursor
 
     return touchPoint;
 }
+
 
 
 Q_EXPORT_PLUGIN2(ketaroller_tuioinput, TuioInputDevice)

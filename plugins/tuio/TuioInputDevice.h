@@ -31,6 +31,8 @@
 #include <QtGui/QTouchEvent>
 #include <QtGui/QWidget>
 
+class TuioInputPort;
+
 class GrabberWidget : public QWidget
 {
     Q_OBJECT
@@ -63,6 +65,8 @@ public:
 
 private:
     QHash< qint64, QList< QTouchEvent::TouchPoint > > m_touchPoints;
+    QHash< qint32, TuioInputPort* > m_portForSymbol;
+    QHash< Qt::GestureType, TuioInputPort* > m_portForGesture;
     QWidget *m_widget;
     QRect m_screenRect;
 
