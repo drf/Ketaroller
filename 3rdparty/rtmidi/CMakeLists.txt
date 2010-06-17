@@ -13,7 +13,7 @@ elseif (APPLE)
     find_library(COREAUDIO_LIBRARY CoreAudio)
     find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 
-    add_definitions(-framework CoreMIDI -framework CoreFoundation -framework CoreAudio)
+    add_definitions(-D__MACOSX_CORE__)
 else ()
     find_package(Alsa REQUIRED)
     find_package(PThread REQUIRED)
