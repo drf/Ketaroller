@@ -4,3 +4,4 @@ include_directories(
 
 add_subdirectory(oscpack)
 add_subdirectory(tuio)
+add_subdirectory(rtmidi)
