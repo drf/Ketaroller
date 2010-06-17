@@ -11,4 +11,4 @@ set(tuio_plugin_SRCS
 )
 
 automoc4_add_library(ketaroller_tuio SHARED ${tuio_plugin_SRCS})
-target_link_libraries(ketaroller_tuio ketaroller tuio)
+target_link_libraries(ketaroller_tuio ketaroller tuio ${QT_QTGUI_LIBRARY})

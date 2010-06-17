@@ -43,6 +43,10 @@ Connection::Connection(InputPort* input, QObject* parent)
     d->port = input;
 }
 
+Connection::~Connection()
+{
+}
+
 bool Connection::disconnectInput()
 {
     QList< OutputPort* > allOutputs = d->outputs;

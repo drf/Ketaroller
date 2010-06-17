@@ -20,3 +20,17 @@
 
 #include "AbstractDevice.h"
 
+namespace KetaRoller {
+
+AbstractDevice::AbstractDevice(QObject *parent)
+    : QObject(parent)
+{
+
+}
+
+AbstractDevice::~AbstractDevice()
+{
+
+}
+
+}

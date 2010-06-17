@@ -116,7 +116,6 @@ void TuioInputDevice::addTuioObject(TUIO::TuioObject* tobj)
 
 void TuioInputDevice::refresh(TUIO::TuioTime ftime)
 {
-    TUIO::TuioListener::refresh(ftime);
 }
 
 void TuioInputDevice::removeTuioCursor(TUIO::TuioCursor* tcur)
@@ -200,7 +199,6 @@ QTouchEvent::TouchPoint TuioInputDevice::tuioCursorToTouchPoint(TUIO::TuioCursor
 
     return touchPoint;
 }
-
 
 
 Q_EXPORT_PLUGIN2(ketaroller_tuioinput, TuioInputDevice)

@@ -7,5 +7,7 @@ set(ketarollerlib_SRCS
     Port.cpp
 )
 
+message("${QT_QTCORE_LIBRARY}")
+
 automoc4_add_library(ketaroller SHARED ${ketarollerlib_SRCS})
-target_link_libraries(ketaroller ${QT4_QTCORE_LIBRARY})
+target_link_libraries(ketaroller ${QT_QTCORE_LIBRARY})
