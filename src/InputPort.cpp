@@ -18,5 +18,36 @@
 
 */
 
-#include "TuioInputPort.h"
+#include "InputPort.h"
 
+#include "Port_p.h"
+#include "Connection.h"
+
+namespace KetaRoller
+{
+
+class InputPortPrivate : public PortPrivate
+{
+public:
+    InputPortPrivate(Port::Type t) { type = t; }
+};
+
+InputPort::InputPort(Port::Type type)
+        : Port(*new InputPortPrivate(type))
+{
+
+}
+
+InputPort::~InputPort()
+{
+
+}
+
+template < typename T >
+void InputPort::putData(const T& data)
+{
+    Q_D(InputPort);
+    d->connection->putData(data);
+}
+
+}

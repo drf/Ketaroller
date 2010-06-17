@@ -5,11 +5,10 @@ set(ketarollerlib_SRCS
     InputDevice.cpp
     Connection.cpp
     Port.cpp
+    InputPort.cpp
+    OutputPort.cpp
     GesturedInputDevice.cpp
-    GestureConnection.cpp
 )
-
-message("${QT_QTCORE_LIBRARY}")
 
 automoc4_add_library(ketaroller SHARED ${ketarollerlib_SRCS})
 target_link_libraries(ketaroller ${QT_QTCORE_LIBRARY})

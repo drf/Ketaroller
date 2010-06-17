@@ -18,7 +18,28 @@
 
 */
 
-#include "Port.h"
+#include "Port_p.h"
+#include "Connection.h"
 
-using namespace KetaRoller;
+namespace KetaRoller
+{
+
+Port::Port(PortPrivate& dd)
+        : d_ptr(&dd)
+{
+}
+
+Port::Type Port::type() const
+{
+    Q_D(const Port);
+    return d->type;
+}
+
+Connection* Port::connection()
+{
+    Q_D(Port);
+    return d->connection;
+}
+
+}
 

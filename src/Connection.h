@@ -27,19 +27,6 @@ namespace KetaRoller {
 
 class OutputPort;
 class InputPort;
-class Connection;
-
-class ConnectionFactory
-{
-public:
-    Connection *createConnectionFor(InputPort *port);
-
-    void registerConnection(const QString &metaName, const QStringList &inputPortMetaNames);
-
-private:
-    class Private;
-    Private * const d;
-};
 
 class Connection : public QObject
 {
@@ -47,8 +34,6 @@ class Connection : public QObject
 public:
     Connection(InputPort *input, QObject* parent = 0);
     virtual ~Connection();
-
-    bool isValid() const;
 
     InputPort *input();
     QList< OutputPort* > outputs() const;
@@ -60,17 +45,17 @@ public:
 
     bool disconnectInput();
 
-protected:
-    void setIsValid(bool validity);
-
-    virtual bool validateAddOutput(OutputPort *output) = 0;
-
 Q_SIGNALS:
     void outputsChanged(QList< OutputPort* >);
 
 private:
     class Private;
     Private * const d;
+
+    template< typename T > void putData(const T &data);
+
+    friend class InputPort;
+    friend class OutputPort;
 };
 
 }

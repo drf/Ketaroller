@@ -18,23 +18,26 @@
 
 */
 
-#ifndef KETAROLLER_GESTURECONNECTION_H
-#define KETAROLLER_GESTURECONNECTION_H
+#ifndef KETAROLLER_INPUTPORT_H
+#define KETAROLLER_INPUTPORT_H
 
-#include <Connection.h>
+#include <Port.h>
 
 
 namespace KetaRoller {
 
-class GestureConnection : public KetaRoller::Connection
+class InputPortPrivate;
+class InputPort : public Port
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(GestureConnection)
+    Q_DECLARE_PRIVATE(InputPort)
+    Q_DISABLE_COPY(InputPort)
 public:
-    GestureConnection(InputPort* input, QObject* parent = 0);
-    virtual ~GestureConnection();
+    InputPort(Port::Type type);
+    virtual ~InputPort();
+
+    template< typename T > void putData(const T &data);
 };
 
 }
 
-#endif // KETAROLLER_GESTURECONNECTION_H
+#endif // KETAROLLER_INPUTPORT_H

@@ -21,11 +21,17 @@
 #ifndef KETAROLLER_PORT_H
 #define KETAROLLER_PORT_H
 
+#include <QtCore/qglobal.h>
+
 namespace KetaRoller {
 
 class Connection;
+
+class PortPrivate;
 class Port
 {
+    Q_DECLARE_PRIVATE(Port)
+    Q_DISABLE_COPY(Port)
 public:
     enum Type {
         UnknownType = 0,
@@ -34,29 +40,15 @@ public:
         MIDIType = 3
     };
 
-    Port();
     virtual ~Port();
 
     Connection *connection();
-    Type type();
-};
+    Type type() const;
 
-class InputPort : public Port
-{
-public:
-    InputPort();
-    virtual ~InputPort();
+protected:
+    Port(PortPrivate &dd);
 
-
-};
-
-class OutputPort : public Port
-{
-public:
-    OutputPort();
-    virtual ~OutputPort();
-
-
+    PortPrivate * const d_ptr;
 };
 
 }

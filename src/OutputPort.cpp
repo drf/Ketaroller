@@ -18,14 +18,38 @@
 
 */
 
-#ifndef TUIOINPUTPORT_H
-#define TUIOINPUTPORT_H
+#include "OutputPort.h"
 
-#include <Port.h>
+#include "Port_p.h"
+#include "Connection.h"
 
+#include <QDebug>
 
-class TuioInputPort : public KetaRoller::InputPort
+namespace KetaRoller
 {
+
+class OutputPortPrivate : public PortPrivate
+{
+public:
+    OutputPortPrivate(Port::Type t) { type = t; }
 };
 
-#endif // TUIOINPUTPORT_H
+OutputPort::OutputPort(Port::Type type)
+    : Port(*new OutputPortPrivate(type))
+{
+
+}
+
+OutputPort::~OutputPort()
+{
+
+}
+
+template < typename T >
+void OutputPort::onNewData(const T& data)
+{
+    Q_UNUSED(data)
+    qWarning() << "This template cannot be handled by this port";
+}
+
+}

@@ -18,21 +18,21 @@
 
 */
 
-#include "TuioConnection.h"
-#include <Port.h>
+#ifndef KETAROLLER_PORT_P_H
+#define KETAROLLER_PORT_P_H
 
-TuioConnection::TuioConnection(KetaRoller::InputPort* input, QObject* parent)
-        : Connection(input, parent)
-{
-    setIsValid(input->type() == KetaRoller::InputPort::TUIOType);
-}
+#include "Port.h"
 
-TuioConnection::~TuioConnection()
+namespace KetaRoller
 {
 
+class PortPrivate
+{
+public:
+    Connection *connection;
+    Port::Type type;
+};
+
 }
 
-bool TuioConnection::validateAddOutput(KetaRoller::OutputPort* output)
-{
-    return output->type() == KetaRoller::InputPort::TUIOType;
-}
+#endif

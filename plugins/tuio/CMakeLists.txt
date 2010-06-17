@@ -5,10 +5,10 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/3rdparty/oscpack/ip
 )
 
-set(tuio_plugin_SRCS
+set(tuio_input_device_plugin_SRCS
     TuioInputDevice.cpp
     FiducialObject.cpp
 )
 
-automoc4_add_library(ketaroller_tuio SHARED ${tuio_plugin_SRCS})
-target_link_libraries(ketaroller_tuio ketaroller tuio ${QT_QTGUI_LIBRARY})
+automoc4_add_library(ketaroller_tuio_input_device SHARED ${tuio_input_device_plugin_SRCS})
+target_link_libraries(ketaroller_tuio_input_device ketaroller tuio ${QT_QTGUI_LIBRARY})

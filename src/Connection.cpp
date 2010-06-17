@@ -22,6 +22,9 @@
 
 #include <QSet>
 #include <QTimer>
+#include <QDebug>
+
+#include "OutputPort.h"
 
 namespace KetaRoller
 {
@@ -29,11 +32,10 @@ namespace KetaRoller
 class Connection::Private
 {
 public:
-    Private() : valid(false) {}
+    Private() {}
 
     InputPort *port;
     QList< OutputPort* > outputs;
-    bool valid;
 };
 
 Connection::Connection(InputPort* input, QObject* parent)
@@ -45,6 +47,7 @@ Connection::Connection(InputPort* input, QObject* parent)
 
 Connection::~Connection()
 {
+    delete d;
 }
 
 bool Connection::disconnectInput()
@@ -64,10 +67,6 @@ bool Connection::disconnectInput()
 
 bool Connection::disconnectOutput(OutputPort* output)
 {
-    if (!isValid()) {
-        return false;
-    }
-
     if (d->outputs.contains(output)) {
         d->outputs.removeOne(output);
         emit outputsChanged(d->outputs);
@@ -79,49 +78,21 @@ bool Connection::disconnectOutput(OutputPort* output)
 
 InputPort* Connection::input()
 {
-    if (!isValid()) {
-        return 0;
-    }
-
     return d->port;
-}
-
-bool Connection::isValid() const
-{
-    return d->valid;
 }
 
 QList< OutputPort* > Connection::outputs() const
 {
-    if (!isValid()) {
-        return QList< OutputPort* >();
-    }
-
     return d->outputs;
-}
-
-void Connection::setIsValid(bool validity)
-{
-    d->valid = validity;
 }
 
 bool Connection::setOutputs(const QList< OutputPort* > &outputs)
 {
-    if (!isValid()) {
-        return false;
-    }
-
     QSet< OutputPort* > oldOutputs = d->outputs.toSet();
     QSet< OutputPort* > newOutputs = outputs.toSet();
 
     QSet< OutputPort* > addedOutputs = newOutputs.subtract(oldOutputs);
     QSet< OutputPort* > removedOutputs = oldOutputs.subtract(newOutputs);
-
-    Q_FOREACH (OutputPort *port, addedOutputs) {
-        if (!validateAddOutput(port)) {
-            return false;
-        }
-    }
 
     d->outputs = outputs;
 
@@ -134,21 +105,21 @@ bool Connection::setOutputs(const QList< OutputPort* > &outputs)
 
 bool Connection::addOutput(OutputPort* output)
 {
-    if (!isValid()) {
-        return false;
-    }
-
     if (d->outputs.contains(output)) {
-        return false;
-    }
-
-    if (!validateAddOutput(output)) {
         return false;
     }
 
     d->outputs.append(output);
 
     return true;
+}
+
+template< typename T >
+void Connection::putData(const T& data)
+{
+    foreach (OutputPort *port, d->outputs) {
+        port->onNewData(data);
+    }
 }
 
 
