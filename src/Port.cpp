@@ -29,6 +29,11 @@ Port::Port(PortPrivate& dd)
 {
 }
 
+Port::~Port()
+{
+    delete d_ptr;
+}
+
 Port::Type Port::type() const
 {
     Q_D(const Port);
