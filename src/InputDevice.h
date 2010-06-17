@@ -61,24 +61,6 @@ protected:
     InputDevicePrivate * const d_ptr;
 };
 
-class GesturedInputDevicePrivate;
-class GesturedInputDevice : public InputDevice
-{
-    Q_OBJECT
-    Q_DECLARE_PRIVATE(GesturedInputDevice)
-    Q_DISABLE_COPY(GesturedInputDevice)
-
-    Q_PRIVATE_SLOT(d_func(), void onConnectionCreated(KetaRoller::InputPort *port, KetaRoller::Connection *connection))
-    Q_PRIVATE_SLOT(d_func(), void onConnectionSevered(KetaRoller::InputPort *port, KetaRoller::Connection *connection))
-
-public:
-    GesturedInputDevice(QObject* parent = 0);
-    virtual ~GesturedInputDevice();
-
-    virtual void grabGesture(Qt::GestureType type) = 0;
-    virtual void ungrabGesture(Qt::GestureType type) = 0;
-};
-
 }
 
 Q_DECLARE_INTERFACE(KetaRoller::InputDevice, "org.ketamina.InputDevice/0.1")

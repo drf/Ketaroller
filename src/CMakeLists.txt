@@ -5,6 +5,8 @@ set(ketarollerlib_SRCS
     InputDevice.cpp
     Connection.cpp
     Port.cpp
+    GesturedInputDevice.cpp
+    GestureConnection.cpp
 )
 
 message("${QT_QTCORE_LIBRARY}")

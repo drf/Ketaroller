@@ -55,27 +55,6 @@ void InputDevice::setOutgoingPorts(const QList< InputPort* >& ports)
 
 }
 
-void GesturedInputDevicePrivate::onConnectionCreated(KetaRoller::InputPort *port, KetaRoller::Connection *connection)
-{
-    
-}
-
-void GesturedInputDevicePrivate::onConnectionSevered(KetaRoller::InputPort *port, KetaRoller::Connection *connection)
-{
-
-}
-
-GesturedInputDevice::GesturedInputDevice(QObject* parent): InputDevice(parent)
-{
-
-}
-GesturedInputDevice::~GesturedInputDevice()
-{
-
-}
-
-
-
 }
 
 #include "InputDevice.moc"

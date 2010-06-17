@@ -18,18 +18,31 @@
 
 */
 
-#include "GestureConnection.h"
+#ifndef GESTUREDINPUTDEVICE_H
+#define GESTUREDINPUTDEVICE_H
+
+#include "InputDevice.h"
 
 namespace KetaRoller {
-GestureConnection::GestureConnection(InputPort* input, QObject* parent)
-    : Connection(input, parent)
+
+class GesturedInputDevicePrivate;
+class GesturedInputDevice : public InputDevice
 {
+    Q_OBJECT
+    Q_DECLARE_PRIVATE(GesturedInputDevice)
+    Q_DISABLE_COPY(GesturedInputDevice)
+
+    Q_PRIVATE_SLOT(d_func(), void onConnectionCreated(KetaRoller::InputPort *port, KetaRoller::Connection *connection))
+    Q_PRIVATE_SLOT(d_func(), void onConnectionSevered(KetaRoller::InputPort *port, KetaRoller::Connection *connection))
+
+public:
+    GesturedInputDevice(QObject* parent = 0);
+    virtual ~GesturedInputDevice();
+
+    virtual void grabGesture(Qt::GestureType type) = 0;
+    virtual void ungrabGesture(Qt::GestureType type) = 0;
+};
 
 }
 
-GestureConnection::~GestureConnection()
-{
-
-}
-}
-
+#endif // GESTUREDINPUTDEVICE_H
