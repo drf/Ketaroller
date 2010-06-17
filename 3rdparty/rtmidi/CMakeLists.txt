@@ -7,7 +7,9 @@ set(rtmidi_SRCS
 )
 
 if (WIN32)
-    add_definitions()
+    find_library(WINMM_LIBRARY winmm)
+
+    add_definitions(-D__WINDOWS_MM__)
 elseif (APPLE)
     find_library(COREMIDI_LIBRARY CoreMidi)
     find_library(COREAUDIO_LIBRARY CoreAudio)
@@ -26,7 +28,7 @@ endif ()
 add_library(rtmidi STATIC ${rtmidi_SRCS})
 
 if (WIN32)
-    add_definitions()
+    target_link_libraries(rtmidi ${WINMM_LIBRARY})
 elseif (APPLE)
     target_link_libraries(rtmidi ${COREMIDI_LIBRARY} ${COREFOUNDATION_LIBRARY} ${COREAUDIO_LIBRARY})
 else ()
