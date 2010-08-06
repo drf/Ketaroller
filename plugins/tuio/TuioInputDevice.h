@@ -48,6 +48,7 @@ class TuioInputDevice : public KetaRoller::InputDevice, public TUIO::TuioListene
     Q_OBJECT
     Q_INTERFACES(KetaRoller::InputDevice)
     Q_DISABLE_COPY(TuioInputDevice)
+
 public:
     TuioInputDevice(QObject* parent = 0);
     virtual ~TuioInputDevice();
