@@ -6,6 +6,8 @@ set(rtmidi_SRCS
     RtMidi.cpp
 )
 
+add_definitions(-fPIC)
+
 if (WIN32)
     find_library(WINMM_LIBRARY winmm)
 

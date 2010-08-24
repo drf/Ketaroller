@@ -3,6 +3,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/3rdparty/rtmidi
 )
 
+add_definitions(-fPIC)
+
 set(midi_input_device_plugin_SRCS
     MIDIInputDevice.cpp
     MIDIMessage.cpp

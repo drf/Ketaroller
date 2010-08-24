@@ -23,9 +23,6 @@ public:
 private:
     RtMidiIn *midiReceiver;
 
-    std::vector<unsigned char> rawMessage;
-    MIDIMessage *message;
-
     double stamp;
     int nBytes;
 };
