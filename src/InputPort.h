@@ -22,9 +22,13 @@
 #define KETAROLLER_INPUTPORT_H
 
 #include <Port.h>
+#include <QtCore/QList>
 
 
 namespace KetaRoller {
+
+class OutputPort;
+
 
 class InputPortPrivate;
 class InputPort : public Port
@@ -34,6 +38,15 @@ class InputPort : public Port
 public:
     InputPort(Port::Type type);
     virtual ~InputPort();
+
+    QList< OutputPort* > outputs() const;
+
+    void addOutput(OutputPort *output);
+
+    void disconnectOutput(OutputPort *output, bool destroyOutput = true);
+    void setOutputs(const QList< OutputPort* > &output);
+
+    void disconnect(bool destroyOrphanOutputs = true);
 
     template< typename T > void putData(const T &data);
 };

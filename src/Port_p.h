@@ -29,7 +29,6 @@ namespace KetaRoller
 class PortPrivate
 {
 public:
-    Connection *connection;
     Port::Type type;
 };
 

@@ -19,7 +19,6 @@
 */
 
 #include "Port_p.h"
-#include "Connection.h"
 
 namespace KetaRoller
 {
@@ -38,12 +37,6 @@ Port::Type Port::type() const
 {
     Q_D(const Port);
     return d->type;
-}
-
-Connection* Port::connection()
-{
-    Q_D(Port);
-    return d->connection;
 }
 
 }

@@ -25,7 +25,8 @@
 
 namespace KetaRoller {
 
-class Connection;
+class AbstractDevice;
+
 
 class PortPrivate;
 class Port
@@ -42,7 +43,6 @@ public:
 
     virtual ~Port();
 
-    Connection *connection();
     Type type() const;
 
 protected:

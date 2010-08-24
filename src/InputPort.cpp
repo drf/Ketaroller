@@ -21,7 +21,7 @@
 #include "InputPort.h"
 
 #include "Port_p.h"
-#include "Connection.h"
+#include "OutputPort.h"
 
 namespace KetaRoller
 {
@@ -30,24 +30,80 @@ class InputPortPrivate : public PortPrivate
 {
 public:
     InputPortPrivate(Port::Type t) { type = t; }
+
+    QList< OutputPort* > outputPorts;
 };
 
 InputPort::InputPort(Port::Type type)
         : Port(*new InputPortPrivate(type))
 {
-
 }
 
 InputPort::~InputPort()
 {
-
+    disconnect(false);
 }
 
 template < typename T >
 void InputPort::putData(const T& data)
 {
     Q_D(InputPort);
-    d->connection->putData(data);
+
+    foreach (OutputPort *port, d->outputPorts) {
+        port->onNewData(data);
+    }
 }
+
+void InputPort::addOutput(OutputPort* output)
+{
+    Q_D(InputPort);
+
+    d->outputPorts.append(output);
+}
+
+void InputPort::disconnect(bool destroyOrphanOutputs)
+{
+    Q_D(InputPort);
+
+    if (destroyOrphanOutputs) {
+        QList< OutputPort* >::iterator i = d->outputPorts.begin();
+
+        while (i != d->outputPorts.end()) {
+            OutputPort *port = *i;
+
+            i = d->outputPorts.erase(i);
+
+            delete port;
+        }
+    } else {
+        d->outputPorts.clear();
+    }
+}
+
+void InputPort::disconnectOutput(OutputPort* output, bool destroyOutput)
+{
+    Q_D(InputPort);
+
+    d->outputPorts.removeOne(output);
+
+    if (destroyOutput) {
+        delete output;
+    }
+}
+
+QList< OutputPort* > InputPort::outputs() const
+{
+    Q_D(const InputPort);
+
+    return d->outputPorts;
+}
+
+void InputPort::setOutputs(const QList< OutputPort* >& output)
+{
+    Q_D(InputPort);
+
+    d->outputPorts = output;
+}
+
 
 }

@@ -37,6 +37,8 @@ public:
 
 protected:
     template< typename T > void onNewData(const T &data);
+
+    friend class InputPort;
 };
 
 }
