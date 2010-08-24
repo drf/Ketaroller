@@ -4,7 +4,7 @@
 #include <QtCore/QSharedDataPointer>
 #include <vector>
 
-class MIDIMessage
+class Q_DECL_EXPORT MIDIMessage
 {
 public:
     enum Type {
@@ -34,7 +34,7 @@ private:
     QSharedDataPointer< Data > d;
 };
 
-class MIDINoteOnEvent : public MIDIMessage
+class Q_DECL_EXPORT MIDINoteOnEvent : public MIDIMessage
 {
 public:
     ~MIDINoteOnEvent();
@@ -48,7 +48,7 @@ private:
     friend class MIDIMessageFactory;
 };
 
-class MIDINoteOffEvent : public MIDIMessage
+class Q_DECL_EXPORT MIDINoteOffEvent : public MIDIMessage
 {
 public:
     ~MIDINoteOffEvent();
@@ -62,7 +62,7 @@ private:
     friend class MIDIMessageFactory;
 };
 
-class MIDIControlChangeEvent : public MIDIMessage
+class Q_DECL_EXPORT MIDIControlChangeEvent : public MIDIMessage
 {
 public:
     ~MIDIControlChangeEvent();
@@ -76,7 +76,7 @@ private:
     friend class MIDIMessageFactory;
 };
 
-class MIDIPitchBenderEvent : public MIDIMessage
+class Q_DECL_EXPORT MIDIPitchBenderEvent : public MIDIMessage
 {
 public:
     MIDIPitchBenderEvent(const MIDIMessage &other);

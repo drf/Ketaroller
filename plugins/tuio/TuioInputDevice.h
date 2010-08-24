@@ -33,7 +33,7 @@
 
 class TuioInputPort;
 
-class GrabberWidget : public QWidget
+class Q_DECL_EXPORT GrabberWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -43,7 +43,7 @@ public:
     virtual bool event(QEvent* event);
 };
 
-class TuioInputDevice : public KetaRoller::InputDevice, public TUIO::TuioListener
+class Q_DECL_EXPORT TuioInputDevice : public KetaRoller::InputDevice, public TUIO::TuioListener
 {
     Q_OBJECT
     Q_INTERFACES(KetaRoller::InputDevice)

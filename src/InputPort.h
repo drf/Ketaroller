@@ -32,7 +32,7 @@ class OutputPort;
 
 
 class InputPortPrivate;
-class InputPort : public Port
+class Q_DECL_EXPORT InputPort : public Port
 {
     Q_DECLARE_PRIVATE(InputPort)
     Q_DISABLE_COPY(InputPort)

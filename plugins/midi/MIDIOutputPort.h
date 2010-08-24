@@ -25,7 +25,7 @@
 
 #include "MIDIMessage.h"
 
-class MIDIOutputPort : public KetaRoller::OutputPort
+class Q_DECL_EXPORT MIDIOutputPort : public KetaRoller::OutputPort
 {
     Q_OBJECT
     Q_INTERFACES(KetaRoller::OutputPort)
@@ -42,7 +42,7 @@ private:
     QList< MIDIMessage > m_lastMessages;
 };
 
-template<> inline void ketaroller_onNewData< MIDIMessage >(const MIDIMessage &data, KetaRoller::OutputPort *port) {
+template<> inline Q_DECL_EXPORT void ketaroller_onNewData< MIDIMessage >(const MIDIMessage &data, KetaRoller::OutputPort *port) {
     qDebug() << "FIST DA MIDI WITH DA MESSAGE" << data.type();
 
     MIDIOutputPort *realPort = qobject_cast< MIDIOutputPort* >(port);

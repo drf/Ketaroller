@@ -28,7 +28,7 @@ namespace TUIO {
 }
 
 class QPointF;
-class FiducialObject
+class Q_DECL_EXPORT FiducialObject
 {
 public:
     FiducialObject();

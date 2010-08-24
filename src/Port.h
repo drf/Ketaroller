@@ -29,7 +29,7 @@ class AbstractDevice;
 
 
 class PortPrivate;
-class Port
+class Q_DECL_EXPORT Port
 {
     Q_DECLARE_PRIVATE(Port)
     Q_DISABLE_COPY(Port)

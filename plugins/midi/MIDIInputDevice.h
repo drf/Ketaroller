@@ -8,7 +8,7 @@
 
 #include <QtCore/QThread>
 
-class MIDIInputDevice : public KetaRoller::InputDevice
+class Q_DECL_EXPORT MIDIInputDevice : public KetaRoller::InputDevice
 {
     Q_OBJECT
     Q_INTERFACES(KetaRoller::InputDevice)

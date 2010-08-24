@@ -32,7 +32,7 @@ class InputDevice;
 class OutputPort;
 
 
-class PluginLoader : public QObject
+class Q_DECL_EXPORT PluginLoader : public QObject
 {
 public:
     enum Type {

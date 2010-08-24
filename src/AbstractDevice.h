@@ -27,7 +27,7 @@ struct QUuid;
 
 namespace KetaRoller {
 
-class AbstractDevice : public QObject
+class Q_DECL_EXPORT AbstractDevice : public QObject
 {
     Q_OBJECT
 public:

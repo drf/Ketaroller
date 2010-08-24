@@ -30,7 +30,7 @@
 namespace KetaRoller {
 
 class OutputPortPrivate;
-class OutputPort : public Port, public QObject
+class Q_DECL_EXPORT OutputPort : public Port, public QObject
 {
     Q_DECLARE_PRIVATE(OutputPort)
     Q_DISABLE_COPY(OutputPort)
@@ -50,7 +50,7 @@ protected:
 
 }
 
-template< typename T > inline void ketaroller_onNewData(const T &data, KetaRoller::OutputPort *port) {
+template< typename T > inline Q_DECL_EXPORT void ketaroller_onNewData(const T &data, KetaRoller::OutputPort *port) {
     Q_UNUSED(data)
     qWarning() << "This template cannot be handled by any port";
 }

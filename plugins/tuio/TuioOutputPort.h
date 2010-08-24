@@ -25,7 +25,7 @@
 #include "FiducialObject.h"
 
 
-class TuioOutputPort : public KetaRoller::OutputPort
+class Q_DECL_EXPORT TuioOutputPort : public KetaRoller::OutputPort
 {
     Q_OBJECT
     Q_INTERFACES(KetaRoller::OutputPort)
@@ -42,7 +42,7 @@ private:
     QList< FiducialObject > m_lastMessages;
 };
 
-template<> inline void ketaroller_onNewData< FiducialObject >(const FiducialObject &data, KetaRoller::OutputPort *port) {
+template<> inline Q_DECL_EXPORT void ketaroller_onNewData< FiducialObject >(const FiducialObject &data, KetaRoller::OutputPort *port) {
     qDebug() << "FIST DA TUIO ON DA POSITION" << data.state();
 
     TuioOutputPort *realPort = qobject_cast< TuioOutputPort* >(port);

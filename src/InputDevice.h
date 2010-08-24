@@ -36,7 +36,7 @@ class InputDevicePrivate;
  * \brief Base class for input devices
  *
  */
-class InputDevice : public AbstractDevice
+class Q_DECL_EXPORT InputDevice : public AbstractDevice
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(InputDevice)
