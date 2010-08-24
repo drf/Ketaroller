@@ -40,11 +40,11 @@ void InputDevice::addOutgoingPort(InputPort* port)
 }
 QList< InputPort* > InputDevice::connectedPorts() const
 {
-
+    return QList< InputPort* >();
 }
 QList< InputPort* > InputDevice::inputPorts() const
 {
-
+    return QList< InputPort* >();
 }
 void InputDevice::removeOutgoingPort(InputPort* port)
 {
