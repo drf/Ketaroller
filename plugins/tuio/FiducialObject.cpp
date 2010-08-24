@@ -88,6 +88,18 @@ FiducialObject::FiducialObject(const FiducialObject& other)
 {
 }
 
+FiducialObject& FiducialObject::operator=(const FiducialObject& rhs)
+{
+    if (this==&rhs) return *this;   //Protect against self-assignment
+    d = rhs.d;
+    return *this;
+}
+
+bool FiducialObject::operator==(const FiducialObject& other) const
+{
+    return (d->position == other.d->position) && (d->state == other.d->state);
+}
+
 FiducialObject::~FiducialObject()
 {
 }

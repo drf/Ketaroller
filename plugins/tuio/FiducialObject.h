@@ -36,6 +36,9 @@ public:
     FiducialObject(const FiducialObject &other);
     ~FiducialObject();
 
+    FiducialObject &operator=(const FiducialObject &rhs);
+    bool operator==(const FiducialObject &other) const;
+
     QPointF position() const;
 
     float speedX() const;
