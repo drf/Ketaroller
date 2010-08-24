@@ -37,7 +37,6 @@ MIDIMessage MIDIMessageFactory::generateMidiMessage(std::vector<unsigned char> r
         //if the message is a note on/off, control change or pitch bender (control the status byte)
         int type = static_cast<int>(rawMessage[0]);
 
-        quint16 statusByte = static_cast<quint16>(rawMessage[0]);
         quint16 dataByte1 = static_cast<quint16>(rawMessage[1]);
         quint16 dataByte2 = static_cast<quint16>(rawMessage[2]);
 
