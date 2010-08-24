@@ -1,28 +1,28 @@
 #include "MIDIMessage.h"
 #include <vector>
 
-class MIDIMessageData : public QSharedData
+class MIDIMessage::Data : public QSharedData
 {
 public:
-    MIDIMessageData()
+    Data()
         : type(MIDIMessage::UnknownEvent)
         , data1(0)
         , data2(0)
     {
     };
-    MIDIMessageData(MIDIMessage::Type messageType, quint16 dataByte1, quint16 dataByte2)
+    Data(MIDIMessage::Type messageType, quint16 dataByte1, quint16 dataByte2)
         :type(messageType)
         ,data1(dataByte1)
         ,data2(dataByte2)
     {
     }
-    MIDIMessageData(const MIDIMessageData &other)
+    Data(const Data &other)
         :type(other.type)
         ,data1(other.data1)
         ,data2(other.data2)
     {
     }
-    ~MIDIMessageData() {}
+    ~Data() {}
 
     MIDIMessage::Type type;
     quint16 data1;
@@ -66,12 +66,12 @@ MIDIMessage MIDIMessageFactory::generateMidiMessage(std::vector<unsigned char> r
 ///// MIDI Generic Message
 
 MIDIMessage::MIDIMessage()
-        : d(new MIDIMessageData)
+        : d(new Data)
 {
 }
 
 MIDIMessage::MIDIMessage(MIDIMessage::Type messageType, quint16 data1, quint16 data2)
-        : d(new MIDIMessageData(messageType, data1, data2))
+        : d(new Data(messageType, data1, data2))
 {
 
 }
@@ -83,6 +83,18 @@ MIDIMessage::MIDIMessage(const MIDIMessage& other)
 
 MIDIMessage::~MIDIMessage()
 {
+}
+
+bool MIDIMessage::operator==(const MIDIMessage& other) const
+{
+    return (d->data1 == other.d->data1) && (d->data2 == other.d->data2) && (d->type == other.d->type);
+}
+
+MIDIMessage& MIDIMessage::operator=(const MIDIMessage& rhs)
+{
+    if (this==&rhs) return *this;   //Protect against self-assignment
+    d = rhs.d;
+    return *this;
 }
 
 quint16 MIDIMessage::data1() const
@@ -174,8 +186,19 @@ MIDIPitchBenderEvent::~MIDIPitchBenderEvent()
 {
 }
 
+MIDIPitchBenderEvent::MIDIPitchBenderEvent(const MIDIMessage& other)
+        : MIDIMessage(other)
+{
+
+}
+
+bool MIDIPitchBenderEvent::operator==(const MIDIPitchBenderEvent& other) const
+{
+    return MIDIMessage::operator==(other);
+}
+
 quint16 MIDIPitchBenderEvent::value() const
 {
-    return (data1() << 8) + data2();
+    return (data1() << 7) + data2();
 }
 

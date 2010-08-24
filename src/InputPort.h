@@ -22,6 +22,7 @@
 #define KETAROLLER_INPUTPORT_H
 
 #include <Port.h>
+#include <OutputPort.h>
 #include <QtCore/QList>
 
 
@@ -48,7 +49,11 @@ public:
 
     void disconnect(bool destroyOrphanOutputs = true);
 
-    template< typename T > void putData(const T &data);
+    template< typename T > inline void putData(const T &data) {
+        foreach (OutputPort *port, outputs()) {
+            port->onNewData(data);
+        }
+    };
 };
 
 }

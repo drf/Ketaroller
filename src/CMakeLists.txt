@@ -1,5 +1,9 @@
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-ketaroller.h.in
+               ${CMAKE_CURRENT_BINARY_DIR}/config-ketaroller.h
+               @ONLY)
+
 set(ketarollerlib_SRCS
     AbstractDevice.cpp
     InputDevice.cpp
@@ -7,6 +11,7 @@ set(ketarollerlib_SRCS
     InputPort.cpp
     OutputPort.cpp
     GesturedInputDevice.cpp
+    PluginLoader.cpp
 )
 
 automoc4_add_library(ketaroller SHARED ${ketarollerlib_SRCS})

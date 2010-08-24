@@ -44,16 +44,6 @@ InputPort::~InputPort()
     disconnect(false);
 }
 
-template < typename T >
-void InputPort::putData(const T& data)
-{
-    Q_D(InputPort);
-
-    foreach (OutputPort *port, d->outputPorts) {
-        port->onNewData(data);
-    }
-}
-
 void InputPort::addOutput(OutputPort* output)
 {
     Q_D(InputPort);

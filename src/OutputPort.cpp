@@ -36,6 +36,7 @@ public:
 
 OutputPort::OutputPort(Port::Type type)
     : Port(*new OutputPortPrivate(type))
+    , d_ptr(Port::d_ptr)
 {
 
 }
@@ -43,13 +44,6 @@ OutputPort::OutputPort(Port::Type type)
 OutputPort::~OutputPort()
 {
 
-}
-
-template < typename T >
-void OutputPort::onNewData(const T& data)
-{
-    Q_UNUSED(data)
-    qWarning() << "This template cannot be handled by this port";
 }
 
 }

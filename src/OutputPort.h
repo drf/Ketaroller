@@ -23,11 +23,14 @@
 
 #include <Port.h>
 
+#include <QtPlugin>
+#include <QDebug>
+
 
 namespace KetaRoller {
 
 class OutputPortPrivate;
-class OutputPort : public Port
+class OutputPort : public Port, public QObject
 {
     Q_DECLARE_PRIVATE(OutputPort)
     Q_DISABLE_COPY(OutputPort)
@@ -36,11 +39,22 @@ public:
     virtual ~OutputPort();
 
 protected:
-    template< typename T > void onNewData(const T &data);
+    template< typename T > inline void onNewData(const T &data) {
+        ketaroller_onNewData(data, this);
+    }
 
     friend class InputPort;
+
+    PortPrivate * const d_ptr;
 };
 
 }
+
+template< typename T > inline void ketaroller_onNewData(const T &data, KetaRoller::OutputPort *port) {
+    Q_UNUSED(data)
+    qWarning() << "This template cannot be handled by any port";
+}
+
+Q_DECLARE_INTERFACE(KetaRoller::OutputPort, "org.ketamina.OutputPortInterface/1.0")
 
 #endif

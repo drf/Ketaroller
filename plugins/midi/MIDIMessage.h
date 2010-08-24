@@ -4,7 +4,6 @@
 #include <QtCore/QSharedDataPointer>
 #include <vector>
 
-class MIDIMessageData;
 class MIDIMessage
 {
 public:
@@ -17,8 +16,11 @@ public:
     };
 
     MIDIMessage();
-    MIDIMessage(const MIDIMessage &other);
     ~MIDIMessage();
+
+    MIDIMessage(const MIDIMessage &other);
+    MIDIMessage &operator=(const MIDIMessage &rhs);
+    bool operator==(const MIDIMessage &other) const;
 
     quint16 data1() const;
     quint16 data2() const;
@@ -28,7 +30,8 @@ protected:
     MIDIMessage(Type messageType, quint16 data1, quint16 data2);
 
 private:
-    QSharedDataPointer< MIDIMessageData > d;
+    class Data;
+    QSharedDataPointer< Data > d;
 };
 
 class MIDINoteOnEvent : public MIDIMessage
@@ -76,7 +79,11 @@ private:
 class MIDIPitchBenderEvent : public MIDIMessage
 {
 public:
+    MIDIPitchBenderEvent(const MIDIMessage &other);
     ~MIDIPitchBenderEvent();
+
+    MIDIPitchBenderEvent &operator=(const MIDIPitchBenderEvent &rhs);
+    bool operator==(const MIDIPitchBenderEvent &other) const;
 
     quint16 value() const;
 
