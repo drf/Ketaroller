@@ -22,8 +22,9 @@
 #define KETAROLLER_OUTPUTDEVICE_H
 
 #include <AbstractDevice.h>
-#include <QVariantMap>
+#include "AbstractPluginFactory.h"
 
+#include <QVariantMap>
 
 namespace KetaRoller {
 
@@ -56,6 +57,30 @@ Q_SIGNALS:
     void portRemoved(KetaRoller::OutputPort *port);
 };
 
+class Q_DECL_EXPORT OutputDeviceFactory : public AbstractPluginFactory
+{
+    Q_OBJECT
+public:
+    OutputDeviceFactory(QObject* parent = 0);
+    virtual ~OutputDeviceFactory();
+
+    virtual OutputDevice *newInstance(QObject *parent) = 0;
+};
+
 }
+
+Q_DECLARE_INTERFACE(KetaRoller::OutputDevice, "org.ketamina.OutputDevice/0.1")
+Q_DECLARE_INTERFACE(KetaRoller::OutputDeviceFactory, "org.ketamina.OutputDeviceFactory/0.1")
+
+#define KETAROLLER_OUTPUT_DEVICE_PLUGIN_FACTORY(type, _gen) class Q_DECL_EXPORT _gen##Factory : public KetaRoller::OutputDeviceFactory \
+{ \
+    Q_OBJECT \
+    Q_INTERFACES(KetaRoller::OutputDeviceFactory) \
+    Q_DISABLE_COPY(_gen) \
+public: \
+    _genFactory(QObject* parent = 0) : KetaRoller::OutputDeviceFactory(parent) {} \
+    virtual ~_gen##Factory() {} \
+    virtual KetaRoller::OutputDevice* newInstance(QObject* parent) { return new _gen(parent); } \
+};
 
 #endif // KETAROLLER_OUTPUTDEVICE_H

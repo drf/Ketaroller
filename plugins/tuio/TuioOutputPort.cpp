@@ -20,8 +20,8 @@
 
 #include "TuioOutputPort.h"
 
-TuioOutputPort::TuioOutputPort()
-        : OutputPort(TUIOType)
+TuioOutputPort::TuioOutputPort(QObject *parent)
+        : OutputPort(TUIOType, parent)
 {
 
 }
@@ -43,5 +43,3 @@ void TuioOutputPort::receiveData(const FiducialObject& message)
     // Send message to device - act as a transparent proxy
     sendToDevice(Q_ARG(FiducialObject, message));
 }
-
-Q_EXPORT_PLUGIN2(ketaroller_tuio_output_port, TuioOutputPort)

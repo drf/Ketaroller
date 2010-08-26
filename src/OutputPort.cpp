@@ -26,8 +26,25 @@
 namespace KetaRoller
 {
 
-OutputPort::OutputPort(Port::Type type)
+OutputPortFactory::OutputPortFactory(QObject* parent)
+        : AbstractPluginFactory(parent)
+{
+
+}
+
+OutputPortFactory::~OutputPortFactory()
+{
+
+}
+
+OutputPort* OutputPortFactory::newInstance(QObject* parent)
+{
+    return 0;
+}
+
+OutputPort::OutputPort(Port::Type type, QObject *parent)
     : Port(*new OutputPortPrivate(type))
+    , QObject(parent)
     , d_ptr(Port::d_ptr)
 {
 

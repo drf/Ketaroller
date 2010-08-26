@@ -18,29 +18,21 @@
 
 */
 
-#include "MIDIOutputPort.h"
+#include "AbstractPluginFactory.h"
 
-#include <QDebug>
+namespace KetaRoller {
 
-MIDIOutputPort::MIDIOutputPort(QObject *parent)
-        : OutputPort(MIDIType, parent)
-{
-}
-
-MIDIOutputPort::~MIDIOutputPort()
+AbstractPluginFactory::AbstractPluginFactory(QObject* parent)
+        : QObject(parent)
 {
 
 }
 
-void MIDIOutputPort::receiveData(const MIDIMessage& message)
+AbstractPluginFactory::~AbstractPluginFactory()
 {
-    qDebug() << "Processing MIDI Message..." << message.data1() << message.data2();
-    m_lastMessages.append(message);
+
 }
 
-MIDIMessage MIDIOutputPort::lastMessage() const
-{
-    return m_lastMessages.last();
 }
 
-#include "MIDIOutputPort.moc"
+#include "AbstractPluginFactory.moc"

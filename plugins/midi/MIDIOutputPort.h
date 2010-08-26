@@ -31,7 +31,7 @@ class Q_DECL_EXPORT MIDIOutputPort : public KetaRoller::OutputPort
     Q_INTERFACES(KetaRoller::OutputPort)
     Q_DISABLE_COPY(MIDIOutputPort)
 public:
-    MIDIOutputPort();
+    MIDIOutputPort(QObject *parent);
     virtual ~MIDIOutputPort();
 
     MIDIMessage lastMessage() const;

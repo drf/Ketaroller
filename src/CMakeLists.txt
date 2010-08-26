@@ -6,12 +6,13 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-ketaroller.h.in
 
 set(ketarollerlib_SRCS
     AbstractDevice.cpp
+    AbstractPluginFactory.cpp
     InputDevice.cpp
     Port.cpp
     InputPort.cpp
     OutputPort.cpp
     OutputDevice.cpp
-    GesturedInputDevice.cpp
+    #GesturedInputDevice.cpp
     PluginLoader.cpp
 )
 

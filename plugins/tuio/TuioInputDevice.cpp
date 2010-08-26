@@ -265,6 +265,4 @@ QTouchEvent::TouchPoint TuioInputDevice::tuioCursorToTouchPoint(TUIO::TuioCursor
     return touchPoint;
 }
 
-
-Q_EXPORT_PLUGIN2(ketaroller_tuioinput, TuioInputDevice)
 #include "TuioInputDevice.moc"

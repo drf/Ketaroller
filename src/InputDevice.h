@@ -23,13 +23,11 @@
 
 #include "AbstractDevice.h"
 
+#include "AbstractPluginFactory.h"
+
 #include <QVariantMap>
 
 namespace KetaRoller {
-
-class Connection;
-
-
 class InputPort;
 
 class InputDevicePrivate;
@@ -74,9 +72,32 @@ Q_SIGNALS:
     void portRemoved(KetaRoller::InputPort *port);
 };
 
+class Q_DECL_EXPORT InputDeviceFactory : public AbstractPluginFactory
+{
+    Q_OBJECT
+public:
+    InputDeviceFactory(QObject* parent = 0);
+    virtual ~InputDeviceFactory();
+
+    virtual InputDevice *newInstance(QObject *parent) = 0;
+};
+
 }
 
 Q_DECLARE_INTERFACE(KetaRoller::InputDevice, "org.ketamina.InputDevice/0.1")
+Q_DECLARE_INTERFACE(KetaRoller::InputDeviceFactory, "org.ketamina.InputDeviceFactory/0.1")
 Q_DECLARE_OPERATORS_FOR_FLAGS(KetaRoller::InputDevice::PortRemovalModes)
+
+#define KETAROLLER_INPUT_DEVICE_PLUGIN_FACTORY(type, _gen) \
+class Q_DECL_EXPORT _gen##Factory : public KetaRoller::InputDeviceFactory \
+{ \
+    Q_OBJECT \
+    Q_INTERFACES(KetaRoller::InputDeviceFactory) \
+    Q_DISABLE_COPY(_gen##Factory) \
+public: \
+    _gen##Factory(QObject* parent = 0) : KetaRoller::InputDeviceFactory(parent) {} \
+    ~_gen##Factory() {} \
+    virtual KetaRoller::InputDevice* newInstance(QObject* parent) { return new _gen(parent); } \
+};
 
 #endif // INPUTDEVICE_H

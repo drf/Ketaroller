@@ -32,8 +32,8 @@ class GesturedInputDevice : public InputDevice
     Q_DECLARE_PRIVATE(GesturedInputDevice)
     Q_DISABLE_COPY(GesturedInputDevice)
 
-    Q_PRIVATE_SLOT(d_func(), void onConnectionCreated(KetaRoller::InputPort *port, KetaRoller::Connection *connection))
-    Q_PRIVATE_SLOT(d_func(), void onConnectionSevered(KetaRoller::InputPort *port, KetaRoller::Connection *connection))
+    Q_PRIVATE_SLOT(d_func(), void onPortAdded(KetaRoller::InputPort *port, KetaRoller::Connection *connection))
+    Q_PRIVATE_SLOT(d_func(), void onPortRemoved(KetaRoller::InputPort *port, KetaRoller::Connection *connection))
 
 public:
     GesturedInputDevice(QObject* parent = 0);

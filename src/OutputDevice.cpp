@@ -31,6 +31,17 @@ public:
     QList< OutputPort* > ports;
 };
 
+OutputDeviceFactory::OutputDeviceFactory(QObject* parent)
+        : AbstractPluginFactory(parent)
+{
+
+}
+
+OutputDeviceFactory::~OutputDeviceFactory()
+{
+
+}
+
 OutputDevice::OutputDevice(QObject* parent)
         : AbstractDevice(*new OutputDevicePrivate, parent)
 {

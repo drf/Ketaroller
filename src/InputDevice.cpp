@@ -23,6 +23,15 @@
 
 namespace KetaRoller {
 
+InputDeviceFactory::InputDeviceFactory(QObject* parent)
+        : AbstractPluginFactory(parent)
+{
+}
+
+InputDeviceFactory::~InputDeviceFactory()
+{
+}
+
 InputDevice::InputDevice(QObject* parent)
     : AbstractDevice(*new InputDevicePrivate, parent)
 {

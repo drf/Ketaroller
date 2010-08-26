@@ -7,7 +7,6 @@
 
 #include <QtPlugin>
 
-
 MIDIInputDevice::MIDIInputDevice(QObject* parent)
     : InputDevice(parent)
 {
@@ -56,5 +55,3 @@ void MIDIInputDevice::getMessage()
         port->putData(Q_ARG(MIDIMessage, message));
     }
 }
-
-Q_EXPORT_PLUGIN2(ketaroller_midi_input_device, MIDIInputDevice)

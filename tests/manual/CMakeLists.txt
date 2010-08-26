@@ -15,3 +15,15 @@ target_link_libraries(tuio-reactivision-manual-test
     ketaroller
     tuio
 )
+
+automoc4_add_executable(tuio-ports-to-fiducial-test
+    tuioportstofiducialstest.cpp
+    ../../plugins/tuio/FiducialObject.cpp
+)
+
+target_link_libraries(tuio-ports-to-fiducial-test
+    ${QT_QTGUI_LIBRARY}
+    ${QT_QTTEST_LIBRARY}
+    ketaroller
+    tuio
+)

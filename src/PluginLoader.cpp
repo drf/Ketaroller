@@ -68,12 +68,12 @@ public:
 
     void refreshPluginList();
     QString mapTypeToName(Type type);
-    QObject *loadPlugin(const QString &name);
+    AbstractPluginFactory *loadPlugin(const QString &name);
 
     PluginLoader *q;
 
     QFileInfoList pluginList;
-    QHash<QString, QPluginLoader*> cachedLoaders;
+    QHash<QString, AbstractPluginFactory*> cachedFactories;
 };
 
 void PluginLoader::Private::refreshPluginList()
@@ -99,42 +99,51 @@ QString PluginLoader::Private::mapTypeToName(PluginLoader::Type type)
     return QString();
 }
 
-QObject* PluginLoader::Private::loadPlugin(const QString& name)
+AbstractPluginFactory* PluginLoader::Private::loadPlugin(const QString& name)
 {
     // Check if we have a cached loader first
-    if (!cachedLoaders.contains(name)) {
+    if (!cachedFactories.contains(name)) {
         qDebug() << "Creating a new QPluginLoader";
 
         qDebug() << "Attempting to load " << name;
 
+        QPluginLoader *loader = 0;
+
         foreach (const QFileInfo &info, pluginList) {
             if (info.baseName().contains(name)) {
-                qDebug() << "Plugin found, attempting to load";
+                qDebug() << "Plugin found, attempting to load" << info.baseName();
 
-                QPluginLoader *loader = new QPluginLoader(info.absoluteFilePath(), q);
-
-                cachedLoaders.insert(name, loader);
+                loader = new QPluginLoader(info.absoluteFilePath(), q);
+                break;
             }
         }
 
-        if (!cachedLoaders.contains(name)) {
+        if (!loader) {
             qDebug() << "The requested plugin was not found";
             return 0;
         }
+
+        QObject *plugin = loader->instance();
+        qDebug() << loader->errorString();
+
+        if (!plugin) {
+            qDebug() << "Failed to create a valid instance!! SHIVER IN AETERNAL DARKNESS";
+            return 0;
+        }
+
+        qDebug() << "Plugin loaded successfully";
+
+        AbstractPluginFactory *factory = qobject_cast< KetaRoller::AbstractPluginFactory* >(plugin);
+
+        if (!factory) {
+            qDebug() << "Failed to create a valid factory!! SHIVER IN AETERNAL DARKNESS";
+            return 0;
+        }
+
+        cachedFactories.insert(name, factory);
     }
 
-    QPluginLoader *loader = cachedLoaders[name];
-
-    QObject *plugin = loader->instance();
-
-    if (!plugin) {
-        qDebug() << "Failed to create a valid instance!! SHIVER IN AETERNAL DARKNESS";
-        return 0;
-    }
-
-    qDebug() << "Plugin loaded successfully";
-
-    return plugin;
+    return cachedFactories.value(name);
 }
 
 PluginLoader::PluginLoader(QObject* parent)
@@ -155,19 +164,21 @@ InputDevice* PluginLoader::loadInputDevice(PluginLoader::Type type, const QVaria
 {
     QString pluginBaseName = QLatin1String("ketaroller_") + d->mapTypeToName(type) + QLatin1String("_input_device");
 
-    QObject *plugin = d->loadPlugin(pluginBaseName);
+    AbstractPluginFactory *factory = d->loadPlugin(pluginBaseName);
 
-    if (!plugin) {
+    if (!factory) {
         qDebug() << "Loading routine failed!! SHIVER IN AETERNAL DARKNESS";
         return 0;
     }
 
-    InputDevice *device = qobject_cast< InputDevice* >(plugin);
+    InputDeviceFactory *inputFactory = qobject_cast< KetaRoller::InputDeviceFactory* >(factory);
 
-    if (!device) {
-        qDebug() << "Failed to cast to correct class type!! SHIVER IN AETERNAL DARKNESS";
+    if (!inputFactory) {
+        qDebug() << "Failed to cast to correct factory type!! SHIVER IN AETERNAL DARKNESS";
         return 0;
     }
+
+    InputDevice *device = inputFactory->newInstance(this);
 
     device->init();
 
@@ -178,19 +189,21 @@ OutputDevice* PluginLoader::loadOutputDevice(PluginLoader::Type type, const QVar
 {
     QString pluginBaseName = QLatin1String("ketaroller_") + d->mapTypeToName(type) + QLatin1String("_output_device");
 
-    QObject *plugin = d->loadPlugin(pluginBaseName);
+    AbstractPluginFactory *factory = d->loadPlugin(pluginBaseName);
 
-    if (!plugin) {
+    if (!factory) {
         qDebug() << "Loading routine failed!! SHIVER IN AETERNAL DARKNESS";
         return 0;
     }
 
-    OutputDevice *device = qobject_cast< OutputDevice* >(plugin);
+    OutputDeviceFactory *outputFactory = qobject_cast< KetaRoller::OutputDeviceFactory* >(factory);
 
-    if (!device) {
-        qDebug() << "Failed to cast to correct class type!! SHIVER IN AETERNAL DARKNESS";
+    if (!outputFactory) {
+        qDebug() << "Failed to cast to correct factory type!! SHIVER IN AETERNAL DARKNESS";
         return 0;
     }
+
+    OutputDevice *device = outputFactory->newInstance(this);
 
     device->init();
 
@@ -201,19 +214,21 @@ OutputPort* PluginLoader::loadOutputPort(PluginLoader::Type type)
 {
     QString pluginBaseName = QLatin1String("ketaroller_") + d->mapTypeToName(type) + QLatin1String("_output_port");
 
-    QObject *plugin = d->loadPlugin(pluginBaseName);
+    AbstractPluginFactory *factory = d->loadPlugin(pluginBaseName);
 
-    if (!plugin) {
+    if (!factory) {
         qDebug() << "Loading routine failed!! SHIVER IN AETERNAL DARKNESS";
         return 0;
     }
 
-    OutputPort *port = qobject_cast< OutputPort* >(plugin);
+    OutputPortFactory *outputPortFactory = qobject_cast< KetaRoller::OutputPortFactory* >(factory);
 
-    if (!port) {
-        qDebug() << "Failed to cast to correct class type!! SHIVER IN AETERNAL DARKNESS";
+    if (!outputPortFactory) {
+        qDebug() << "Failed to cast to correct factory type!! SHIVER IN AETERNAL DARKNESS";
         return 0;
     }
+
+    OutputPort *port = outputPortFactory->newInstance(this);
 
     return port;
 }

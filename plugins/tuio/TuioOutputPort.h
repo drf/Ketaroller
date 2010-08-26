@@ -31,7 +31,7 @@ class Q_DECL_EXPORT TuioOutputPort : public KetaRoller::OutputPort
     Q_INTERFACES(KetaRoller::OutputPort)
     Q_DISABLE_COPY(TuioOutputPort)
 public:
-    TuioOutputPort();
+    TuioOutputPort(QObject *parent);
     virtual ~TuioOutputPort();
 
     FiducialObject lastMessage() const;
