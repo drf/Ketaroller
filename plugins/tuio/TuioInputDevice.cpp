@@ -79,6 +79,8 @@ TuioInputDevice::~TuioInputDevice()
 
 void TuioInputDevice::init(const QVariantMap& args)
 {
+    qRegisterMetaType<FiducialObject>("FiducialObject");
+
     if (args.contains("TuioClientPort")) {
         m_tuioClient = new TUIO::TuioClient(args.value("TuioClientPort").toInt());
     } else {

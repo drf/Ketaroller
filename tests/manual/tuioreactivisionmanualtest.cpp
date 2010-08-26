@@ -25,6 +25,8 @@
 #include <OutputPort.h>
 #include <PluginLoader.h>
 
+#define REACTIVISION_OBJECT_ID 2
+
 void TuioReactivisionManualTest::initTestCase()
 {
     using namespace KetaRoller;
@@ -38,7 +40,7 @@ void TuioReactivisionManualTest::initTestCase()
     QVERIFY(m_output);
 
     QVariantMap args;
-    args.insert("TuioFiducialID", 1);
+    args.insert("TuioFiducialID", REACTIVISION_OBJECT_ID);
 
     m_input = new InputPort(KetaRoller::Port::TUIOType, args);
 
@@ -51,6 +53,7 @@ void TuioReactivisionManualTest::initTestCase()
 
 void TuioReactivisionManualTest::testCatchFiducial()
 {
+    qDebug() << "Please add the object with ID " << REACTIVISION_OBJECT_ID << "to your reactivision client.";
     QEventLoop e;
     e.exec();
 }

@@ -22,6 +22,7 @@
 #define FIDUCIALOBJECT_H
 
 #include <QtCore/QSharedDataPointer>
+#include <QtCore/QMetaType>
 
 namespace TUIO {
     class TuioObject;
@@ -61,5 +62,7 @@ private:
     class Data;
     QSharedDataPointer< Data > d;
 };
+
+Q_DECLARE_METATYPE(FiducialObject)
 
 #endif // FIDUCIALOBJECT_H
