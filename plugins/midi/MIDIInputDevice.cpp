@@ -53,7 +53,7 @@ void MIDIInputDevice::getMessage()
     MIDIMessage message = MIDIMessageFactory::generateMidiMessage(rawMessage);
 
     foreach (KetaRoller::InputPort *port, inputPorts()) {
-        port->putData(message);
+        port->putData(Q_ARG(MIDIMessage, message));
     }
 }
 

@@ -34,25 +34,16 @@ class Q_DECL_EXPORT OutputPort : public Port, public QObject
 {
     Q_DECLARE_PRIVATE(OutputPort)
     Q_DISABLE_COPY(OutputPort)
+
+    friend class InputPort;
 public:
     OutputPort(Port::Type type);
     virtual ~OutputPort();
 
 protected:
-    template< typename T > inline void onNewData(const T &data) {
-        ketaroller_onNewData(data, this);
-    }
-
-    friend class InputPort;
-
     PortPrivate * const d_ptr;
 };
 
-}
-
-template< typename T > inline Q_DECL_EXPORT void ketaroller_onNewData(const T &data, KetaRoller::OutputPort *port) {
-    Q_UNUSED(data)
-    qWarning() << "This template cannot be handled by any port";
 }
 
 Q_DECLARE_INTERFACE(KetaRoller::OutputPort, "org.ketamina.OutputPortInterface/1.0")

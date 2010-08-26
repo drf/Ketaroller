@@ -109,5 +109,12 @@ Port::Type InputPort::type() const
     return d->type;
 }
 
+void InputPort::putData(const QGenericArgument& argument)
+{
+    Q_D(InputPort);
+    foreach (OutputPort *port, d->outputPorts) {
+        qDebug() << "Invoke metamethod: " << QMetaObject::invokeMethod(port, "receiveData", argument);
+    }
+}
 
 }

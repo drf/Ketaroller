@@ -58,7 +58,7 @@ void TestTuioPorts::testTuioMessage()
     TUIO::TuioObject *randObj = new TUIO::TuioObject(qrand(), qrand(), 1/qrand(), 1/qrand(), 1/qrand());
     FiducialObject fiducial(randObj);
 
-    m_inputport->putData(fiducial);
+    m_inputport->putData(Q_ARG(FiducialObject, fiducial));
 
     QCOMPARE(m_tuioport->lastMessage(), fiducial);
 }

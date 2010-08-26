@@ -34,19 +34,13 @@ public:
     TuioOutputPort();
     virtual ~TuioOutputPort();
 
-    void processTuioMessage(const FiducialObject &message);
-
     FiducialObject lastMessage() const;
+
+public slots:
+    void receiveData(const FiducialObject &message);
 
 private:
     QList< FiducialObject > m_lastMessages;
 };
-
-template<> inline Q_DECL_EXPORT void ketaroller_onNewData< FiducialObject >(const FiducialObject &data, KetaRoller::OutputPort *port) {
-    qDebug() << "FIST DA TUIO ON DA POSITION" << data.state();
-
-    TuioOutputPort *realPort = qobject_cast< TuioOutputPort* >(port);
-    realPort->processTuioMessage(data);
-}
 
 #endif // TUIOOUTPUTPORT_H

@@ -160,7 +160,7 @@ void TuioInputDevice::addTuioObject(TUIO::TuioObject* tobj)
     }
 
     FiducialObject fidobj(tobj);
-    port->putData(fidobj);
+    port->putData(Q_ARG(FiducialObject, fidobj));
 }
 
 void TuioInputDevice::refresh(TUIO::TuioTime ftime)
@@ -198,7 +198,7 @@ void TuioInputDevice::removeTuioObject(TUIO::TuioObject* tobj)
     }
 
     FiducialObject fidobj(tobj);
-    port->putData(fidobj);
+    port->putData(Q_ARG(FiducialObject, fidobj));
 }
 
 void TuioInputDevice::updateTuioCursor(TUIO::TuioCursor* tcur)
@@ -236,7 +236,7 @@ void TuioInputDevice::updateTuioObject(TUIO::TuioObject* tobj)
     }
 
     FiducialObject fidobj(tobj);
-    port->putData(fidobj);
+    port->putData(Q_ARG(FiducialObject, fidobj));
 }
 
 QTouchEvent::TouchPoint TuioInputDevice::tuioCursorToTouchPoint(TUIO::TuioCursor* tcur)

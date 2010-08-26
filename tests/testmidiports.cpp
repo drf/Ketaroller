@@ -64,7 +64,7 @@ void TestMIDIPorts::testMIDICC()
 
     QCOMPARE(message.type(), MIDIMessage::ControlChangeEvent);
 
-    m_inputport->putData<MIDIMessage>(message);
+    m_inputport->putData(Q_ARG(MIDIMessage, message));
 
     QCOMPARE(m_midiport->lastMessage(), message);
 }
@@ -80,7 +80,7 @@ void TestMIDIPorts::testMIDINoteOff()
 
     QCOMPARE(message.type(), MIDIMessage::NoteOffEvent);
 
-    m_inputport->putData<MIDIMessage>(message);
+    m_inputport->putData(Q_ARG(MIDIMessage, message));
 
     QCOMPARE(m_midiport->lastMessage(), message);
 }
@@ -96,7 +96,7 @@ void TestMIDIPorts::testMIDINoteOn()
 
     QCOMPARE(message.type(), MIDIMessage::NoteOnEvent);
 
-    m_inputport->putData<MIDIMessage>(message);
+    m_inputport->putData(Q_ARG(MIDIMessage, message));
 
     QCOMPARE(m_midiport->lastMessage(), message);
 }
@@ -113,7 +113,7 @@ void TestMIDIPorts::testPitchBend()
 
     QCOMPARE(message.type(), MIDIMessage::PitchBendEvent);
 
-    m_inputport->putData<MIDIMessage>(message);
+    m_inputport->putData(Q_ARG(MIDIMessage, message));
 
     QCOMPARE(m_midiport->lastMessage(), message);
 

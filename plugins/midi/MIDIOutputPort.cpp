@@ -32,7 +32,7 @@ MIDIOutputPort::~MIDIOutputPort()
 
 }
 
-void MIDIOutputPort::processMIDIMessage(const MIDIMessage& message)
+void MIDIOutputPort::receiveData(const MIDIMessage& message)
 {
     qDebug() << "Processing MIDI Message..." << message.data1() << message.data2();
     m_lastMessages.append(message);

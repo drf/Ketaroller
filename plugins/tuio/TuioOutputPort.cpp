@@ -36,7 +36,7 @@ FiducialObject TuioOutputPort::lastMessage() const
     return m_lastMessages.last();
 }
 
-void TuioOutputPort::processTuioMessage(const FiducialObject& message)
+void TuioOutputPort::receiveData(const FiducialObject& message)
 {
     qDebug() << "Processing Tuio Message..." << message.angle() << message.motionSpeed();
     m_lastMessages.append(message);

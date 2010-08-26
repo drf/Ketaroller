@@ -53,11 +53,7 @@ public:
     QVariantMap args() const;
     Type type() const;
 
-    template< typename T > inline void putData(const T &data) {
-        foreach (OutputPort *port, outputs()) {
-            port->onNewData(data);
-        }
-    };
+    void putData(const QGenericArgument &argument);
 };
 
 }

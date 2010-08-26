@@ -34,19 +34,13 @@ public:
     MIDIOutputPort();
     virtual ~MIDIOutputPort();
 
-    void processMIDIMessage(const MIDIMessage &message);
-
     MIDIMessage lastMessage() const;
+
+public slots:
+    void receiveData(const MIDIMessage &message);
 
 private:
     QList< MIDIMessage > m_lastMessages;
 };
-
-template<> inline Q_DECL_EXPORT void ketaroller_onNewData< MIDIMessage >(const MIDIMessage &data, KetaRoller::OutputPort *port) {
-    qDebug() << "FIST DA MIDI WITH DA MESSAGE" << data.type();
-
-    MIDIOutputPort *realPort = qobject_cast< MIDIOutputPort* >(port);
-    realPort->processMIDIMessage(data);
-}
 
 #endif // MIDIOUTPUTPORT_H
