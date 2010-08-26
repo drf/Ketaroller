@@ -30,6 +30,8 @@
 #include <QGraphicsRectItem>
 #include <QGesture>
 #include <QDebug>
+#include <TuioClient.h>
+#include <InputPort.h>
 
 GrabberWidget::GrabberWidget(QWidget* parent, Qt::WindowFlags f)
         : QWidget(parent, f)
@@ -50,7 +52,7 @@ bool GrabberWidget::event(QEvent* event)
             gestureEvent->accept(gesture);
 
             if (gesture->state() == Qt::GestureFinished) {
-                
+                //
             }
         }
     }
@@ -72,6 +74,51 @@ TuioInputDevice::TuioInputDevice(QObject* parent)
 TuioInputDevice::~TuioInputDevice()
 {
 
+}
+
+void TuioInputDevice::init(const QVariantMap& args)
+{
+    if (args.contains("TuioClientPort")) {
+        m_tuioClient = new TUIO::TuioClient(args.value("TuioClientPort").toInt());
+    } else {
+        m_tuioClient = new TUIO::TuioClient();
+    }
+
+    m_tuioClient->addTuioListener(this);
+    m_tuioClient->connect();
+
+    connect(this, SIGNAL(portAdded(KetaRoller::InputPort*)), this, SLOT(onPortAdded(KetaRoller::InputPort*)));
+    connect(this, SIGNAL(portRemoved(KetaRoller::InputPort*)), this, SLOT(onPortRemoved(KetaRoller::InputPort*)));
+}
+
+bool TuioInputDevice::validatePort(KetaRoller::InputPort* port)
+{
+    if (port->type() != KetaRoller::InputPort::TUIOType) {
+        qDebug() << "This device is capable of handling TUIO ports only";
+        return false;
+    }
+
+    if (!port->args().contains("TuioFiducialID") || port->args().value("TuioFiducialID").type() != QVariant::Int) {
+        qDebug() << "Missing Fiducial ID argument or wrong argument supplied";
+        return false;
+    }
+
+    if (m_portForSymbol.contains(port->args().value("TuioFiducialID").toInt())) {
+        qDebug() << "There's already an existing port handling fiducial " << port->args().value("TuioFiducialID").toInt();
+        return false;
+    }
+
+    return true;
+}
+
+void TuioInputDevice::onPortAdded(KetaRoller::InputPort* port)
+{
+    m_portForSymbol.insert(port->args().value("TuioFiducialID").toInt(), port);
+}
+
+void TuioInputDevice::onPortRemoved(KetaRoller::InputPort* port)
+{
+    m_portForSymbol.remove(port->args().value("TuioFiducialID").toInt());
 }
 
 void TuioInputDevice::addTuioCursor(TUIO::TuioCursor* tcur)
@@ -105,13 +152,14 @@ void TuioInputDevice::addTuioCursor(TUIO::TuioCursor* tcur)
 
 void TuioInputDevice::addTuioObject(TUIO::TuioObject* tobj)
 {
-    TuioInputPort *port = m_portForSymbol.value(tobj->getSymbolID(), 0);
+    KetaRoller::InputPort *port = m_portForSymbol.value(tobj->getSymbolID(), 0);
     if (!port) {
         qDebug() << "Got an add object for an ignored fiducial";
         return;
     }
 
     FiducialObject fidobj(tobj);
+    port->putData(fidobj);
 }
 
 void TuioInputDevice::refresh(TUIO::TuioTime ftime)

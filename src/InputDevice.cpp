@@ -19,40 +19,68 @@
 */
 
 #include "InputDevice_p.h"
+#include "InputPort.h"
 
 namespace KetaRoller {
 
 InputDevice::InputDevice(QObject* parent)
-    : AbstractDevice(parent)
-    , d_ptr(new InputDevicePrivate)
+    : AbstractDevice(*new InputDevicePrivate, parent)
 {
-
 }
 
 InputDevice::~InputDevice()
 {
-    delete d_ptr;
 }
 
-void InputDevice::addOutgoingPort(InputPort* port)
+bool InputDevice::addOutgoingPort(InputPort* port)
 {
+    Q_D(InputDevice);
 
+    if (d->ports.contains(port)) {
+        return false;
+    }
+
+    if (validatePort(port)) {
+        d->ports.append(port);
+        emit portAdded(port);
+        return true;
+    }
+
+    return false;
 }
-QList< InputPort* > InputDevice::connectedPorts() const
-{
-    return QList< InputPort* >();
-}
+
 QList< InputPort* > InputDevice::inputPorts() const
 {
-    return QList< InputPort* >();
+    Q_D(const InputDevice);
+    return d->ports;
 }
-void InputDevice::removeOutgoingPort(InputPort* port)
-{
 
+void InputDevice::removeOutgoingPort(InputPort* port, PortRemovalModes mode)
+{
+    Q_D(InputDevice);
+    d->ports.removeOne(port);
+
+    emit portRemoved(port);
+
+    QMetaObject::invokeMethod(this, SLOT(removeOutgoingPortDelayed(InputPort*,uint)),
+                              Qt::QueuedConnection, Q_ARG(KetaRoller::InputPort*, port), Q_ARG(uint, (uint)mode));
 }
-void InputDevice::setOutgoingPorts(const QList< InputPort* >& ports)
-{
 
+void InputDevicePrivate::removeOutgoingPortDelayed(KetaRoller::InputPort *port, uint mode)
+{
+    InputDevice::PortRemovalModes pModes = static_cast< InputDevice::PortRemovalModes >(mode);
+    if (pModes & InputDevice::DisconnectOutputsMode) {
+        port->disconnect(mode & InputDevice::DeleteAllOrphanOutputsMode);
+    }
+
+    if (pModes & InputDevice::DeleteInputPortMode) {
+        delete port;
+    }
+}
+
+void InputDevice::init(const QVariantMap& args)
+{
+    Q_UNUSED(args)
 }
 
 }

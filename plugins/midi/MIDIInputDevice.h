@@ -20,6 +20,10 @@ public:
 
     void getMessage();
 
+protected:
+    virtual void init(const QVariantMap& args = QVariantMap());
+    virtual bool validatePort(KetaRoller::InputPort* port);
+
 private:
     RtMidiIn *midiReceiver;
 

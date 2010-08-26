@@ -11,11 +11,20 @@
 MIDIInputDevice::MIDIInputDevice(QObject* parent)
     : InputDevice(parent)
 {
+}
+
+MIDIInputDevice::~MIDIInputDevice()
+{
+}
+
+void MIDIInputDevice::init(const QVariantMap& args)
+{
+    Q_UNUSED(args)
+
     // RtMidiIn constructor
     try {
       midiReceiver = new RtMidiIn();
-    }
-    catch ( RtError &error ) {
+    } catch ( RtError &error ) {
       error.printMessage();
       exit( EXIT_FAILURE );
     }
@@ -23,15 +32,18 @@ MIDIInputDevice::MIDIInputDevice(QObject* parent)
     //Open RtMidiIn port
     try {
       midiReceiver->openPort();
-    }
-    catch ( RtError &error ) {
+    } catch ( RtError &error ) {
       error.printMessage();
       delete midiReceiver;
     }
 }
 
-MIDIInputDevice::~MIDIInputDevice()
+bool MIDIInputDevice::validatePort(KetaRoller::InputPort* port)
 {
+    if (port->type() != KetaRoller::InputPort::MIDIType) {
+        qDebug() << "This device is capable of handling MIDI ports only";
+        return false;
+    }
 }
 
 void MIDIInputDevice::getMessage()

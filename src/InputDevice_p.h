@@ -22,16 +22,19 @@
 #define INPUTDEVICE_P_H
 
 #include "InputDevice.h"
+#include "AbstractDevice_p.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QUuid>
 
 namespace KetaRoller {
 
-class InputDevicePrivate
+class InputDevicePrivate : public AbstractDevicePrivate
 {
 public:
-    
+    QList< InputPort* > ports;
+
+    void removeOutgoingPortDelayed(KetaRoller::InputPort *port, uint mode);
 };
 
 }

@@ -23,6 +23,8 @@
 
 #include "AbstractDevice.h"
 
+#include <QVariantMap>
+
 namespace KetaRoller {
 
 class Connection;
@@ -41,28 +43,40 @@ class Q_DECL_EXPORT InputDevice : public AbstractDevice
     Q_OBJECT
     Q_DECLARE_PRIVATE(InputDevice)
     Q_DISABLE_COPY(InputDevice)
+
+    Q_PRIVATE_SLOT(d_func(), void removeOutgoingPortDelayed(KetaRoller::InputPort *port, uint mode))
+
+    friend class PluginLoader;
+
 public:
+    enum PortRemovalMode {
+        KeepPortAliveMode = 0,
+        DisconnectOutputsMode = 1,
+        DeleteInputPortMode = 2,
+        DeleteAllOrphanOutputsMode = 4
+    };
+    Q_DECLARE_FLAGS(PortRemovalModes, PortRemovalMode)
+
     InputDevice(QObject *parent = 0);
     virtual ~InputDevice();
 
     QList< InputPort* > inputPorts() const;
-    QList< InputPort* > connectedPorts() const;
 
 protected:
-    void setOutgoingPorts(const QList< InputPort* > &ports);
-    void addOutgoingPort(InputPort *port);
-    void removeOutgoingPort(InputPort *port);
+    bool addOutgoingPort(InputPort *port);
+    void removeOutgoingPort(InputPort *port, PortRemovalModes mode = KeepPortAliveMode);
+
+    virtual void init(const QVariantMap &args = QVariantMap());
+    virtual bool validatePort(KetaRoller::InputPort *port) = 0;
 
 Q_SIGNALS:
-    void connectionCreated(KetaRoller::InputPort *port, KetaRoller::Connection *connection);
-    void connectionSevered(KetaRoller::InputPort *port, KetaRoller::Connection *connection);
-
-protected:
-    InputDevicePrivate * const d_ptr;
+    void portAdded(KetaRoller::InputPort *port);
+    void portRemoved(KetaRoller::InputPort *port);
 };
 
 }
 
 Q_DECLARE_INTERFACE(KetaRoller::InputDevice, "org.ketamina.InputDevice/0.1")
+Q_DECLARE_OPERATORS_FOR_FLAGS(KetaRoller::InputDevice::PortRemovalModes)
 
 #endif // INPUTDEVICE_H

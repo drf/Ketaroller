@@ -2,6 +2,8 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/oscpack
 )
 
+add_definitions(-fPIC)
+
 add_subdirectory(oscpack)
 add_subdirectory(tuio)
 add_subdirectory(rtmidi)

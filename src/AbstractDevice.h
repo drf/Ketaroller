@@ -27,16 +27,21 @@ struct QUuid;
 
 namespace KetaRoller {
 
+class AbstractDevicePrivate;
 class Q_DECL_EXPORT AbstractDevice : public QObject
 {
     Q_OBJECT
+    Q_DECLARE_PRIVATE(AbstractDevice)
+    Q_DISABLE_COPY(AbstractDevice)
 public:
     virtual ~AbstractDevice();
 
     QUuid uuid() const;
 
 protected:
-    AbstractDevice(QObject* parent = 0);
+    AbstractDevice(AbstractDevicePrivate &dd, QObject* parent = 0);
+
+    AbstractDevicePrivate * const d_ptr;
 };
 
 }

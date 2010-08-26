@@ -18,26 +18,26 @@
 
 */
 
-#include "AbstractDevice_p.h"
+#ifndef ABSTRACTDEVICE_P_H
+#define ABSTRACTDEVICE_P_H
+
+#include "AbstractDevice.h"
+
+#include <QtCore/QUuid>
 
 namespace KetaRoller {
-AbstractDevice::AbstractDevice(AbstractDevicePrivate& dd, QObject* parent)
-    : QObject(parent)
-    , d_ptr(&dd)
+
+class AbstractDevicePrivate
 {
+public:
+    AbstractDevicePrivate()
+        : uuid(QUuid::createUuid())
+    {
+    }
+
+    QUuid uuid;
+};
 
 }
 
-AbstractDevice::~AbstractDevice()
-{
-    delete d_ptr;
-}
-
-QUuid AbstractDevice::uuid() const
-{
-    Q_D(const AbstractDevice);
-
-    return d->uuid;
-}
-
-}
+#endif // ABSTRACTDEVICE_H

@@ -31,7 +31,13 @@
 #include <QtGui/QTouchEvent>
 #include <QtGui/QWidget>
 
-class TuioInputPort;
+namespace KetaRoller {
+class InputPort;
+}
+
+namespace TUIO {
+class TuioClient;
+}
 
 class Q_DECL_EXPORT GrabberWidget : public QWidget
 {
@@ -64,12 +70,21 @@ public:
     virtual void updateTuioCursor(TUIO::TuioCursor* tcur);
     virtual void updateTuioObject(TUIO::TuioObject* tobj);
 
+protected:
+    virtual void init(const QVariantMap& args = QVariantMap());
+    virtual bool validatePort(KetaRoller::InputPort* port);
+
+private slots:
+    void onPortAdded(KetaRoller::InputPort*);
+    void onPortRemoved(KetaRoller::InputPort*);
+
 private:
     QHash< qint64, QList< QTouchEvent::TouchPoint > > m_touchPoints;
-    QHash< qint32, TuioInputPort* > m_portForSymbol;
-    QHash< Qt::GestureType, TuioInputPort* > m_portForGesture;
+    QHash< qint32, KetaRoller::InputPort* > m_portForSymbol;
+    QHash< Qt::GestureType, KetaRoller::InputPort* > m_portForGesture;
     QWidget *m_widget;
     QRect m_screenRect;
+    TUIO::TuioClient *m_tuioClient;
 
     QTouchEvent::TouchPoint tuioCursorToTouchPoint(TUIO::TuioCursor *tcur);
 };

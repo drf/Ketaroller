@@ -24,6 +24,7 @@
 #include <Port.h>
 #include <OutputPort.h>
 #include <QtCore/QList>
+#include <QVariantMap>
 
 
 namespace KetaRoller {
@@ -37,7 +38,7 @@ class Q_DECL_EXPORT InputPort : public Port
     Q_DECLARE_PRIVATE(InputPort)
     Q_DISABLE_COPY(InputPort)
 public:
-    InputPort(Port::Type type);
+    InputPort(Port::Type type, const QVariantMap &args = QVariantMap());
     virtual ~InputPort();
 
     QList< OutputPort* > outputs() const;
@@ -49,6 +50,9 @@ public:
 
     void disconnect(bool destroyOrphanOutputs = true);
 
+    QVariantMap args() const;
+    Type type() const;
+
     template< typename T > inline void putData(const T &data) {
         foreach (OutputPort *port, outputs()) {
             port->onNewData(data);
@@ -57,5 +61,7 @@ public:
 };
 
 }
+
+Q_DECLARE_METATYPE(KetaRoller::InputPort*)
 
 #endif // KETAROLLER_INPUTPORT_H

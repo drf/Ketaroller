@@ -32,11 +32,13 @@ public:
     InputPortPrivate(Port::Type t) { type = t; }
 
     QList< OutputPort* > outputPorts;
+    QVariantMap args;
 };
-
-InputPort::InputPort(Port::Type type)
+InputPort::InputPort(Port::Type type, const QVariantMap& args)
         : Port(*new InputPortPrivate(type))
 {
+    Q_D(InputPort);
+    d->args = args;
 }
 
 InputPort::~InputPort()
@@ -93,6 +95,18 @@ void InputPort::setOutputs(const QList< OutputPort* >& output)
     Q_D(InputPort);
 
     d->outputPorts = output;
+}
+
+QVariantMap InputPort::args() const
+{
+    Q_D(const InputPort);
+    return d->args;
+}
+
+Port::Type InputPort::type() const
+{
+    Q_D(const InputPort);
+    return d->type;
 }
 
 
