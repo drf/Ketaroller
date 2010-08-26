@@ -24,12 +24,33 @@
 #include <QtGui>
 #include <QtTest/QtTest>
 
+#include <OutputDevice.h>
+
+class FiducialObject;
 namespace KetaRoller {
 class InputDevice;
 class InputPort;
 class OutputPort;
 }
 
+class TestOutputDevice : public KetaRoller::OutputDevice
+{
+    Q_OBJECT
+public:
+    TestOutputDevice(QObject* parent = 0);
+    virtual ~TestOutputDevice();
+
+    virtual void init(const QVariantMap& args = QVariantMap());
+    virtual bool validatePort(KetaRoller::OutputPort* port);
+
+public slots:
+    void newDataFromPort(const FiducialObject &obj);
+
+signals:
+    void fiducialIsOn();
+    void fiducialHasChanged(FiducialObject);
+    void fiducialIsOff();
+};
 
 class TuioReactivisionManualTest : public QObject
 {
@@ -37,11 +58,14 @@ class TuioReactivisionManualTest : public QObject
 private slots:
     void initTestCase();
     void testCatchFiducial();
+    void testUpdateFiducial();
+    void testReleaseFiducial();
 
 private:
     KetaRoller::InputDevice *m_device;
     KetaRoller::InputPort *m_input;
     KetaRoller::OutputPort *m_output;
+    TestOutputDevice *m_outputDevice;
 };
 
 #endif // TUIOREACTIVISIONMANUALTEST_H

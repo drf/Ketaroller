@@ -18,34 +18,31 @@
 
 */
 
-#include "OutputPort_p.h"
+#ifndef OUTPUTPORT_P_H
+#define OUTPUTPORT_P_H
 
-#include <QDebug>
-#include "OutputDevice.h"
+#include "OutputPort.h"
+
+#include "Port_p.h"
 
 namespace KetaRoller
 {
 
-OutputPort::OutputPort(Port::Type type)
-    : Port(*new OutputPortPrivate(type))
-    , d_ptr(Port::d_ptr)
+class OutputDevice;
+
+
+class OutputPortPrivate : public PortPrivate
 {
-
-}
-
-OutputPort::~OutputPort()
-{
-
-}
-
-void OutputPort::sendToDevice(const QGenericArgument& arg)
-{
-    Q_D(OutputPort);
-    if (!d->device) {
-        qWarning() << "Attempting to send a message over a port with no device connected";
-        return;
+public:
+    OutputPortPrivate(Port::Type t)
+        : device(0)
+    {
+        type = t;
     }
-    QMetaObject::invokeMethod(d->device, "newDataFromPort", arg);
-}
+
+    OutputDevice *device;
+};
 
 }
+
+#endif

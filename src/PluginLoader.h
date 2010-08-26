@@ -27,9 +27,8 @@
 
 namespace KetaRoller {
 
+class OutputDevice;
 class InputDevice;
-
-
 class OutputPort;
 
 
@@ -45,6 +44,7 @@ public:
 
     OutputPort *loadOutputPort(Type type);
     InputDevice *loadInputDevice(Type type, const QVariantMap &args = QVariantMap());
+    OutputDevice *loadOutputDevice(Type type, const QVariantMap &args = QVariantMap());
 
     virtual ~PluginLoader();
 

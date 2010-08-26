@@ -161,7 +161,7 @@ void TuioInputDevice::addTuioObject(TUIO::TuioObject* tobj)
         return;
     }
 
-    FiducialObject fidobj(tobj);
+    FiducialObject fidobj(tobj, FiducialObject::FiducialAddedEvent);
     port->putData(Q_ARG(FiducialObject, fidobj));
 }
 
@@ -199,7 +199,7 @@ void TuioInputDevice::removeTuioObject(TUIO::TuioObject* tobj)
         return;
     }
 
-    FiducialObject fidobj(tobj);
+    FiducialObject fidobj(tobj, FiducialObject::FiducialRemovedEvent);
     port->putData(Q_ARG(FiducialObject, fidobj));
 }
 
@@ -237,7 +237,7 @@ void TuioInputDevice::updateTuioObject(TUIO::TuioObject* tobj)
         return;
     }
 
-    FiducialObject fidobj(tobj);
+    FiducialObject fidobj(tobj, FiducialObject::FiducialUpdatedEvent);
     port->putData(Q_ARG(FiducialObject, fidobj));
 }
 

@@ -31,6 +31,7 @@
 #include <QDir>
 #include <QHash>
 #include <QDebug>
+#include "OutputDevice.h"
 
 namespace KetaRoller
 {
@@ -162,6 +163,29 @@ InputDevice* PluginLoader::loadInputDevice(PluginLoader::Type type, const QVaria
     }
 
     InputDevice *device = qobject_cast< InputDevice* >(plugin);
+
+    if (!device) {
+        qDebug() << "Failed to cast to correct class type!! SHIVER IN AETERNAL DARKNESS";
+        return 0;
+    }
+
+    device->init();
+
+    return device;
+}
+
+OutputDevice* PluginLoader::loadOutputDevice(PluginLoader::Type type, const QVariantMap& args)
+{
+    QString pluginBaseName = QLatin1String("ketaroller_") + d->mapTypeToName(type) + QLatin1String("_output_device");
+
+    QObject *plugin = d->loadPlugin(pluginBaseName);
+
+    if (!plugin) {
+        qDebug() << "Loading routine failed!! SHIVER IN AETERNAL DARKNESS";
+        return 0;
+    }
+
+    OutputDevice *device = qobject_cast< OutputDevice* >(plugin);
 
     if (!device) {
         qDebug() << "Failed to cast to correct class type!! SHIVER IN AETERNAL DARKNESS";

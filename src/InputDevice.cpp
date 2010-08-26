@@ -62,8 +62,8 @@ void InputDevice::removeOutgoingPort(InputPort* port, PortRemovalModes mode)
 
     emit portRemoved(port);
 
-    QMetaObject::invokeMethod(this, SLOT(removeOutgoingPortDelayed(InputPort*,uint)),
-                              Qt::QueuedConnection, Q_ARG(KetaRoller::InputPort*, port), Q_ARG(uint, (uint)mode));
+    QMetaObject::invokeMethod(this, "removeOutgoingPortDelayed", Qt::QueuedConnection,
+                              Q_ARG(KetaRoller::InputPort*, port), Q_ARG(uint, (uint)mode));
 }
 
 void InputDevicePrivate::removeOutgoingPortDelayed(KetaRoller::InputPort *port, uint mode)

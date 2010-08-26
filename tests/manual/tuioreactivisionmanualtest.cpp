@@ -26,6 +26,45 @@
 #include <PluginLoader.h>
 
 #define REACTIVISION_OBJECT_ID 2
+#include "../../plugins/tuio/FiducialObject.h"
+
+TestOutputDevice::TestOutputDevice(QObject* parent)
+        : OutputDevice(parent)
+{
+    qDebug() << "A test output device has been created";
+}
+
+TestOutputDevice::~TestOutputDevice()
+{
+
+}
+
+void TestOutputDevice::init(const QVariantMap& args)
+{
+    qDebug() << "A test output device has been initialized";
+}
+
+bool TestOutputDevice::validatePort(KetaRoller::OutputPort* port)
+{
+    return true;
+}
+
+void TestOutputDevice::newDataFromPort(const FiducialObject& obj)
+{
+    switch (obj.event()) {
+        case FiducialObject::FiducialAddedEvent:
+            emit fiducialIsOn();
+            break;
+        case FiducialObject::FiducialRemovedEvent:
+            emit fiducialIsOff();
+            break;
+        case FiducialObject::FiducialUpdatedEvent:
+            emit fiducialHasChanged(obj);
+            break;
+        default:
+            qWarning() << "Got a fiducial with unknown event";
+    }
+}
 
 void TuioReactivisionManualTest::initTestCase()
 {
@@ -49,13 +88,48 @@ void TuioReactivisionManualTest::initTestCase()
     QVERIFY(m_device->addOutgoingPort(m_input));
 
     m_input->addOutput(m_output);
+
+    m_outputDevice = new TestOutputDevice(this);
+    QVERIFY(m_outputDevice->addIncomingPort(m_output));
 }
 
 void TuioReactivisionManualTest::testCatchFiducial()
 {
-    qDebug() << "Please add the object with ID " << REACTIVISION_OBJECT_ID << "to your reactivision client.";
+    qDebug() << "Please add the object with ID " << REACTIVISION_OBJECT_ID << "to your reactivision client in 20 seconds.";
     QEventLoop e;
+    QTimer t;
+    t.start(20000);
+    connect(&t, SIGNAL(timeout()), &e, SLOT(quit()));
+    connect(m_outputDevice, SIGNAL(fiducialIsOn()), &e, SLOT(quit()));
     e.exec();
+    QVERIFY(t.isActive());
+    t.stop();
+}
+
+void TuioReactivisionManualTest::testUpdateFiducial()
+{
+    qDebug() << "Now please move your fiducial to trigger at least an update event in 20 seconds";
+    QEventLoop e;
+    QTimer t;
+    t.start(20000);
+    connect(&t, SIGNAL(timeout()), &e, SLOT(quit()));
+    connect(m_outputDevice, SIGNAL(fiducialHasChanged(FiducialObject)), &e, SLOT(quit()));
+    e.exec();
+    QVERIFY(t.isActive());
+    t.stop();
+}
+
+void TuioReactivisionManualTest::testReleaseFiducial()
+{
+    qDebug() << "Please remove the fiducial from your client in 20 seconds to complete the test successfully";
+    QEventLoop e;
+    QTimer t;
+    t.start(20000);
+    connect(&t, SIGNAL(timeout()), &e, SLOT(quit()));
+    connect(m_outputDevice, SIGNAL(fiducialIsOff()), &e, SLOT(quit()));
+    e.exec();
+    QVERIFY(t.isActive());
+    t.stop();
 }
 
 

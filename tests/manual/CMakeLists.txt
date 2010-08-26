@@ -6,6 +6,7 @@ include_directories(
 
 automoc4_add_executable(tuio-reactivision-manual-test
     tuioreactivisionmanualtest.cpp
+    ../../plugins/tuio/FiducialObject.cpp
 )
 
 target_link_libraries(tuio-reactivision-manual-test

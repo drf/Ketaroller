@@ -39,6 +39,7 @@ public:
         , angle(tobj->getAngle())
         , angledeg(tobj->getAngleDegrees())
         , state(tobj->getTuioState())
+        , tuioObject(tobj)
     {
     }
     Data(const Data& other)
@@ -52,6 +53,8 @@ public:
         , angle(other.angle)
         , angledeg(other.angledeg)
         , state(other.state)
+        , event(other.event)
+        , tuioObject(other.tuioObject)
     {
     }
     ~Data() {}
@@ -71,16 +74,21 @@ public:
     float angledeg;
 
     uint state;
+    FiducialEvent event;
+
+    TUIO::TuioObject *tuioObject;
 };
 
 FiducialObject::FiducialObject()
 {
     d = new Data();
+    d->event = UnknownEvent;
 }
 
-FiducialObject::FiducialObject(TUIO::TuioObject* tobj)
+FiducialObject::FiducialObject(TUIO::TuioObject* tobj, FiducialEvent event)
 {
     d = new Data(tobj);
+    d->event = event;
 }
 
 FiducialObject::FiducialObject(const FiducialObject& other)
@@ -154,3 +162,12 @@ uint FiducialObject::state() const
     return d->state;
 }
 
+FiducialObject::FiducialEvent FiducialObject::event() const
+{
+    return d->event;
+}
+
+TUIO::TuioObject* FiducialObject::tuioObject()
+{
+    return d->tuioObject;
+}

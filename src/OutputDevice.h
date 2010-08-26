@@ -18,31 +18,44 @@
 
 */
 
-#include "TuioOutputPort.h"
+#ifndef KETAROLLER_OUTPUTDEVICE_H
+#define KETAROLLER_OUTPUTDEVICE_H
 
-TuioOutputPort::TuioOutputPort()
-        : OutputPort(TUIOType)
+#include <AbstractDevice.h>
+#include <QVariantMap>
+
+
+namespace KetaRoller {
+
+class OutputPort;
+
+class OutputDevicePrivate;
+class Q_DECL_EXPORT OutputDevice : public KetaRoller::AbstractDevice
 {
+    Q_OBJECT
+    Q_DECLARE_PRIVATE(OutputDevice)
+    Q_DISABLE_COPY(OutputDevice)
+
+    friend class PluginLoader;
+
+public:
+    OutputDevice(QObject *parent = 0);
+    virtual ~OutputDevice();
+
+    QList< OutputPort* > outputPorts() const;
+
+    bool addIncomingPort(OutputPort *port);
+    void removeIncomingPort(OutputPort *port);
+
+protected:
+    virtual void init(const QVariantMap &args = QVariantMap());
+    virtual bool validatePort(KetaRoller::OutputPort *port) = 0;
+
+Q_SIGNALS:
+    void portAdded(KetaRoller::OutputPort *port);
+    void portRemoved(KetaRoller::OutputPort *port);
+};
 
 }
 
-TuioOutputPort::~TuioOutputPort()
-{
-
-}
-
-FiducialObject TuioOutputPort::lastMessage() const
-{
-    return m_lastMessages.last();
-}
-
-void TuioOutputPort::receiveData(const FiducialObject& message)
-{
-    qDebug() << "Processing Tuio Message..." << message.angle() << message.motionSpeed();
-    m_lastMessages.append(message);
-
-    // Send message to device - act as a transparent proxy
-    sendToDevice(Q_ARG(FiducialObject, message));
-}
-
-Q_EXPORT_PLUGIN2(ketaroller_tuio_output_port, TuioOutputPort)
+#endif // KETAROLLER_OUTPUTDEVICE_H

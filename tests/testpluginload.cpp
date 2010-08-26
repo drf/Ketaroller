@@ -33,6 +33,10 @@ void TestPluginLoad::testLoadMidiInputDevice()
     KetaRoller::InputDevice *inputDevice = KetaRoller::PluginLoader::instance()->loadInputDevice(KetaRoller::PluginLoader::MIDIType);
     QVERIFY(inputDevice);
 
+    qDebug() << inputDevice;
+    qDebug() << inputDevice->uuid();
+    qDebug() << inputDevice->inputPorts();
+
     QCOMPARE(inputDevice->inputPorts().size(), 0);
 }
 

@@ -32,8 +32,15 @@ class QPointF;
 class Q_DECL_EXPORT FiducialObject
 {
 public:
+    enum FiducialEvent {
+        UnknownEvent = 0,
+        FiducialAddedEvent,
+        FiducialRemovedEvent,
+        FiducialUpdatedEvent
+    };
+
     FiducialObject();
-    FiducialObject(TUIO::TuioObject *tobj);
+    FiducialObject(TUIO::TuioObject *tobj, FiducialEvent event = FiducialUpdatedEvent);
     FiducialObject(const FiducialObject &other);
     ~FiducialObject();
 
@@ -55,6 +62,8 @@ public:
     float angleDegrees() const;
 
     uint state() const;
+
+    FiducialEvent event() const;
 
     TUIO::TuioObject *tuioObject();
 

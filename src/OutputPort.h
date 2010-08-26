@@ -40,8 +40,12 @@ public:
     OutputPort(Port::Type type);
     virtual ~OutputPort();
 
+    void sendToDevice(const QGenericArgument &arg);
+
 protected:
     PortPrivate * const d_ptr;
+
+    friend class OutputDevice;
 };
 
 }
