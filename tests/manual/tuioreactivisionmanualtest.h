@@ -31,6 +31,7 @@ namespace KetaRoller {
 class InputDevice;
 class InputPort;
 class OutputPort;
+class OutputPort;
 }
 
 class TestOutputDevice : public KetaRoller::OutputDevice
@@ -44,12 +45,15 @@ public:
     virtual bool validatePort(KetaRoller::OutputPort* port);
 
 public slots:
-    void newDataFromPort(const FiducialObject &obj);
+    void newDataFromPort(KetaRoller::OutputPort *port, const FiducialObject &obj);
 
 signals:
     void fiducialIsOn();
     void fiducialHasChanged(FiducialObject);
     void fiducialIsOff();
+
+private:
+    QTime m_time;
 };
 
 class TuioReactivisionManualTest : public QObject

@@ -41,6 +41,7 @@ TestOutputDevice::~TestOutputDevice()
 
 void TestOutputDevice::init(const QVariantMap& args)
 {
+    m_time.start();
     qDebug() << "A test output device has been initialized";
 }
 
@@ -49,7 +50,7 @@ bool TestOutputDevice::validatePort(KetaRoller::OutputPort* port)
     return true;
 }
 
-void TestOutputDevice::newDataFromPort(const FiducialObject& obj)
+void TestOutputDevice::newDataFromPort(KetaRoller::OutputPort *port, const FiducialObject& obj)
 {
     switch (obj.event()) {
         case FiducialObject::FiducialAddedEvent:
@@ -59,6 +60,11 @@ void TestOutputDevice::newDataFromPort(const FiducialObject& obj)
             emit fiducialIsOff();
             break;
         case FiducialObject::FiducialUpdatedEvent:
+            if (m_time.elapsed() > 1000) {
+                qDebug() << "Fiducial updated. Angle degrees: " << obj.angleDegrees() << "Position:" << obj.position()
+                         << "Speed: " << obj.motionSpeed() << "Acceleration: " << obj.motionAcceleration();
+                m_time.restart();
+            }
             emit fiducialHasChanged(obj);
             break;
         default:
@@ -91,6 +97,12 @@ void TuioReactivisionManualTest::initTestCase()
 
     m_outputDevice = new TestOutputDevice(this);
     QVERIFY(m_outputDevice->addIncomingPort(m_output));
+
+    qDebug() << "*************";
+    qDebug() << "Test case initialized";
+    qWarning() << "This is a manual test case which requires a working ReactiVision client and user interaction.";
+    qDebug() << "To avoid flooding your terminal, only an update per second of your fiducial will be reported.";
+    qDebug() << "*************";
 }
 
 void TuioReactivisionManualTest::testCatchFiducial()

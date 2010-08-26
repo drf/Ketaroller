@@ -38,7 +38,6 @@ FiducialObject TuioOutputPort::lastMessage() const
 
 void TuioOutputPort::receiveData(const FiducialObject& message)
 {
-    qDebug() << "Processing Tuio Message..." << message.angle() << message.motionSpeed();
     m_lastMessages.append(message);
 
     // Send message to device - act as a transparent proxy

@@ -45,7 +45,7 @@ void OutputPort::sendToDevice(const QGenericArgument& arg)
         qWarning() << "Attempting to send a message over a port with no device connected";
         return;
     }
-    QMetaObject::invokeMethod(d->device, "newDataFromPort", arg);
+    QMetaObject::invokeMethod(d->device, "newDataFromPort", Q_ARG(KetaRoller::OutputPort*, this), arg);
 }
 
 }
