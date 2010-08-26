@@ -64,10 +64,11 @@ bool GrabberWidget::event(QEvent* event)
 
 TuioInputDevice::TuioInputDevice(QObject* parent)
         : InputDevice(parent)
-        , m_screenRect(QApplication::desktop()->rect())
-        , m_widget(new GrabberWidget())
 {
-    m_widget->setHidden(true);
+//     if (QApplication::instance()->) {
+//         m_widget = new GrabberWidget();
+//         m_widget->setHidden(true);
+//     }
 //     m_widget->grabGesture();
 }
 
@@ -190,7 +191,14 @@ void TuioInputDevice::removeTuioCursor(TUIO::TuioCursor* tcur)
 
 void TuioInputDevice::removeTuioObject(TUIO::TuioObject* tobj)
 {
+    KetaRoller::InputPort *port = m_portForSymbol.value(tobj->getSymbolID(), 0);
+    if (!port) {
+        qDebug() << "Got an add object for an ignored fiducial";
+        return;
+    }
 
+    FiducialObject fidobj(tobj);
+    port->putData(fidobj);
 }
 
 void TuioInputDevice::updateTuioCursor(TUIO::TuioCursor* tcur)
@@ -221,7 +229,14 @@ void TuioInputDevice::updateTuioCursor(TUIO::TuioCursor* tcur)
 
 void TuioInputDevice::updateTuioObject(TUIO::TuioObject* tobj)
 {
+    KetaRoller::InputPort *port = m_portForSymbol.value(tobj->getSymbolID(), 0);
+    if (!port) {
+        qDebug() << "Got an add object for an ignored fiducial";
+        return;
+    }
 
+    FiducialObject fidobj(tobj);
+    port->putData(fidobj);
 }
 
 QTouchEvent::TouchPoint TuioInputDevice::tuioCursorToTouchPoint(TUIO::TuioCursor* tcur)

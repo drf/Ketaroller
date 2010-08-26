@@ -18,43 +18,43 @@
 
 */
 
-#ifndef KETAROLLER_PLUGINLOADER_H
-#define KETAROLLER_PLUGINLOADER_H
+#include "tuioreactivisionmanualtest.h"
 
-#include <QObject>
-#include <QVariantMap>
+#include <InputDevice.h>
+#include <InputPort.h>
+#include <OutputPort.h>
+#include <PluginLoader.h>
 
-
-namespace KetaRoller {
-
-class InputDevice;
-
-
-class OutputPort;
-
-
-class Q_DECL_EXPORT PluginLoader : public QObject
+void TuioReactivisionManualTest::initTestCase()
 {
-public:
-    enum Type {
-        MIDIType,
-        TuioType
-    };
+    using namespace KetaRoller;
 
-    static PluginLoader *instance();
+    m_device = PluginLoader::instance()->loadInputDevice(KetaRoller::PluginLoader::TuioType);
 
-    OutputPort *loadOutputPort(Type type);
-    InputDevice *loadInputDevice(Type type, const QVariantMap &args = QVariantMap());
+    QVERIFY(m_device);
 
-    virtual ~PluginLoader();
+    m_output = PluginLoader::instance()->loadOutputPort(KetaRoller::PluginLoader::TuioType);
 
-private:
-    PluginLoader(QObject* parent = 0);
+    QVERIFY(m_output);
 
-    class Private;
-    Private * const d;
-};
+    QVariantMap args;
+    args.insert("TuioFiducialID", 1);
 
+    m_input = new InputPort(KetaRoller::Port::TUIOType, args);
+
+    QVERIFY(m_input);
+
+    QVERIFY(m_device->addOutgoingPort(m_input));
+
+    m_input->addOutput(m_output);
 }
 
-#endif // KETAROLLER_PLUGINLOADER_H
+void TuioReactivisionManualTest::testCatchFiducial()
+{
+    QEventLoop e;
+    e.exec();
+}
+
+
+QTEST_MAIN(TuioReactivisionManualTest)
+#include "tuioreactivisionmanualtest.moc"

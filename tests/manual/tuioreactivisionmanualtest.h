@@ -18,43 +18,30 @@
 
 */
 
-#ifndef KETAROLLER_PLUGINLOADER_H
-#define KETAROLLER_PLUGINLOADER_H
+#ifndef TUIOREACTIVISIONMANUALTEST_H
+#define TUIOREACTIVISIONMANUALTEST_H
 
-#include <QObject>
-#include <QVariantMap>
-
+#include <QtGui>
+#include <QtTest/QtTest>
 
 namespace KetaRoller {
-
 class InputDevice;
-
-
+class InputPort;
 class OutputPort;
-
-
-class Q_DECL_EXPORT PluginLoader : public QObject
-{
-public:
-    enum Type {
-        MIDIType,
-        TuioType
-    };
-
-    static PluginLoader *instance();
-
-    OutputPort *loadOutputPort(Type type);
-    InputDevice *loadInputDevice(Type type, const QVariantMap &args = QVariantMap());
-
-    virtual ~PluginLoader();
-
-private:
-    PluginLoader(QObject* parent = 0);
-
-    class Private;
-    Private * const d;
-};
-
 }
 
-#endif // KETAROLLER_PLUGINLOADER_H
+
+class TuioReactivisionManualTest : public QObject
+{
+    Q_OBJECT
+private slots:
+    void initTestCase();
+    void testCatchFiducial();
+
+private:
+    KetaRoller::InputDevice *m_device;
+    KetaRoller::InputPort *m_input;
+    KetaRoller::OutputPort *m_output;
+};
+
+#endif // TUIOREACTIVISIONMANUALTEST_H

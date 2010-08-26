@@ -150,7 +150,7 @@ PluginLoader::~PluginLoader()
 {
 }
 
-InputDevice* PluginLoader::loadInputDevice(PluginLoader::Type type)
+InputDevice* PluginLoader::loadInputDevice(PluginLoader::Type type, const QVariantMap &args)
 {
     QString pluginBaseName = QLatin1String("ketaroller_") + d->mapTypeToName(type) + QLatin1String("_input_device");
 
@@ -167,6 +167,8 @@ InputDevice* PluginLoader::loadInputDevice(PluginLoader::Type type)
         qDebug() << "Failed to cast to correct class type!! SHIVER IN AETERNAL DARKNESS";
         return 0;
     }
+
+    device->init();
 
     return device;
 }

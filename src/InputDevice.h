@@ -62,10 +62,10 @@ public:
 
     QList< InputPort* > inputPorts() const;
 
-protected:
     bool addOutgoingPort(InputPort *port);
     void removeOutgoingPort(InputPort *port, PortRemovalModes mode = KeepPortAliveMode);
 
+protected:
     virtual void init(const QVariantMap &args = QVariantMap());
     virtual bool validatePort(KetaRoller::InputPort *port) = 0;
 

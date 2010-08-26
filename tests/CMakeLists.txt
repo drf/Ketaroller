@@ -44,3 +44,5 @@ target_link_libraries(tuio-ports-test
 add_test(PluginLoaderMIDITest ${CMAKE_CURRENT_BINARY_DIR}/plugin-load-test)
 add_test(MIDICommunicationTest ${CMAKE_CURRENT_BINARY_DIR}/midi-ports-test)
 add_test(TuioCommunicationTest ${CMAKE_CURRENT_BINARY_DIR}/tuio-ports-test)
+
+add_subdirectory(manual)
