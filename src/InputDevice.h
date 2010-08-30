@@ -32,8 +32,23 @@ class InputPort;
 
 class InputDevicePrivate;
 /**
- * \class InputDevice InputDevice.h
- * \brief Base class for input devices
+ * @class InputDevice InputDevice.h
+ * @brief Base class for input devices
+ *
+ * InputDevice is the base class for implementing input devices to be used with
+ * KetaRoller. It features a set of methods for handling ports which can be connected
+ * to this device.
+ *
+ * @section handle_ports_input_device_sec Handling ports
+ *
+ * The whole logic for handling ports is contained into the base InputDevice class, however,
+ * you will have to reimplement validatePort to actually determine if your device supports
+ * a specific port. For example, in that function you can check if the port type is supported,
+ * if some compulsory parameters are present, etc.
+ *
+ * Still, consider that the I/O logic still happens in InputPort.
+ *
+ * @sa KetaRoller::InputPort
  *
  */
 class Q_DECL_EXPORT InputDevice : public AbstractDevice
@@ -47,31 +62,143 @@ class Q_DECL_EXPORT InputDevice : public AbstractDevice
     friend class PluginLoader;
 
 public:
+    /**
+     * Describes the removal mode of a port in removeOutgoingPort
+     */
     enum PortRemovalMode {
+        /**
+         * The port is not deleted neither disconnected.
+         */
         KeepPortAliveMode = 0,
+        /**
+         * Every output will be disconnected from the port.
+         */
         DisconnectOutputsMode = 1,
+        /**
+         * The input port will be deleted.
+         */
         DeleteInputPortMode = 2,
+        /**
+         * If \c DisconnectOutputsMode has been selected, all of the disconnected outputs will be deleted.
+         */
         DeleteAllOrphanOutputsMode = 4
     };
     Q_DECLARE_FLAGS(PortRemovalModes, PortRemovalMode)
 
-    InputDevice(QObject *parent = 0);
+    /**
+     * Base destructor.
+     */
     virtual ~InputDevice();
 
+    /**
+     * @returns the input ports connected to this device.
+     */
     QList< InputPort* > inputPorts() const;
 
+    /**
+     * Attempts to add an outgoing port to this device. The port will be validated.
+     *
+     * @param port a valid InputPort to be added to this device.
+     *
+     * @returns \c true if the port has been successfully added, \c false if the device rejected
+     *          the port for any reason.
+     */
     bool addOutgoingPort(InputPort *port);
+
+    /**
+     * Removes an existing port from this device.
+     *
+     * @param port An existing port of this device to be removed
+     * @param mode Defines how the port and its outputs should be treated upon removal. The default
+     *             behavior is not to do anything.
+     *
+     * @sa removeAllOutgoingPorts
+     */
     void removeOutgoingPort(InputPort *port, PortRemovalModes mode = KeepPortAliveMode);
 
+    /**
+     * Removes all existing ports from this device.
+     *
+     * @param mode Defines how the ports and their outputs should be treated upon removal. The default
+     *             behavior is not to do anything.
+     */
+    void removeAllOutgoingPorts(PortRemovalModes mode = KeepPortAliveMode);
+
 protected:
+    /**
+     * Creates a new InputDevice.
+     *
+     * You cannot use this constructor directly, instead, if you want to create a new InputDevice,
+     * please use PluginLoader's methods for loading specific InputDevices.
+     *
+     * @sa KetaRoller::PluginLoader
+     */
+    InputDevice(QObject *parent = 0);
+
+    /**
+     * @brief Initializes the device.
+     *
+     * This function is never meant to be called directly: \c PluginLoader will take care of that for you.
+     * However, this function \b CAN be reimplemented in plugins implementing an InputDevice.
+     *
+     * You should avoid putting anything in your plugin's constructor and instead save it for this function
+     * to let the initialization happen safely. It is \b REQUIRED that when this function has returned, the InputDevice
+     * is ready to be used.
+     *
+     * You probably want to initialize your framework in this function - have a look at TUIO's implementation for
+     * an overview of what you should do here.
+     *
+     * @param args A set of arbitrary arguments which might be required by the plugin to be initialized.
+     */
     virtual void init(const QVariantMap &args = QVariantMap());
+    /**
+     * @brief Validates a port
+     *
+     * This function is never meant to be called directly: \c addOutgoingPort will take care of that for you.
+     * However, this function \b MUST be reimplemented in plugins implementing an InputDevice.
+     *
+     * This function will be called whenever a port is being added - depending on the return value, the port
+     * will be added to the device or not. Please return \c true if the port is valid and can be added to the device,
+     * or \c false if not.
+     *
+     * This function <b>MUST NOT</b> alter any value inside \c port : it should be completely transparent and ac
+     * as a verifier only.
+     *
+     * @param port The port which should be validated
+     *
+     * @returns \c true if the port is valid and can be added to the device, \c false otherwise.
+     */
     virtual bool validatePort(KetaRoller::InputPort *port) = 0;
 
 Q_SIGNALS:
+    /**
+     * This signal will be emitted whenever a port is added to the device
+     *
+     * @param port The port which has just been added
+     *
+     * @note Please note that this signal will be emitted only if addOutgoingPort was successful.
+     */
     void portAdded(KetaRoller::InputPort *port);
+    /**
+     * This signal will be emitted whenever a port is removed from the device
+     *
+     * @param port The port which has just been removed
+     *
+     * @note Please note that this signal will be emitted \c BEFORE any action eventually specified through
+     *       \c PortRemovalModes will take place: however, it is not guaranteed that on the next event loop
+     *       run the port will still be a valid object.
+     */
     void portRemoved(KetaRoller::InputPort *port);
 };
 
+/**
+ * @brief Factory for creating InputDevices
+ *
+ * This class serves as an helper for creating instances of a plugin.
+ * It's an internal class and should not be reimplemented directly - please
+ * read @ref create_plugins_cmake_sec "CMake's documentation on creating plugins"
+ * to learn how to autogenerate plugins.
+ */
 class Q_DECL_EXPORT InputDeviceFactory : public AbstractPluginFactory
 {
     Q_OBJECT

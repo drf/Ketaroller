@@ -92,6 +92,14 @@ void InputDevice::init(const QVariantMap& args)
     Q_UNUSED(args)
 }
 
+void InputDevice::removeAllOutgoingPorts(InputDevice::PortRemovalModes mode)
+{
+    Q_D(InputDevice);
+    foreach (InputPort *port, d->ports) {
+        removeOutgoingPort(port, mode);
+    }
+}
+
 }
 
 #include "InputDevice.moc"
