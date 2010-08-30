@@ -103,12 +103,6 @@ QVariantMap InputPort::args() const
     return d->args;
 }
 
-Port::Type InputPort::type() const
-{
-    Q_D(const InputPort);
-    return d->type;
-}
-
 void InputPort::putData(const QGenericArgument& argument)
 {
     Q_D(InputPort);

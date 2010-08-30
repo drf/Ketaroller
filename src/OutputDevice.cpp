@@ -89,11 +89,6 @@ void OutputDevice::removeIncomingPort(OutputPort* port)
     emit portRemoved(port);
 }
 
-void OutputDevice::init(const QVariantMap& args)
-{
-    Q_UNUSED(args)
-}
-
 }
 
 #include "OutputDevice.moc"

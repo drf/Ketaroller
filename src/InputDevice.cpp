@@ -87,11 +87,6 @@ void InputDevicePrivate::removeOutgoingPortDelayed(KetaRoller::InputPort *port, 
     }
 }
 
-void InputDevice::init(const QVariantMap& args)
-{
-    Q_UNUSED(args)
-}
-
 void InputDevice::removeAllOutgoingPorts(InputDevice::PortRemovalModes mode)
 {
     Q_D(InputDevice);

@@ -136,22 +136,6 @@ protected:
     InputDevice(QObject *parent = 0);
 
     /**
-     * @brief Initializes the device.
-     *
-     * This function is never meant to be called directly: \c PluginLoader will take care of that for you.
-     * However, this function \b CAN be reimplemented in plugins implementing an InputDevice.
-     *
-     * You should avoid putting anything in your plugin's constructor and instead save it for this function
-     * to let the initialization happen safely. It is \b REQUIRED that when this function has returned, the InputDevice
-     * is ready to be used.
-     *
-     * You probably want to initialize your framework in this function - have a look at TUIO's implementation for
-     * an overview of what you should do here.
-     *
-     * @param args A set of arbitrary arguments which might be required by the plugin to be initialized.
-     */
-    virtual void init(const QVariantMap &args = QVariantMap());
-    /**
      * @brief Validates a port
      *
      * This function is never meant to be called directly: \c addOutgoingPort will take care of that for you.

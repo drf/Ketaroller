@@ -85,7 +85,7 @@ public:
      * @param type The type of this port
      * @param args A set of arbitrary arguments which will be used by the associated InputDevice.
      */
-    InputPort(Port::Type type, const QVariantMap &args = QVariantMap());
+    explicit InputPort(Port::Type type, const QVariantMap &args = QVariantMap());
     /**
      * Base destructor.
      */
@@ -133,10 +133,6 @@ public:
      * @returns The arguments of this port
      */
     QVariantMap args() const;
-    /**
-     * @returns The type of this port
-     */
-    Type type() const;
 
     /**
      * @brief Puts arbitrary data into this port

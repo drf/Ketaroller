@@ -23,7 +23,7 @@
 #include "OutputPort.h"
 #include "InputDevice.h"
 
-#include "config-ketaroller.h"
+#include <config-ketaroller.h>
 
 #include <QCoreApplication>
 #include <QPluginLoader>
@@ -124,10 +124,10 @@ AbstractPluginFactory* PluginLoader::Private::loadPlugin(const QString& name)
         }
 
         QObject *plugin = loader->instance();
-        qDebug() << loader->errorString();
 
         if (!plugin) {
             qDebug() << "Failed to create a valid instance!! SHIVER IN AETERNAL DARKNESS";
+            qDebug() << loader->errorString();
             return 0;
         }
 

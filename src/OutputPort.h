@@ -31,6 +31,24 @@
 namespace KetaRoller {
 
 class OutputPortPrivate;
+/**
+ * @brief Main entry point for incoming data from InputDevices
+ *
+ * An OutputPort is the component which takes care of receivng incoming data from an InputDevice
+ * through an InputPort. Please read @ref routing_model_sec "routing in KetaRoller" to learn more about
+ * Ports and Devices.
+ * @par
+ * An OutputPort can be connected to a singli InputPort, which should be compatible with the data
+ * this output port is capable. Please read @ref generic_argument_model_sec "the generic argument model" to learn how
+ * KetaRoller abstracts data arguments at runtime to allow arbitrary connections between different ports.
+ * @par
+ * When reimplementing this class in your plugin, you will need to add one method as a private slot, receiveData.
+ * This is explained in @ref creating_output_port_plugin_sec "creating an OutputPort".
+ *
+ * @sa InputDevice
+ * @sa InputPort
+ * @sa OutputDevice
+ */
 class Q_DECL_EXPORT OutputPort : public Port, public QObject
 {
     Q_DECLARE_PRIVATE(OutputPort)
@@ -38,17 +56,54 @@ class Q_DECL_EXPORT OutputPort : public Port, public QObject
 
     friend class InputPort;
 public:
-    OutputPort(Port::Type type, QObject *parent = 0);
+    /**
+     * Base destructor
+     */
     virtual ~OutputPort();
 
+    /**
+     * @brief Sends arbitrary data to the associated device
+     *
+     * Calling this function will make the port route the given data to the connected device.
+     * This function uses the @ref generic_argument_model_sec "generic argument model", so for calling it
+     * with an argument of type "MyType", you would do:
+     *
+     * @code
+     * MyType data;
+     * myport->sendToDevice(Q_ARG(MyType, data));
+     * @endcode
+     *
+     * Once done, the port will attempt to call the receiver function with the given argument on the other end:
+     * should this fail, an error will be printed into the terminal. In the future this function will probably return
+     * a more meaningful error.
+     *
+     * @note Please remember that the data type passed to this port \b MUST be registered as a metatype with the
+     *       Qt's metaobject system. Please read Qt documentation for more information.
+     *
+     * @param argument A QGenericArgument to be generated with Q_ARG, representing the data to be passed to the device.
+     */
     void sendToDevice(const QGenericArgument &arg);
 
 protected:
+    /**
+     * Base constructor
+     */
+    explicit OutputPort(Port::Type type, QObject *parent = 0);
+
     PortPrivate * const d_ptr;
 
     friend class OutputDevice;
+    friend class PluginLoader;
 };
 
+/**
+ * @brief Factory for creating OutputPorts
+ *
+ * This class serves as an helper for creating instances of a plugin.
+ * It's an internal class and should not be reimplemented directly - please
+ * read @ref create_plugins_cmake_sec "CMake's documentation on creating plugins"
+ * to learn how to autogenerate plugins.
+ */
 class Q_DECL_EXPORT OutputPortFactory : public AbstractPluginFactory
 {
     Q_OBJECT

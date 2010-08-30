@@ -21,6 +21,7 @@
 #include "AbstractDevice_p.h"
 
 namespace KetaRoller {
+
 AbstractDevice::AbstractDevice(AbstractDevicePrivate& dd, QObject* parent)
     : QObject(parent)
     , d_ptr(&dd)
@@ -38,6 +39,11 @@ QUuid AbstractDevice::uuid() const
     Q_D(const AbstractDevice);
 
     return d->uuid;
+}
+
+void AbstractDevice::init(const QVariantMap& args)
+{
+    Q_UNUSED(args)
 }
 
 }

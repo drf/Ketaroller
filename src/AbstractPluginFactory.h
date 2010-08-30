@@ -25,6 +25,16 @@
 
 namespace KetaRoller {
 
+/**
+ * @brief Abstract factory for creating InputDevices
+ *
+ * This class serves as an helper for creating instances of a plugin.
+ * It's an internal class and should not be reimplemented directly - please
+ * read @ref create_plugins_cmake_sec "CMake's documentation on creating plugins"
+ * to learn how to autogenerate plugins.
+ *
+ * Please refer to the project documentation to learn how plugins have been implemented internally.
+ */
 class AbstractPluginFactory : public QObject
 {
     Q_OBJECT

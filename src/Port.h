@@ -27,25 +27,49 @@ namespace KetaRoller {
 
 class AbstractDevice;
 
-
 class PortPrivate;
+
+/**
+ * @brief Base class for a Port
+ *
+ * This class represents a Port. It is not meant to be used directly: use one of its subclasses instead.
+ *
+ * Please read @ref routing_model_sec "routing in KetaRoller" to learn more about
+ * Ports and Devices.
+ */
 class Q_DECL_EXPORT Port
 {
     Q_DECLARE_PRIVATE(Port)
     Q_DISABLE_COPY(Port)
 public:
+    /**
+     * The type of this port
+     */
     enum Type {
+        /** An unknown type */
         UnknownType = 0,
+        /** A port sending or receiving gesture events */
         GestureType = 1,
+        /** A port sending or receiving TUIO messages */
         TUIOType = 2,
+        /** A port sending or receiving MIDI messages */
         MIDIType = 3
     };
 
+    /**
+     * Base destructor
+     */
     virtual ~Port();
 
+    /**
+     * @returns The type of this port
+     */
     Type type() const;
 
 protected:
+    /**
+     * Base constructor
+     */
     Port(PortPrivate &dd);
 
     PortPrivate * const d_ptr;
