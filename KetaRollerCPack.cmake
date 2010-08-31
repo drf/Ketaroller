@@ -8,6 +8,8 @@ SET(CPACK_PACKAGE_VERSION_MAJOR "0")
 SET(CPACK_PACKAGE_VERSION_MINOR "1")
 SET(CPACK_PACKAGE_VERSION_PATCH "0")
 SET(CPACK_PACKAGE_INSTALL_DIRECTORY "KetaRoller")
+set(CPACK_SOURCE_IGNORE_FILES
+   "/build/;/.bzr/;~$;/.git/;/.kdev4/;/installatio/;${CPACK_SOURCE_IGNORE_FILES}")
 IF(WIN32 AND NOT UNIX)
   # There is a bug in NSI that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backlasshes.
@@ -26,10 +28,8 @@ ENDIF(WIN32 AND NOT UNIX)
 INCLUDE(CPack)
 
 if (APPLE)
-    set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/cpack/README.txt")
-    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/cpack/LICENSE.txt")
     set(CPACK_SET_DESTDIR ON)
-   set(CPACK_PACKAGE_RELOCATABLE OFF)
+    set(CPACK_PACKAGE_RELOCATABLE OFF)
 endif (APPLE)
 
 include(CPack)
