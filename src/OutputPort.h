@@ -37,11 +37,11 @@ class OutputPortPrivate;
  * An OutputPort is the component which takes care of receivng incoming data from an InputDevice
  * through an InputPort. Please read @ref routing_model_sec "routing in KetaRoller" to learn more about
  * Ports and Devices.
- * @par
+ * <br><br>
  * An OutputPort can be connected to a singli InputPort, which should be compatible with the data
  * this output port is capable. Please read @ref generic_argument_model_sec "the generic argument model" to learn how
  * KetaRoller abstracts data arguments at runtime to allow arbitrary connections between different ports.
- * @par
+ * <br><br>
  * When reimplementing this class in your plugin, you will need to add one method as a private slot, receiveData.
  * This is explained in @ref creating_output_port_plugin_sec "creating an OutputPort".
  *
@@ -103,7 +103,7 @@ protected:
  * It's an internal class and should not be reimplemented directly - please
  * read @ref create_plugins_cmake_sec "CMake's documentation on creating plugins"
  * to learn how to autogenerate plugins.
- * @par
+ * <br><br>
  * Please read @ref plugin_factory_model_sec "the plugin factory model" if you're interested in knowing
  * how PluginFactories work.
  */

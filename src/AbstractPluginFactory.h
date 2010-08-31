@@ -32,7 +32,7 @@ namespace KetaRoller {
  * It's an internal class and should not be reimplemented directly - please
  * read @ref create_plugins_cmake_sec "CMake's documentation on creating plugins"
  * to learn how to autogenerate plugins.
- * @par
+ * <br><br>
  * Please read @ref plugin_factory_model_sec "the plugin factory model" if you're interested in knowing
  * how PluginFactories work.
  */

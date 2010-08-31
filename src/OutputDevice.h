@@ -36,7 +36,7 @@ class OutputDevicePrivate;
  *
  * This class serves as an interface for implementing an Output Device. This device is meant
  * to receive messages coming from one or more OutputPorts and process them.
- * @par
+ * <br><br>
  * When reimplementing this class in your plugin, you will need to add one method as a private slot, newDataFromPort.
  * This is explained in @ref creating_output_device_plugin_sec "creating an OutputDevice".
  *
@@ -153,7 +153,7 @@ Q_SIGNALS:
  * It's an internal class and should not be reimplemented directly - please
  * read @ref create_plugins_cmake_sec "CMake's documentation on creating plugins"
  * to learn how to autogenerate plugins.
- * @par
+ * <br><br>
  * Please read @ref plugin_factory_model_sec "the plugin factory model" if you're interested in knowing
  * how PluginFactories work.
  */

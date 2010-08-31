@@ -39,7 +39,7 @@ class InputPortPrivate;
  * An InputPort is the component which takes care of routing outgoing data to an OutputDevice
  * through an OutputPort. Please read @ref routing_model_sec "routing in KetaRoller" to learn more about
  * Ports and Devices.
- * @par
+ * <br><br>
  * An InputPort can be connected to a set of OutputPorts, which should be compatible with the data sent from
  * this output port. Please read @ref generic_argument_model_sec "the generic argument model" to learn how
  * KetaRoller abstracts data arguments at runtime to allow arbitrary connections between different ports.
