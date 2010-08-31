@@ -22,6 +22,8 @@ This document will give an overview over the concepts, the design choices and th
 behind KetaRoller, an advanced signal router for musical devices.
 </p>
 
+@image latex ketaroller_schema.png "KetaRoller's internal design overview" width=400px
+
 @section main_intro_sec What is KetaRoller and where we are at
 
 <p>
@@ -235,6 +237,8 @@ Pompeu Fabra in Barcelona, Spain. ReacTIVision was designed as the underlying se
 <p>We are building our own Reactable, not to use as a synthesizer, but just to control the sound generation parameters of
 BCT synthesis system (remember: MIDI to trigger, TUIO to control).</p>
 
+@image latex reactivision_reactable.png "reacTIVision and ReacTable framework diagram" width=280px
+
 @subsubsection tuio_cpp_framework_sec TUIO C++ framework, a C++ implementation of the TUIO standard
 
 <p>
@@ -244,7 +248,11 @@ Our software receives TUIO messages through TuioInputDevice, the class implement
 FiducialObjects, which can be freely routed.
 </p><p>
 Here is a small scheme illustrating this 3rd party framework working.
-</p><p>
+</p>
+
+@image latex tuio_schema.png "TUIO internal routing schema" width=280px
+
+<p>
 For further info please visit the <a href="http://www.tuio.org/">TUIO homepage</a> and TUIO C++ Reference Implementation.
 </p>
 
@@ -284,7 +292,7 @@ in @ref create_plugins_cmake_sec "Creating plugins - Adding the necessary bits t
 @section routing_model_sec Routing in KetaRoller
 
 <p>
-KetaRoller uses a 4-phase routing to ensure the maximum flexibility for the programmer, without forgetting
+KetaRoller uses a 4-phase, modular routing to ensure the maximum flexibility for the programmer, without forgetting
 the ease of use. It consists of four main components:
 </p>
 
@@ -310,6 +318,12 @@ So, a signal received from an InputDevice is routed to an OutputDevice through P
 what ports should represent: usually, each port represents a single mean of communication of the device - for example, a
 TUIO fiducial or a MIDI channel - but you might decide to use a single port to route all the traffic.
 </p><p>
+This architecture aims to provide a full loosely coupled system for routing signals, which is not even bound to what
+a Port/Device combination supports: the developer is completely in control of each and every connection between Ports and Devices.
+To the bottom line: the developer can couple any combination of devices. Here is a small schema of the routing chain:
+</p>
+@image latex routing_chain_graph.png "KetaRoller's routing chain" width=250px
+<p>
 When using the library and not implementing a plugin, the routing phase is started whenever the device receives data and it's
 all processed internally - so you have nothing to do except connecting ports and associating them to devices.
 </p>
