@@ -1,0 +1,23 @@
+// -------------- Start Plugin specific documentation page
+
+/**
+@page plugin_specific_documentation_page Plugin-specific documentation (arguments, advices...)
+
+<p>
+In this page the specific usages of the MIDI and TUIO plugins will be described
+</p>
+
+@section plugins_init_arguments_sec Plugin arguments
+
+<p>Some plugins need additional arguments when created. Follows a list of the valid keys to pass to args with the expected value
+for both plugins.</p>
+
+@subsection tuio_plugins_init_arguments_sec TUIO plugins
+
+@subsubsection tuio_input_port_init_arguments_sec Input Port
+
+<ul>
+    <li>@c TuioFiducialID : Represents the ID of the fiducial this port will listen to. Value should be an int > 0. <b>This
+        parameters is compulsory</b></li>
+</ul>
+*/

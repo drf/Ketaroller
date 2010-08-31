@@ -1,0 +1,57 @@
+// -------------- Start Introduction page
+
+/**
+@page introduction_page Introduction to the KetaRoller project
+
+<p>
+This document will give an overview over the concepts, the design choices and the implementation details
+behind KetaRoller, an advanced signal router for musical devices.
+</p>
+
+@image latex ketaroller_schema.png "KetaRoller's internal design overview" width=400px
+
+@section main_intro_sec What is KetaRoller and where we are at
+
+<p>
+KetaRoller can be seen as a router for musical signals. It takes care of carrying a signal from one end to another - it
+has nothing to do with signal processing. Its main aim is to allow connections between arbitrary devices which use the
+same protocols through a set of "Ports" which are able to seize input signals in more specific and understandable parts.
+</p><p>
+Despite KetaRoller being completely multiplatform, this release will support Linux only. Building on Mac and Windows is possible,
+but no warranties or support are given on those two platforms, so <b>do this at your own risk!</b>.
+At least Mac will be fully supported in the near future.
+</p>
+
+@section protocol_overview_sec Protocols used by KetaRoller
+<p>
+KetaRoller aims towards full abstraction, as it will be explained later - in this project, two protocols were implemented:
+</p>
+
+<ul>
+    <li><b>MIDI (Musical Instrument Digital Interface)</b>. An industry standard protocol for musical instrument
+           communication. See @ref midi_protocol_sec "MIDI explained" for a better overview.</li>
+    <li><b>TUIO</b>. A protocol for table-top tangible user interfaces based on OpenSoundControl. See
+        @ref tuio_protocol_sec "TUIO explained" for a better overview.</li>
+</ul>
+
+@section bachelor_thesis_overview_sec KetaRoller in our Bachelor's thesis project
+<p>
+This project is a part of the big picture in our bachelor's thesis project, where we will implement a full-fledged
+ReacTable (developed by MTG of Università Pompeu Fabra, Barcelona) which will communicate with the sound synthesis
+system BCT (developed by ISPG of Politecnico di Milano) throughout this very project. The final aim is to play/control
+a musical instrument, created with this particular synthesis method, through a simple MIDI controller and ReacTable.
+</p>
+<p>
+Given that ReacTable communicates through TUIO, as a first step we need to implement a software capable of handling
+both protocols: this software should be able to receive packets, extract information through the use of the protocol
+standard, and be able to provide concrete data to an output device (which will be the BCT - in this project, we will
+use some fake output devices for printing messages for testing purposes).
+</p>
+
+@section tests_keta_sec Test cases and examples
+<p>
+We provided a set of autotests and manual test/examples in the tests/ folder. You can run the three autotests for checking
+KetaRoller and its plugins' correct operation and check against regressions, and the two tests in manual/ for trying KetaRoller with
+reacTIVision... and have some fun with fiducials!
+</p>
+*/

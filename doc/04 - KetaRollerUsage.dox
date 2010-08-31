@@ -1,0 +1,72 @@
+// -------------- Start Usage page
+
+/**
+@page ketaroller_usage_page How to use KetaRoller in your application
+
+<p>
+Using KetaRoller in your application is extremely simple. Some examples are already provided in tests/manual, but this page
+will explain how to connect a TUIO InputDevice and a MIDI InputDevice to an output device which we will name "SoundDevice" and
+will assume existent, working, and accepting both MIDI and TUIO OutputPorts. Let's see how to do this.
+</p>
+
+@section instantiating_objects_usage_sec Instantiating the needed objects through PluginLoader and connecting the ports
+
+<p>
+First of all, we'll need to create our devices. We will assume an instance of our output device has already been created.
+</p><p>
+We want to create a MIDI device and a TUIO device, 3 TUIO ports (both input and output) and a single MIDI port.
+To do this, we need to use PluginLoader. PluginLoader is the main entry point for creating objects from plugins. Let's
+see it in action (m_tuioOutputs is a QHash<OutputPort*, int>, and so is m_tuioInputs):
+</p>
+
+@code
+using namespace KetaRoller;
+
+m_tuioInputDevice = PluginLoader::instance()->loadInputDevice(KetaRoller::PluginLoader::TuioType);
+m_midiInputDevice = PluginLoader::instance()->loadInputDevice(KetaRoller::PluginLoader::MIDIType);
+
+m_outputDevice = new SoundDevice();
+
+for (int i = 0; i < 3; ++i) {
+    OutputPort *port = PluginLoader::instance()->loadOutputPort(KetaRoller::PluginLoader::TuioType);
+    m_outputDevice->addIncomingPort(port);
+    m_tuioOutputs.insert(port, i);
+}
+
+m_midiOutput = PluginLoader::instance()->loadOutputPort(KetaRoller::PluginLoader::MIDIType);
+m_outputDevice->addIncomingPort(m_midiOutput);
+
+for (int i = 0; i < 3; ++i) {
+    QVariantMap args;
+    args.insert("TuioFiducialID", i);
+
+    KetaRoller::InputPort *input = new InputPort(KetaRoller::Port::TUIOType, args);
+
+    m_tuioInputDevice->addOutgoingPort(input);
+
+    input->addOutput(m_outputs.key(i));
+
+    m_tuioInputs.insert(input, i);
+}
+
+m_midiInput = new InputPort(KetaRoller::Port::MIDIType);
+m_midiInput->addOutput(m_midiOutput);
+@endcode
+
+<p>As you can see, it's very easy to use PluginLoader to load the needed instances. InputPort, though, acts as a
+transparent proxy, hence it's not reimplemented anywhere and can be created as a standard object, specifying the port
+type.
+</p><p>
+While initializing our objects, we also connected the ports through InputPort::addOutput.
+</p>
+
+@section finalizing_usage_sec Maintainance of the created chain
+
+Once the initialization has been completed, the chain is already working by itself: the InputDevices take care of routing
+any input signal received through their ports, and the OutputDevice processes them as it should. However, you can monitor
+the ports through portAdded and portRemoved signals, and disconnect them. It is advised to disconnect the ports through InputDevice
+unless you have specific needs. Please refer to the class documentation of InputDevice to learn more on that.
+
+
+
+*/

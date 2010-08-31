@@ -1,0 +1,13 @@
+/**
+@mainpage KetaRoller - an advanced signal router for musical devices
+
+KetaRoller is a signal router which is able to route arbitrary data between devices, developed by Dario Freddi and Luca Mucci.
+
+ - @subpage introduction_page "Introduction to the KetaRoller project"
+ - @subpage design_choices_page "Design choices and 3rd party frameworks used by KetaRoller"
+ - @subpage basic_concepts_page "Basic concepts and models used in KetaRoller"
+ - @subpage ketaroller_usage_page "How to use KetaRoller in your application"
+ - @subpage creating_plugins_page "How to create new plugins for KetaRoller"
+ - @subpage plugin_specific_documentation_page "Plugin-specific documentation (arguments, advices...)"
+
+*/

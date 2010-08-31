@@ -1,0 +1,187 @@
+// -------------- Start Design choices and 3rd party frameworks used by KetaRoller
+
+/**
+@page design_choices_page Design choices and 3rd party frameworks used by KetaRoller
+
+<p>
+KetaRoller uses a wide variety of frameworks and concepts for bringing to the table its advanced features.
+</p>
+
+@section design_choices_sec Design choices
+
+<p>
+Some important decisions had to be taken before coding to ensure the quality of the product would have met the
+expectation for the rest of the project. We will talk just about the concepts and the reasoning behind those choices -
+you can find some technical explaination and implementation details in the next sections, especially
+@ref basic_concepts_page "Basic concepts and models used in KetaRoller".
+</p>
+
+@subsection abstract_io_sec Full I/O abstraction
+
+<p>
+To provide developers with a very easy to use library, we developed a full abstract system which allows to plug in
+any possible type of protocol/device, giving also future-proof warranty to KetaRoller's users. Should a new protocol
+be born, the internal logic of KetaRoller can still work simply by writing a new set of plugins which use the new protocol.
+</p>
+<p>
+This kind of abstraction also allows different protocol sources to connect to the same output device (given it accepts them).
+For example, BCT will be capable of handling MIDI and TUIO: this will happen in a completely transparent way for the programmer,
+which will just have to connect its MIDI and TUIO outputs to the chosen device ports.
+</p>
+
+@section frameworks_sec Frameworks used in KetaRoller
+
+@subsection qt_framework_sec Qt by Nokia - the foundations of KetaRoller
+
+<p>
+KetaRoller is nothing but a Qt library, which relies heavily on Qt's advanced features to achieve many of its advanced
+features. Qt is a multi-platform and multi-device library developed by Nokia, which is the foundation of many projects, both
+commercial (Mathematica, Google Earth...) and many open source projects (KDE, MeeGo...).
+</p>
+<p>
+Qt is distributed with a dual licensing system - we chose the open source LGPL license for our project, which will be released
+under the same license as well.
+</p>
+
+@subsubsection qt_metaobject_sec The metaobject system
+
+<p>
+One of the main advantages of Qt over other C++ frameworks such as Boost is its runtime introspection features and its metaobject
+features. Qt allows programmers to use non strongly-typed methods and runtime connections between objects, which
+are the foundation of our @ref routing_model_sec "routing model".
+</p><p>
+This is achieved through a system named moc, which generates metaobject information at build time and allows runtime introspection.
+This is completely transparent to the developer, which can even ignore the exsistence of moc, especially when developing with
+CMake and automoc4. Surely, the metaobject features have been a primary reason for using Qt in the first place.
+</p>
+
+@subsubsection qt_gui_sec GUI framework
+
+<p>
+Qt was born as a GUI library, and it is still an awesome framework for generating user interfaces which look native on every
+system. This, again, was a huge factor in chosing Qt due to our big picture: a GUI for controlling KetaRoller will be provided
+in the near future.
+</p>
+
+@subsubsection qt_test_sec Test case framework
+
+<p>
+Qt also provides a full-fledged test case library for examples and autotests generation, and for creating benchmarks. This
+allowed us to create easily a small set of autotests (to be used in conjunction with CMake's ctest suite) and a set of manual
+tests/examples to show KetaRoller in action.
+</p>
+
+@subsubsection qt_touch_interfaces_sec Touch interfaces support
+
+<p>
+Given its future on mobile devices, Qt has recently acquired great support for touch-based interfaces and devices, including
+a gesture recognizer and a full set of gestures event. We will use this feature for handling cursors in TUIO in the near future,
+translating cursors to Qt gesture events and making Qt recognize which kind of gesture the user has done on the ReacTable surface.
+</p><p>
+This thing will open the door for using KetaRoller even on small touch screen devices, such as new generation mobile phones,
+using a touch screen instead of a ReacTable as one of the main controllers.
+</p>
+
+@subsection cmake_build_system_sec The CMake buildsystem
+
+<p>
+CMake is an advanced, modular, and multiplatform build system which is used for building KetaRoller. Its ease and modularity
+helped us a lot, especially when creating plugins. As explained in @ref plugin_factory_model_sec "the plugin factory model",
+we created a new CMake macro which allows the developer to autogenerate the needed bits for making plugin work through a single
+line in its buildsystem.
+</p><p>
+CMake also allows us to build KetaRoller on different platforms than Linux, such as Windows and Mac, and greatly supports
+out-of-source builds.
+</p>
+
+@subsubsection cmake_ctest_sec Using CMake for autotests, packaging and generating this document
+
+<p>
+CMake also features Doxygen support through a module, and two components, namely CPack and CTest, for packaging
+a project and running a set of existent tests in an automatic way. Our tests folder features CTest support, so once
+you built KetaRoller, you can simply enter "ctest" in your terminal while in the binary tests directory to start the
+test suite and see the results.
+</p><p>
+You can also create a new source release by entering "make package" in the root build folder.
+</p>
+
+@subsection midi_protocol_sec The MIDI protocol
+<p>
+MIDI (Musical Instrument Digital Interface) is an industry-standard protocol defined in 1982 that enables electronic
+musical instruments such as keyboard controllers, synthetizers and computers, to communicate, control and synchronize with each other.
+</p><p>
+We need MIDI to trigger the sound production of BCT system: for example, if the sound modelled by the BCT is a percussion,
+a MIDI percussion controller is very useful to trigger the sound.
+</p>
+
+@subsubsection rtmidi_framework_sec RtMidi - a multiplatform C++ framework
+
+<p>
+RtMidi is a C++ framework developed by Gary P. Scavone (McGill University) that provides a common API for realtime
+MIDI input/output across Linux, Macintosh OS X and Windows operating systems.
+</p><p>
+RtMidi significantly simplifies the process of interacting with computer MIDI hardware and software, and it is designed to
+be object oriented and cross-platform.<br />
+For our project we use RtMidiIn facilities to receive MIDI messages with our MIDIInputDevice class.
+</p><p>
+Just 4 types of incoming MIDI message are accepted: NoteOn, NoteOff, PitchBender and ControlChange (they're enough for our purpose).
+System exclusive, timing, active sensing, program change and bank change messages are ignored.
+</p><p>
+For further info please visit <a href="http://www.music.mcgill.ca/~gary/rtmidi/index.html"> RtMidi homepage.</a>
+</p>
+
+@subsection tuio_protocol_sec The TUIO protocol
+
+<p><a href="http://www.tuio.org/">TUIO</a> is an open framework that defines a common protocol and API for tangible multitouch
+surfaces.<br />
+The TUIO protocol allows the transmission of an abstract description of interactive surfaces, including touch events and object states.
+</p><p>
+For further info about TUIO, please read the paper "TUIO: A Protocol for Table-Top Tangible User Interface" by M. Kaltenbrunner,
+T. Bowermann, R. Bencina and E. Costanza.
+</p>
+
+@subsubsection tuio_osc_protocol_sec TUIO and OSC
+
+<p>
+Technically TUIO is based on <a href ="http://opensoundcontrol.org/"> Open Sound Control </a>, an emerging standard for interactive
+environments (not only limited to musical instrument control).
+<p></p>
+TUIO protocol encodes control data from a tracker application, ReacTIVision, and sends it to any client application that is capable
+of decoding the protocol.<br />
+</p>
+
+@subsubsection reactivision_framework_sec TUIO, reacTIVision and ReacTable
+
+<p>
+<a href="http://reactivision.sourceforge.net/">ReacTIVision</a> is an open source, cross-platform computer vision framework
+for the fast tracking of fiducial markers and finger multi-touch onto physical surfaces.<br />
+It was mainly designed as a toolkit for the development of table-based tangible user interfaces and interactive
+surfaces with TUIO protocol.
+</p><p>
+This framework has been developed by Martin Kaltenbrunner and Ross Bencina at the Music Technology Group at the Universitat
+Pompeu Fabra in Barcelona, Spain. ReacTIVision was designed as the underlying sensor component of the
+<a href="http://www.reactable.com/">ReacTable</a>, a tangible modular synthesizer.<br /></p>
+
+<p>We are building our own Reactable, not to use as a synthesizer, but just to control the sound generation parameters of
+BCT synthesis system (remember: MIDI to trigger, TUIO to control).</p>
+
+@image latex reactivision_reactable.png "reacTIVision and ReacTable framework diagram" width=280px
+
+@subsubsection tuio_cpp_framework_sec TUIO C++ framework, a C++ implementation of the TUIO standard
+
+<p>
+In our project we used TUIO C++ framework, developed by Kaltenbrunner, in order to be able to receive TUIO from
+Reactable/ReacTIVision.<br />
+Our software receives TUIO messages through TuioInputDevice, the class implementing the TuioListener, then generates
+FiducialObjects, which can be freely routed.
+</p><p>
+Here is a small scheme illustrating this 3rd party framework working.
+</p>
+
+@image latex tuio_schema.png "TUIO internal routing schema" width=280px
+
+<p>
+For further info please visit the <a href="http://www.tuio.org/">TUIO homepage</a> and TUIO C++ Reference Implementation.
+</p>
+
+*/
