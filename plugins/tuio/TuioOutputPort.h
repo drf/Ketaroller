@@ -21,22 +21,49 @@
 #ifndef TUIOOUTPUTPORT_H
 #define TUIOOUTPUTPORT_H
 
+#include <QtCore/QPointF>
+
 #include <OutputPort.h>
 #include "FiducialObject.h"
 
-
+/**
+ * @brief Entry point for incoming data from TuioInputDevices
+ *
+ * This class takes care of receiving FiducialObject messages from a TuioInputDevice through a compatible InputPort.
+ * Please read @ref routing_model_sec "routing in KetaRoller" to learn more about Ports and Devices and
+ * @ref creating_output_port_plugin_sec "creating an OutputPort".
+ *
+ * @sa OutputPort
+ * @sa OutputDevice
+ * @sa FiducialObject
+ * @sa TuioInputDevice
+ */
 class Q_DECL_EXPORT TuioOutputPort : public KetaRoller::OutputPort
 {
     Q_OBJECT
     Q_INTERFACES(KetaRoller::OutputPort)
     Q_DISABLE_COPY(TuioOutputPort)
 public:
+    /**
+    * Base constructor
+    */
     TuioOutputPort(QObject *parent);
+    /**
+    * Base destructor.
+    */
     virtual ~TuioOutputPort();
 
+    /**
+    * @returns The last FiducialObject message received.
+    */
     FiducialObject lastMessage() const;
 
 public slots:
+    /**
+    * This function receive and store the FiducialObject messages passed by the TuioInputDevice through the InputPort.
+    *
+    * @param message The reference to a FiducialObject passed by the input.
+    */
     void receiveData(const FiducialObject &message);
 
 private:

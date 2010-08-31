@@ -29,9 +29,25 @@ namespace TUIO {
 }
 
 class QPointF;
+
+/**
+* @brief The class for Tuio Fiducial messages
+*
+* This class contains some info about TuioObject messages received by the TuioInputDevice
+* thanks to Tuio C++ framework (developed by Martin Kaltenbrunner, MTG).
+*
+* Our FiducialObjects contain just the relevant info about the fiducials on the Reactable
+* and can be routed in Ketaroller system.
+*
+* @sa TuioInputDevice
+*/
 class Q_DECL_EXPORT FiducialObject
 {
 public:
+
+    /**
+    * The type of event occurred to this FiducialObject
+    */
     enum FiducialEvent {
         UnknownEvent = 0,
         FiducialAddedEvent,
@@ -39,32 +55,81 @@ public:
         FiducialUpdatedEvent
     };
 
+    /**
+    * Empty constructor
+    */
     FiducialObject();
+    /**
+    * Base constructor
+    */
     FiducialObject(TUIO::TuioObject *tobj, FiducialEvent event = FiducialUpdatedEvent);
+    /**
+    * Copy constructor
+    */
     FiducialObject(const FiducialObject &other);
+    /**
+    * Empty destructor
+    */
     ~FiducialObject();
 
     FiducialObject &operator=(const FiducialObject &rhs);
+    /**
+    * Operator "==" overloading
+    */
     bool operator==(const FiducialObject &other) const;
 
+    /**
+    * @returns The position of the Fiducial on the table in QPointF coordinates type.
+    */
     QPointF position() const;
 
+    /**
+    * @returns The speed of the Fiducial on the table X-axis.
+    */
     float speedX() const;
+    /**
+    * @returns The speed of the Fiducial on the table Y-axis.
+    */
     float speedY() const;
-
+    /**
+    * @returns The motion speed of the Fiducial.
+    */
     float motionSpeed() const;
+    /**
+    * @returns The motion acceleration of the Fiducial.
+    */
     float motionAcceleration() const;
-
+    /**
+    * @returns The rotation speed of the Fiducial.
+    */
     float rotationSpeed() const;
+    /**
+    * @returns The rotation acceleration of the Fiducial.
+    */
     float rotationAcceleration() const;
 
+    /**
+    * @returns The rotation angle of the Fiducial.
+    */
     float angle() const;
+    /**
+    * @returns The rotation angle in degrees of the Fiducial.
+    */
     float angleDegrees() const;
 
+    /**
+    * @returns The state of the Fiducial.
+    */
     uint state() const;
 
+    /**
+    * @returns The event occurred to the Fiducial, i.e if it has been is added, updated or removed.
+    */
     FiducialEvent event() const;
 
+    /**
+    * @returns
+    */
     TUIO::TuioObject *tuioObject();
 
 private:

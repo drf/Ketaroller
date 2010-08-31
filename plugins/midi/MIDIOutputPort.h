@@ -25,18 +25,45 @@
 
 #include "MIDIMessage.h"
 
+
+/**
+ * @brief Entry point for incoming data from MIDIInputDevices
+ *
+ * This class takes care of receiving MIDIMessages from a MIDIInputDevice through a compatible InputPort.
+ * Please read @ref routing_model_sec "routing in KetaRoller" to learn more about Ports and Devices and
+ * @ref creating_output_port_plugin_sec "creating an OutputPort".
+ *
+ * @sa Ketaroller::OutputPort
+ * @sa Ketaroller::OutputDevice
+ * @sa MIDIMessage
+ * @sa MIDIInputDevice
+ */
 class Q_DECL_EXPORT MIDIOutputPort : public KetaRoller::OutputPort
 {
     Q_OBJECT
     Q_INTERFACES(KetaRoller::OutputPort)
     Q_DISABLE_COPY(MIDIOutputPort)
 public:
+    /**
+    * Base constructor
+    */
     MIDIOutputPort(QObject *parent);
+    /**
+    * Base destructor.
+    */
     virtual ~MIDIOutputPort();
 
+    /**
+    * @returns The last MIDIMessage received.
+    */
     MIDIMessage lastMessage() const;
 
 public slots:
+    /**
+    * This function receive and store the MIDIMessages passed by the MIDIInputDevice through the InputPort.
+    *
+    * @param message The reference to a MIDIMessage passed by the input.
+    */
     void receiveData(const MIDIMessage &message);
 
 private:

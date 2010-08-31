@@ -34,8 +34,12 @@ MIDIOutputPort::~MIDIOutputPort()
 
 void MIDIOutputPort::receiveData(const MIDIMessage& message)
 {
-    qDebug() << "Processing MIDI Message..." << message.data1() << message.data2();
+    qDebug() << "Processing MIDIMessage..." << message.data1() << message.data2();
     m_lastMessages.append(message);
+
+    // Send message to device - act as a transparent proxy...in future it will also do some processing.
+    sendToDevice(Q_ARG(MIDIMessage, message));
+
 }
 
 MIDIMessage MIDIOutputPort::lastMessage() const
