@@ -14,6 +14,7 @@ MIDIInputDevice::MIDIInputDevice(QObject* parent)
 
 MIDIInputDevice::~MIDIInputDevice()
 {
+    midiReceiver->closePort();
 }
 
 void MIDIInputDevice::init(const QVariantMap& args)

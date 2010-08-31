@@ -20,6 +20,7 @@
 
 #include "TuioOutputPort.h"
 
+
 TuioOutputPort::TuioOutputPort(QObject *parent)
         : OutputPort(TUIOType, parent)
 {
@@ -31,15 +32,16 @@ TuioOutputPort::~TuioOutputPort()
 
 }
 
+void TuioOutputPort::receiveData(const FiducialObject& message)
+{
+    qDebug() << "Processing FiducialObject message..." << message.position().x() << message.position().y() << message.angle();
+    m_lastMessages.append(message);
+
+    // Send message to device - act as a transparent proxy...in future it will also do some processing.
+    sendToDevice(Q_ARG(FiducialObject, message));
+}
+
 FiducialObject TuioOutputPort::lastMessage() const
 {
     return m_lastMessages.last();
-}
-
-void TuioOutputPort::receiveData(const FiducialObject& message)
-{
-    m_lastMessages.append(message);
-
-    // Send message to device - act as a transparent proxy
-    sendToDevice(Q_ARG(FiducialObject, message));
 }
