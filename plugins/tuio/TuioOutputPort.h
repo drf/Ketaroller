@@ -60,7 +60,10 @@ public:
 
 public slots:
     /**
-    * This function receive and store the FiducialObject messages passed by the TuioInputDevice through the InputPort.
+    * This function receives and stores the FiducialObject messages passed by the TuioInputDevice through the InputPort.
+    * It's a compulsory reimplementation of the data receiver callback as explained in
+    * @ref generic_argument_model_sec "the generic argument model". Please read
+    * @ref creating_output_port_plugin_sec "creating an OutputPort" for a better overview over this method.
     *
     * @param message The reference to a FiducialObject passed by the input.
     */

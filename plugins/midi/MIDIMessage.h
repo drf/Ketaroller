@@ -24,19 +24,22 @@ public:
     };
 
     /**
-    * Empty constructor.
+    * Default constructor.
     */
     MIDIMessage();
     /**
     * Base destructor.
     */
-    ~MIDIMessage();
+    virtual ~MIDIMessage();
 
     /**
     * Copy constructor.
     */
     MIDIMessage(const MIDIMessage &other);
 
+    /**
+    * Operator "=" overloading.
+    */
     MIDIMessage &operator=(const MIDIMessage &rhs);
     /**
     * Operator "==" overloading.

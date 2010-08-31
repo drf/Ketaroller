@@ -10,6 +10,7 @@ set(PROJECT_VERSION "0.1.0")
 
 include(InstallSettings)
 include(UseDoxygen)
+include(KetaRollerCPack)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
     ${QT_INCLUDES}
