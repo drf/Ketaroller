@@ -1,6 +1,8 @@
 /*
-    <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) <year>  <name of author>
+    KetaRoller - an advanced signal router for musical devices
+
+    Copyright (C) 2010 Dario Freddi <drf@kde.org>
+    Copyright (C) 2010 Luca Mucci <luca.mucci@4cmp.it>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
