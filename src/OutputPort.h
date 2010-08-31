@@ -123,8 +123,8 @@ public:
 
 
 
-Q_DECLARE_INTERFACE(KetaRoller::OutputPort, "org.ketamina.OutputPort/0.1")
-Q_DECLARE_INTERFACE(KetaRoller::OutputPortFactory, "org.ketamina.OutputPortFactory/0.1")
+Q_DECLARE_INTERFACE(KetaRoller::OutputPort, "org.KetaRoller.OutputPort/0.1")
+Q_DECLARE_INTERFACE(KetaRoller::OutputPortFactory, "org.KetaRoller.OutputPortFactory/0.1")
 
 #define KETAROLLER_OUTPUT_PORT_PLUGIN_FACTORY(type, _gen) \
 class Q_DECL_EXPORT _gen##Factory : public KetaRoller::OutputPortFactory \

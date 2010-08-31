@@ -200,8 +200,8 @@ public:
 
 }
 
-Q_DECLARE_INTERFACE(KetaRoller::InputDevice, "org.ketamina.InputDevice/0.1")
-Q_DECLARE_INTERFACE(KetaRoller::InputDeviceFactory, "org.ketamina.InputDeviceFactory/0.1")
+Q_DECLARE_INTERFACE(KetaRoller::InputDevice, "org.KetaRoller.InputDevice/0.1")
+Q_DECLARE_INTERFACE(KetaRoller::InputDeviceFactory, "org.KetaRoller.InputDeviceFactory/0.1")
 Q_DECLARE_OPERATORS_FOR_FLAGS(KetaRoller::InputDevice::PortRemovalModes)
 
 #define KETAROLLER_INPUT_DEVICE_PLUGIN_FACTORY(type, _gen) \

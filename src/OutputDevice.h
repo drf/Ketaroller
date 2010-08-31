@@ -171,8 +171,8 @@ public:
 
 }
 
-Q_DECLARE_INTERFACE(KetaRoller::OutputDevice, "org.ketamina.OutputDevice/0.1")
-Q_DECLARE_INTERFACE(KetaRoller::OutputDeviceFactory, "org.ketamina.OutputDeviceFactory/0.1")
+Q_DECLARE_INTERFACE(KetaRoller::OutputDevice, "org.KetaRoller.OutputDevice/0.1")
+Q_DECLARE_INTERFACE(KetaRoller::OutputDeviceFactory, "org.KetaRoller.OutputDeviceFactory/0.1")
 
 #define KETAROLLER_OUTPUT_DEVICE_PLUGIN_FACTORY(type, _gen) class Q_DECL_EXPORT _gen##Factory : public KetaRoller::OutputDeviceFactory \
 { \
