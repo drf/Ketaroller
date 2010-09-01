@@ -1,5 +1,8 @@
 
 include(KetaRollerPlugin)
 
-add_subdirectory(tuio)
+if (QT_QTGUI_FOUND)
+    add_subdirectory(tuio)
+endif (QT_QTGUI_FOUND)
+
 add_subdirectory(midi)

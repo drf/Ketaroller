@@ -19,9 +19,10 @@ if (WIN32)
    set(INCLUDE_INSTALL_DIR  "include"                     ) # The subdirectory to the header prefix
 
    set(PLUGIN_INSTALL_DIR       "plugins"                 ) # "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)
+   set(DOC_INSTALL_DIR          "doc"                     ) # "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)
    set(CONFIG_INSTALL_DIR       "share/config"            ) # The config file install dir
    set(DATA_INSTALL_DIR         "share/apps"              ) # The parent directory where applications can install their data
-   set(HTML_INSTALL_DIR         "share/doc/HTML"          ) # The HTML install dir for documentation
+   set(HTML_INSTALL_DIR         "${DOC_INSTALL_DIR}/HTML" ) # The HTML install dir for documentation
    set(ICON_INSTALL_DIR         "share/icons"             ) # The icon install dir (default ${SHARE_INSTALL_PREFIX}/share/icons/)
    set(KCFG_INSTALL_DIR         "share/config.kcfg"       ) # The install dir for kconfig files
    set(LOCALE_INSTALL_DIR       "share/locale"            ) # The install dir for translations
@@ -83,7 +84,8 @@ else (WIN32)
    _set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/ketaroller"          "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)")
    _set_fancy(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"         "The config file install dir")
    _set_fancy(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"           "The parent directory where applications can install their data")
-   _set_fancy(HTML_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/doc/HTML"       "The HTML install dir for documentation")
+   _set_fancy(DOC_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/doc/ketaroller" "The install dir for documentation")
+   _set_fancy(HTML_INSTALL_DIR         "${DOC_INSTALL_DIR}/HTML"                "The HTML install dir for documentation")
    _set_fancy(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons"          "The icon install dir (default ${SHARE_INSTALL_PREFIX}/share/icons/)")
    _set_fancy(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg"    "The install dir for kconfig files")
    _set_fancy(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale"         "The install dir for translations")

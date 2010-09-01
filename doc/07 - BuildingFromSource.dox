@@ -1,0 +1,291 @@
+// -------------- Start Introduction page
+
+/**
+@page building_ketaroller_from_source_page Building KetaRoller from source
+
+<p>
+This section is meant for people who want to compile their own KetaRoller binaries from the source code. If you are using
+a binary KetaRoller distribution, feel free to skip this section.
+</p>
+
+@section building_ketaroller_linux_sec Building KetaRoller on Linux
+
+@subsection building_ketaroller_linux_pre_sec Prerequisites
+
+<p>
+To build KetaRoller on Linux, you need the following components. All of them can be easily found in your package manager.
+</p>
+
+<ul>
+    <li><b>Automake</b>: needed for the "make" command. Usually it is contained in a package named @c automake .</li>
+    <li><b>GCC</b>: the GCC C++ compiler is needed for compiling the sources. It is usually contained in a package
+        named @c gcc , but it might be split in several subpackages. Be sure to install the C++ (also named CPP or CXX)
+        compiler.</li>
+    <li><b>CMake</b>: CMake is needed for configuring the buildsystem and generating Makefiles. It is usually contained in
+        a package named @c cmake .</li>
+    <li><b>Qt</b>: Qt is the framework used by KetaRoller. You need both Qt runtime @b AND development files. The required
+        components are QtCore. QtTest is optional but advised for building tests, while QtGui is required for building
+        TUIO plugins. On debian and derivates, to get the most out of KetaRoller features, you should install @c libqt4-dev
+        to install the whole dependency chain. Your users will need to install @c libqt4-core and @c libqt4-gui only.</li>
+</ul>
+
+@subsection building_ketaroller_linux_build_sec How to build KetaRoller
+
+<p>
+After having unpacked KetaRoller sources into a directory, go to your terminal and, while in the root directory of KetaRoller's
+sources, enter these commands:
+</p>
+
+@code
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+@endcode
+
+<p>
+What we are doing is creating a separate build directory, telling cmake to configure the sources for being built, and issue
+@c make to start the real compilation. You can pass additional parameters to CMake in the configure phase as explained in
+@ref building_ketaroller_cmake_parameters_sec "additional CMake parameters".
+</p>
+
+@subsection building_ketaroller_linux_install_sec Install or generate a binary distribution
+
+<p>
+Once done, you probably want to create a package or install the binaries to your system.
+</p>
+
+
+@subsubsection building_ketaroller_linux_install_package_sec Generating source tarballs and binary packages
+
+<p>
+In case you want to create a binary
+package, open your CMake gui by entering in the build directory and issuing
+</p>
+
+@code
+$ cmake-gui .
+@endcode
+
+<p>
+Search for variables starting with @c CPACK_BINARY (remember to check the @c Advanced box), and select the binary distributions
+you want to generate. Once done, configure and generate your project from the GUI; get back to the terminal and issue:
+</p>
+
+@code
+$ make package
+@endcode
+
+<p>
+This will generate the binary packages you requested.
+</p><p>
+By default, CPack also generates source tarballs. You can control their creation in a similar fashion to binary's ones by opening
+@c cmake-gui and searching for variables starting with @c CPACK_SOURCE.
+</p>
+
+
+@subsubsection building_ketaroller_linux_install_system_sec Installing to your system
+
+<p>
+If you just want to install your project into your system, simply issue
+</p>
+
+@code
+$ make install
+@endcode
+
+<p>
+Depending on the installation directory you have chosen, you might need root privileges to perform the installation.
+</p>
+
+
+
+@section building_ketaroller_windows_sec Building KetaRoller on Windows
+
+@subsection building_ketaroller_windows_vcmingw_sec Choosing between Visual Studio's cl or MinGW
+
+<p>
+KetaRoller, like every CMake project, can be built either with Visual Studio's compiler (both the free and the commercial version),
+or with MinGW, a free alternative which provides a port of the GCC compiler. KetaRoller's binary distributions are created
+with Visual Studio, which is the only supported method - although it has been reported that MinGW is able to build the sources
+correctly.
+</p><p>
+Make this choice before you start installing the required frameworks: Qt is shipped in two different versions, one supporting
+MinGW and another supporting Visual Studio. You can build KetaRoller only with the compiler Qt has been compiled with - for this
+reason, be sure to pick the correct Qt version.
+</p>
+
+@subsection building_ketaroller_windows_pre_sec Prerequisites
+
+<p>
+To build KetaRoller on Windows, you need the following components.
+</p>
+
+<ul>
+    <li><b>Visual Studio or MinGW</b>: as explained before, you need one between these two compilers. MinGW is free software;
+        Visual Studio is a commercial product, but a free (as in beer) version of the compiler is provided.</li>
+    <li><b>CMake</b>: CMake is needed for configuring the buildsystem and generating Makefiles. A binary installer for
+        windows can be downloaded from <a href="">CMake's website</a></li>
+    <li><b>Qt</b>: Qt is the framework used by KetaRoller. You need both Qt runtime @b AND development files. The required
+        components are QtCore. QtTest is optional but advised for building tests, while QtGui is required for building
+        TUIO plugins. The most comfortable and advised way for installing Qt is using the Qt SDK,
+        which provides you with all the needed components and the Qt Creator IDE. As you will see later, Qt SDK greatly simplifies
+        the building process. However, you can still install the library only. Both of them are available, under
+        a license of your choice between LGPL and a commercial one, in <a href="http://qt.nokia.com/">Qt's website</a></li>
+</ul>
+
+@subsection building_ketaroller_windows_env_sec Preparing the environment
+
+<p>
+To make the build process succeed, you will need to add to your path some directories to let CMake and thus the linker
+find out all the required components.
+
+<ul>
+    <li>If you are using Qt's SDK, you can load KetaRoller into Qt Creator - at this stage, you should already be able to configure
+        and build it. If this shouldn't happen, or if you needed to do some operations such as installing or creating a distribution,
+        you can go to <i>Tools->Open Qt Terminal</i> to open a command prompt which should have all the required paths set, and keep
+        on following the instructions provided in the next paragraph.</li>
+    <li>If you are using Visual Studio, you need to set your paths correctly in the command prompt. To do this, you can run the
+        vcvarsall.bat script provided with Visual Studio itself. It usually lies in <i>C:\\Program Files\\Microsoft Visual
+        Studio 9.0\\VC\\bin\\vcvarsall.bat</i>. Unfortunately, this is not enough for adding Qt to the system path.
+        You will need to add Qt's bin, include, and lib directory manually to your path.</li>
+    <li>If you are using MinGW, you need to make sure both MinGW components and Qt components are in the system path, as
+        explained above.</li>
+</ul>
+</p>
+
+@subsection building_ketaroller_windows_build_sec How to build KetaRoller
+
+@subsubsection building_ketaroller_windows_build_vc_sec Building with Visual Studio
+
+<p>
+With your environment now ready, go to your command prompt and issue the following commands:
+</p>
+
+@code
+$ mkdir build
+$ cd build
+$ cmake .. -G"NMake Makefiles"
+$ nmake
+@endcode
+
+<p>
+What we are doing is creating a separate build directory, telling cmake to configure the sources for being built, specifying
+we want CMake to use Visual Studio and NMake as a generator, and call @c nmake to start the real compilation.
+You can pass additional parameters to CMake in the configure phase as explained in
+@ref building_ketaroller_cmake_parameters_sec "additional CMake parameters".
+</p>
+
+@subsubsection building_ketaroller_windows_build_mingw_sec Building with MinGW
+
+<p>
+With your environment now ready, go to your command prompt and issue the following commands:
+</p>
+
+@code
+$ mkdir build
+$ cd build
+$ cmake .. -G"MinGW Makefiles"
+$ make
+@endcode
+
+<p>
+What we are doing is creating a separate build directory, telling cmake to configure the sources for being built, specifying
+we want CMake to use MinGW as a generator, and call @c make to start the real compilation.
+You can pass additional parameters to CMake in the configure phase as explained in
+@ref building_ketaroller_cmake_parameters_sec "additional CMake parameters".
+</p>
+
+@subsection building_ketaroller_windows_install_sec Install or generate a binary distribution
+
+@note Always replace @c nmake with @c make if you are using MinGW instead of Visual Studio.
+
+@subsubsection building_ketaroller_windows_install_nsis_sec Generating an installer with NSIS
+
+<p>
+KetaRoller's build scripts are capable of autogenerating an installer from a build. For this feature to be available, you
+need to install <a href="http://nsis.sourceforge.net">NSIS, an installer generator</a>. If CMake finds out NSIS is installed,
+the binary target will automatically be activated. To be sure it is, from your command prompt, in your build directory, issue:
+</p>
+
+@code
+$ cmake-gui .
+@endcode
+
+<p>
+Search for variables starting with @c CPACK_BINARY (remember to check the @c Advanced box), and select @c CPACK_BINARY_NSIS.
+Once done, configure and generate your project from the GUI; get back to the terminal and issue:
+</p>
+
+@code
+$ nmake package
+@endcode
+
+<p>
+This will generate an installer ready to be used.
+</p>
+
+@subsubsection building_ketaroller_windows_install_system_sec Installing to your system
+
+<p>
+If you just want to install your project into your system, simply issue
+</p>
+
+@code
+$ nmake install
+@endcode
+
+<p>
+Depending on the installation directory you have chosen, you might need Administrator privileges to perform the installation.
+</p>
+
+
+@section building_ketaroller_mac_sec Building KetaRoller on Mac
+
+<p>
+As of version 0.1.0, Mac is not a supported platform for KetaRoller. Full Mac OSX support is planned for the forthcoming versions,
+in the meanwhile, it has been reported KetaRoller builds successfully on Mac OSX systems. You can follow the guidelines for Linux
+(most of the requirements are available through MacPorts or as an installer) which should lead you to a successful compilation,
+however please remind that no support is given to Mac builds at the moment.
+</p>
+
+
+@section building_ketaroller_cmake_parameters_sec Additional CMake parameters
+
+@note This applies to all platforms
+
+<p>
+CMake has a wide variety of parameters which can influence the build process. Those parameters can be edited through @c cmake-gui,
+as you might have noticed in the previous section, or can be passed directly from the command line when calling CMake. If your wish
+to do so, it is sufficient to append -D<i>variable</i>=<i>value</i> to the CMake command. So supposing I wanted to set the variable
+CMAKE_INSTALL_PREFIX to @c /usr, I would call CMake in the following way:
+</p>
+
+@code
+$ cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+@endcode
+
+<p>
+Otherwise, I might have just opened cmake-gui, modified the CMAKE_INSTALL_PREFIX variable, and reconfigured and regenerated the build
+files.
+</p>
+
+@subsection building_ketaroller_cmake_common_parameters_sec Overview on most common CMake parameters
+
+<p>
+Follows a short overview on the most common and important CMake parameters. For further info, please refer to CMake's documentation.
+</p>
+
+<ul>
+    <li>@b CMAKE_INSTALL_PREFIX : Sets the installation prefix of the build. Especially useful on Linux. It is the equivalent
+        of @c --prefix in @c configure scripts.</li>
+    <li>@b CMAKE_BUILD_TYPE : Defines which kind of build you want to obtain: possible values are "Debug" and "Release"</li>
+    <li>@b LIB_SUFFIX : Sets a suffix to append to libraries and library installation directories.
+        Especially useful on linux, for example if you wanted to install libraries to lib32/ or lib64/ instead of lib/</li>
+    <li>@b CMAKE_VERBOSE_MAKEFILE : Instead of displaying the nice quiet progress, displays full information from the compiler
+        during the build. Can be either @c TRUE or @c FALSE, with @c FALSE as the default.</li>
+    <li>@b CMAKE_CXX_FLAGS : Allows to pass some additional flags to the C++ compiler. There is also @b CMAKE_C_FLAGS for passing
+        flags to the C compiler.</li>
+</ul>
+
+*/

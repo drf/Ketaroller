@@ -29,4 +29,7 @@ public:
 Q_EXPORT_PLUGIN2(ketaroller_${KCG_PLUGIN_TYPE}_${KCG_CLASS}, ${KCG_PLUGIN_TYPE}${KCG_CLASS}Factory)
 #include \"${KCG_PLUGIN_TYPE}${KCG_CLASS}Factory.moc\"
 ")
+
+    set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${KCG_PLUGIN_TYPE}${KCG_CLASS}Factory.h PROPERTIES GENERATED 1)
+    set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${KCG_PLUGIN_TYPE}${KCG_CLASS}Factory.cpp PROPERTIES GENERATED 1)
 endfunction(add_ketaroller_plugin PLUGIN_TYPE INCLUDE_FILE CLASS SUBCLASS OUTFILE)

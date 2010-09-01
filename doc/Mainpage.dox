@@ -16,6 +16,7 @@ KetaRoller is developed by <a href="mailto:drf@kde.org">Dario Freddi</a> and <a 
     <li>@subpage ketaroller_usage_page "How to use KetaRoller in your application"</li>
     <li>@subpage creating_plugins_page "How to create new plugins for KetaRoller"</li>
     <li>@subpage plugin_specific_documentation_page "Plugin-specific documentation (arguments, advices...)"</li>
+    <li>@subpage building_ketaroller_from_source_page "Building KetaRoller from source"</li>
 </ul>
 
 */
