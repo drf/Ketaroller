@@ -29,6 +29,7 @@
 #include <OutputDevice.h>
 
 class FiducialObject;
+class MIDIMessage;
 namespace KetaRoller {
 class InputDevice;
 class InputPort;
@@ -50,6 +51,7 @@ public:
 
 public slots:
     void newDataFromPort(KetaRoller::OutputPort *port, const FiducialObject &obj);
+    void newDataFromPort(KetaRoller::OutputPort *port, const MIDIMessage &msg);
 
 private:
     QHash<int, QTime> m_times;

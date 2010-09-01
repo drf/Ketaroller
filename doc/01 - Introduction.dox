@@ -10,6 +10,14 @@ behind KetaRoller, an advanced signal router for musical devices.
 
 @image latex ketaroller_schema.png "KetaRoller's internal design overview" width=400px
 
+@section who_intro_sec Who this document is aimed to
+
+<p>
+This document is aimed to people interested in KetaRoller's design and internals, developers intending to create user interfaces
+to KetaRoller, or developers interested in developing plugins for KetaRoller, including sound synthesis systems, protocol
+implementations, etc.
+</p>
+
 @section main_intro_sec What is KetaRoller and where we are at
 
 <p>
@@ -17,6 +25,17 @@ KetaRoller can be seen as a router for musical signals. It takes care of carryin
 has nothing to do with signal processing. Its main aim is to allow connections between arbitrary devices which use the
 same protocols through a set of "Ports" which are able to seize input signals in more specific and understandable parts.
 </p><p>
+KetaRoller is a Qt library extendable through plugins. It can be used into an application to create a connection from input
+control surfaces to output devices. The internal logic takes care of the routing part only, and by default implements just two
+protocols (MIDI and TUIO). KetaRoller, though, is designed to be extended by 3rd parties with output devices (usually
+sound generation systems, such as BCT), and with new protocols if needed.
+</p>
+
+@note This package just provides the base library and TUIO and MIDI protocol implementations - no real output devices are supplied.
+      Although, some fake output devices are provided in the tests/ directory for testing purposes - those devices just print text
+      to a terminal and serve as a proof of concept for implementing real-world devices.
+
+<p>
 Despite KetaRoller being completely multiplatform, this release will support Linux only. Building on Mac and Windows is possible,
 but no warranties or support are given on those two platforms, so <b>do this at your own risk!</b>.
 At least Mac will be fully supported in the near future.

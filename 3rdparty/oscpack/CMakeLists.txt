@@ -36,3 +36,7 @@ else (WIN32)
 endif (WIN32)
 
 add_library(oscpack STATIC ${oscpack_SRCS})
+
+if (WIN32)
+    target_link_libraries(oscpack ${WINMM_LIBRARY} ${WS2_32_LIBRARY})
+endif (WIN32)

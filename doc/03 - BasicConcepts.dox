@@ -17,7 +17,7 @@ especially true for ports), exporting the main class itself as a plugin wouldn't
 could be loaded from the shared library only once, thus generating a single instance.
 </p><p>
 For this reason, an helper class has been created, AbstractPluginFactory. This class is what gets really exported, and
-allows to create n instances of the plugin on demand. This mechanism is internal and completely transparent to both the
+allows to create @c n instances of the plugin on demand. This mechanism is internal and completely transparent to both the
 final user of the library and programmer who wants to implement a new plugin.
 </p><p>
 If you are using KetaRoller in your application, PluginLoader will take care of all the needed magic for getting you
@@ -37,18 +37,18 @@ the ease of use. It consists of four main components:
 </p>
 
 <ul>
-    <li>InputDevice: The first element in the chain. It has to be reimplemented in a plugin. It takes care of
+    <li>KetaRoller::InputDevice: The first element in the chain. It has to be reimplemented in a plugin. It takes care of
         validating ports and sending data to the correct input ports. It can contain an arbitrary number of
         InputPorts. Usually, it's an implementation of a real world device, such as reactivision.</li>
-    <li>InputPort: Ports which takes care of opening a sort of tunnel from an InputDevice to an OutputDevice. An
+    <li>KetaRoller::InputPort: Port which takes care of opening a of tunnel from an InputDevice to an OutputDevice. An
         input port can be associated to a single InputDevice, and connected to an arbitrary number of OutputPorts.
         It takes care of routing the data to the output ports.</li>
-    <li>OutputPort: Ports which takes care of receiving data and streaming it to its associated device. It has to
+    <li>KetaRoller::OutputPort: Ports which takes care of receiving data and streaming it to its associated device. It has to
         be reimplemented in a plugin. It can be connected to a single InputPort and to a single OutputDevice. The
         port can work as a transparent bridge such as InputPort, or do some processing before streaming the data to
         the device. It's up to the programmer to decide how to implement this - however, it does not affect usage
         of the library.</li>
-    <li>OutputDevice: The last element in the chain. It has to be reimplemented in a plugin. It takes care of
+    <li>KetaRoller::OutputDevice: The last element in the chain. It has to be reimplemented in a plugin. It takes care of
         validating ports and receiving data from its OutputPorts. It can contain an arbitrary number of
         OutputPorts. Usually, it's an implementation of a real world output device, such as a synthesizer.</li>
 </ul>
@@ -76,7 +76,7 @@ abstract way. Instead of using reimplementations of strongly-typed functions, Ke
 in conjunction with QMetaObject::invokeMethod to call a callback defined in the plugin reimplementation with
 the correct argument. Let's see an example to understand how this works.
 </p><p>
-Let's assume we are implementing an OutputPort, and our Input/Output chain in done through a custom data type
+Let's assume we are implementing an OutputPort, and our Input/Output chain is done through a custom data type
 defined by \c MyDataType.
 As explained in @ref creating_output_port_plugin_sec "creating an OutputPort",
 we need to implement a function named receiveData in our class, which would look like:

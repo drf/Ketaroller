@@ -10,3 +10,7 @@ set(tuio_SRCS
 
 add_library(tuio STATIC ${tuio_SRCS})
 target_link_libraries(tuio oscpack)
+
+if (WIN32)
+    target_link_libraries(tuio ${WINMM_LIBRARY} ${WS2_32_LIBRARY})
+endif (WIN32)

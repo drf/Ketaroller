@@ -49,8 +49,8 @@ protected:
 need to reimplement validatePort() to allow your device to accept only supported ports.
 </p><p>
 @c addTuioCursor is a TUIO specific callback, in which you need to create the data object and stream it to the correct port.
-This is completely up to the device implementation: so inside your device you will need to call InputPort::putData on the correct
-port to make the chain work correctly.
+This is completely up to the device implementation: so inside your device you will need to call
+KetaRoller::InputPort::putData() on the correct port to make the chain work correctly.
 </p>
 
 @section creating_output_port_plugin_sec Creating an OutputPort
@@ -80,7 +80,7 @@ public slots:
 used in the TUIO message chain.
 </p><p>
 In receiveData, you will need to (eventually) process the received data and (eventually) stream it to the device. This is
-done by calling OutputPort::sendDataToDevice(). Remember that you need explicitely to call this function whenever needed.
+done by calling KetaRoller::OutputPort::sendDataToDevice(). Remember that you need explicitely to call this function whenever needed.
 </p>
 
 @section creating_output_device_plugin_sec Creating an OutputDevice
@@ -114,6 +114,17 @@ used in the TUIO message chain. Also, remember that the first argument should @b
 with namespace in the exported symbol.
 </p><p>
 In @c newDataFromPort, you have to process the data which you received from the specified port as you please.
+</p><p>
+Differently from ports, OutputDevices can accept multiple protocols on their ends. Supposing you want your OutputDevice
+to accept both MIDI and TUIO, you would overload newDataFromPort in the following way:
+</p>
+@code
+public slots:
+    void newDataFromPort(KetaRoller::OutputPort *port, const FiducialObject &obj);
+    void newDataFromPort(KetaRoller::OutputPort *port, const MIDIMessage &msg);
+@endcode
+<p>
+Done that, you can handle independently TUIO and MIDI messages in your device by implementing both functions.
 </p>
 
 @section create_plugins_cmake_sec Adding the necessary bits to the build system

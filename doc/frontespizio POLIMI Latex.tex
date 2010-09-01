@@ -1,0 +1,225 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                   %
+%                           TESI in LaTex                           %
+%                                                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                             Preambolo                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Documento pronto da stampare
+\documentclass[a4paper,12pt,twoside]{report}
+% Documento di brutta (al poste delle immagine una X)
+%\documentclass[draft,a4paper,12pt,oneside]{report}
+
+
+% Imposto la lingua italiana
+\usepackage[italian]{babel}
+
+
+% Settaggio dei margini
+\topmargin 0cm
+\headsep 1cm
+\headheight 0.6cm
+\textwidth 14.6cm
+\textheight 21.8cm
+\evensidemargin 1cm
+\oddsidemargin 1cm
+
+
+% Pacchetti da includere per...
+
+% simboli matematici
+\usepackage{amsmath}
+
+% simboli vari
+\usepackage{textcomp}
+\usepackage[mathscr]{euscript}
+
+% figure
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{subfigure}
+
+% intestazioni
+\usepackage{fancyhdr}
+
+% encoding dei caratteri
+\usepackage[ansinew]{inputenc}
+\usepackage[OT1]{fontenc}
+
+% ridefinire le didascalie
+\usepackage[footnotesize,hang,bf]{caption}
+
+% Stile della pagina
+\fancyhead[L]{\chaptername \thechapter}
+\fancyhead[LO]{\thesection} \fancyhead[RO]{\sectionmark}
+\lhead{\slshape Ch. \thechapter}
+
+
+% Configurazioni varie
+
+% nonumchapter serve per introduzioni, prefazioni, ecc.
+% titola come un capitolo ma senza numero
+\def\nonumchapter#1{
+    \chapter*{#1}
+    \addcontentsline{toc}{chapter}{#1}
+}
+
+% estensioni e cartella delle immagini (non necessario...)
+%\DeclareGraphicsExtensions{gif,eps}
+%\graphicspath{{./eps/}}
+
+% crea una nuova lunghezza e gli assegna un valore
+\newlength{\defbaselineskip}
+\setlength{\defbaselineskip}{\baselineskip}
+
+% comando per settare  la variabile \baselineskip come multiplo di \defbaselineskip
+\newcommand{\setlinespacing}[1]%
+           {\setlength{\baselineskip}{#1 \defbaselineskip}}
+
+% permette l'inserimento "rapido" del virgolettato (ad es. per citazioni)
+\newcommand{\virgolette}[1]{``#1''}
+
+% definizione dello stile delle didascalie delle immagini
+\renewcommand{\captionfont}{%
+    \normalfont \sffamily \slshape \footnotesize%
+}
+
+% questo ambiente serve per i log e codice sorgente:
+% riduce il carattere la dimensione dei font e imposta l'ambiente
+% come verbatim per evitare l'interpretazione di caratteri speciali
+\newenvironment{logs}{\begin{flushleft}\begin{ttfamily}\scriptsize\setlinespacing{1}}{\end{ttfamily}\end{flushleft}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                         Inizio Documento                          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+
+% Inizio del Frontespizio
+
+\thispagestyle{empty}
+\enlargethispage{60mm}
+\begin{center}
+\Large{\textsc{Politecnico di Milano}}\\
+%\vspace{5mm}
+\large{V Facolt\`a di Ingegneria}\\
+%\vspace{5mm}
+\large{Corso di laurea in Ingegneria delle Telecomunicazioni}\\
+\large{Dipartimento di Elettronica e Informazione}\\
+\vspace{7mm}
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.15]{logo-polimi.eps}
+\end{center}
+\end{figure}
+\vspace{2mm}
+
+% titolo della tesi
+\begin{LARGE}
+TITOLO DELLA TESI
+\end{LARGE}
+\vspace{25mm}
+
+% relatore
+\begin{flushleft}
+\begin{tabular}{l l }
+Relatore:    & Prof. Nome COGNOME\\
+Correlatore: & Ing. Nome COGNOME\\
+\end{tabular}
+\end{flushleft}
+\vspace{25mm}
+
+% autore/autori
+\begin{flushright}
+\begin{tabular}{l l }
+Tesi di Laurea di: & \\
+Nome COGNOME & Matr. xxxxxx
+\end{tabular}
+\end{flushright}
+\vspace{43mm}
+{\large{\bf Anno Accademico 200x-200x}}
+\end{center}
+
+% Fine del Frontespizio
+
+
+\clearpage
+\newpage
+
+
+% Settaggio interlinea
+\setlinespacing{1.5}
+
+
+% Inizio Numerazione Romana
+\pagenumbering{Roman}
+
+
+% Indice - Per abilitarlo decommentare le tre linee seguenti
+%\tableofcontents
+%\newpage
+%\clearpage
+
+
+% Elenco delle Figure
+% La linea seguente inserisce la lista delle figure come voce nell'indice
+%\addcontentsline{toc}{section}{\listfigurename}
+
+% La linee seguenti inseriscono la lista delle figure nel corpo
+%\listoffigures
+%\clearpage
+
+
+% Impostazioni della pagina
+\pagestyle{fancy}
+\headsep=40pt
+\lhead{}
+\rhead{\slshape \leftmark}
+\cfoot{\thepage}
+
+
+% Sommario (1 pagina)
+% [Includo il file abstract.tex]
+\include{abstract}
+
+
+% Inizio Numerazione Araba
+\pagenumbering{arabic}
+
+
+% Vari Capitoli
+% [Includo i vari file chapterN.tex]
+
+%\include{introduzione}      % Introduzione
+
+%\include{chapter2}          % Capitolo 2
+
+%\include{chapter3}          % Capitolo 3
+
+%\include{chapter4}          % Capitolo 4
+
+%\include{chapter5}          % Capitolo 5
+
+%\include{chapter6}          % Capitolo 6
+
+%\include{chapter7}          % Capitolo 7
+
+% Bibliografia
+% [Includo il file biblio.tex.... se non usi bibtex]
+%\input{biblio}
+
+
+% Fine del documento
+
+\end{document}

@@ -1,13 +1,21 @@
 /**
-@mainpage KetaRoller - an advanced signal router for musical devices
+@mainpage KetaRoller - an advanced signal router and port manager for musical devices
 
-KetaRoller is a signal router which is able to route arbitrary data between devices, developed by Dario Freddi and Luca Mucci.
+<p>
+KetaRoller is a signal router and port manager which is able to route arbitrary data between devices through an advanced
+port system. The main library features the routing part only, and it has been designed to be extremely modular and extendable.
+Any developer can plug its protocol or sound synthesis system to KetaRoller easily to design its own musical instrument.
+</p><p>
+KetaRoller is developed by <a href="mailto:drf@kde.org">Dario Freddi</a> and <a href="mailto:luca.mucci@4cmp.it">Luca Mucci</a>.
+</li>
 
- - @subpage introduction_page "Introduction to the KetaRoller project"
- - @subpage design_choices_page "Design choices and 3rd party frameworks used by KetaRoller"
- - @subpage basic_concepts_page "Basic concepts and models used in KetaRoller"
- - @subpage ketaroller_usage_page "How to use KetaRoller in your application"
- - @subpage creating_plugins_page "How to create new plugins for KetaRoller"
- - @subpage plugin_specific_documentation_page "Plugin-specific documentation (arguments, advices...)"
+<ul>
+    <li>@subpage introduction_page "Introduction to the KetaRoller project"</li>
+    <li>@subpage design_choices_page "Design choices and 3rd party frameworks used by KetaRoller"</li>
+    <li>@subpage basic_concepts_page "Basic concepts and models used in KetaRoller"</li>
+    <li>@subpage ketaroller_usage_page "How to use KetaRoller in your application"</li>
+    <li>@subpage creating_plugins_page "How to create new plugins for KetaRoller"</li>
+    <li>@subpage plugin_specific_documentation_page "Plugin-specific documentation (arguments, advices...)"</li>
+</ul>
 
 */

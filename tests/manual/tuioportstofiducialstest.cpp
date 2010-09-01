@@ -77,15 +77,26 @@ void TestOutputDevice::newDataFromPort(KetaRoller::OutputPort *port, const Fiduc
     }
 }
 
+void TestOutputDevice::newDataFromPort(KetaRoller::OutputPort* port, const MIDIMessage& msg)
+{
+
+}
+
 void TuioPortsToFiducialsTest::initTestCase()
 {
     using namespace KetaRoller;
 
     m_device = PluginLoader::instance()->loadInputDevice(KetaRoller::PluginLoader::TuioType);
+    InputDevice *midiDevice = PluginLoader::instance()->loadInputDevice(KetaRoller::PluginLoader::MIDIType);
+    InputPort *midiPort = new InputPort(KetaRoller::Port::MIDIType);
+    OutputPort *midiOutputPort = PluginLoader::instance()->loadOutputPort(KetaRoller::PluginLoader::MIDIType);
+    midiPort->addOutput(midiOutputPort);
+    midiDevice->addOutgoingPort(midiPort);
 
     QVERIFY(m_device);
 
     m_outputDevice = new TestOutputDevice(this);
+    m_outputDevice->addIncomingPort(midiOutputPort);
 
     for (int i = 0; i < 4; ++i) {
         OutputPort *port = PluginLoader::instance()->loadOutputPort(KetaRoller::PluginLoader::TuioType);

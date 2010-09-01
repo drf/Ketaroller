@@ -29,6 +29,22 @@ For example, BCT will be capable of handling MIDI and TUIO: this will happen in 
 which will just have to connect its MIDI and TUIO outputs to the chosen device ports.
 </p>
 
+@subsection binary_compatibility_sec Binary compatibility
+
+<p>
+KetaRoller aims to be completely binary and source compatible throughout all major release cycles (such as 1.x.x).
+For achieving this goal, we used a technique called d-pointer, which consists in creating a private class which does
+not get either exposed or exported, in which all private members are contained. This way, it is possible to change every
+private symbol in any possible way without affecting exported headers.
+</p><p>
+The d-pointer technique is widely used, especially in Qt libraries. For learning more on it, KDE Techbase has an
+<a href="http://techbase.kde.org/Policies/Binary_Compatibility_Issues_With_C++">extensive page about binary compatibility</a>
+in which the most common caveats of d-pointers and other techniques are described.
+</p><p>
+Some parts of KetaRoller also use some advanced Qt macros for having private classes inheritance in a transparent way, please
+read @ref qt_declare_private_sec "advanced d-pointers and q-pointers management".
+</p>
+
 @section frameworks_sec Frameworks used in KetaRoller
 
 @subsection qt_framework_sec Qt by Nokia - the foundations of KetaRoller
@@ -69,6 +85,23 @@ in the near future.
 Qt also provides a full-fledged test case library for examples and autotests generation, and for creating benchmarks. This
 allowed us to create easily a small set of autotests (to be used in conjunction with CMake's ctest suite) and a set of manual
 tests/examples to show KetaRoller in action.
+</p>
+
+@subsubsection qt_declare_private_sec Advanced d-pointers and q-pointers management
+
+<p>
+Qt provides a set of macros, namely Q_DECLARE_PRIVATE and Q_D, to manage d-pointers in a very smart and easy way. Using
+Q_DECLARE_PRIVATE, you are able to make classes which inherit from another class have a private class which inherits from
+the other class' private class. Then, the Q_D macro takes care of generating a d-pointer of the correct type. The same applies
+with public classes and q-pointers through Q_DECLARE_PUBLIC and Q_Q. Two classes taking advantage of this are
+KetaRoller::AbstractDevice and KetaRoller::InputDevice, but you can see almost any inheritance chain using Q_DECLARE_PRIVATE
+for its private members.
+</p><p>
+Qt also offers another macro, which is Q_PRIVATE_SLOT. This macro expands to a blank line, so that you can declare private slots
+in your header without having them exported or seen by the compiler, and declare the very same slot in your private class - which
+does @b not have to inherit from QObject. Through this macro, you can hide your private slots from exported symbols without
+having to make your private classes inherit from QObject. Also, this macro does not strictly require the d-pointer to be
+created with Q_DECLARE_PRIVATE to work.
 </p>
 
 @subsubsection qt_touch_interfaces_sec Touch interfaces support
