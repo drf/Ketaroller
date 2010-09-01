@@ -26,6 +26,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QVariantMap>
 
+#include <ketaroller-export.h>
+
 struct QUuid;
 
 namespace KetaRoller {
@@ -41,7 +43,7 @@ class AbstractDevicePrivate;
  * @sa InputDevice
  * @sa OutputDevice
  */
-class Q_DECL_EXPORT AbstractDevice : public QObject
+class KETAROLLER_EXPORT AbstractDevice : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(AbstractDevice)

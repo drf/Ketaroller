@@ -29,6 +29,8 @@
 #include <QtPlugin>
 #include <QDebug>
 
+#include <ketaroller-export.h>
+
 
 namespace KetaRoller {
 
@@ -51,7 +53,7 @@ class OutputPortPrivate;
  * @sa InputPort
  * @sa OutputDevice
  */
-class Q_DECL_EXPORT OutputPort : public Port, public QObject
+class KETAROLLER_EXPORT OutputPort : public Port, public QObject
 {
     Q_DECLARE_PRIVATE(OutputPort)
     Q_DISABLE_COPY(OutputPort)
@@ -109,7 +111,7 @@ protected:
  * Please read @ref plugin_factory_model_sec "the plugin factory model" if you're interested in knowing
  * how PluginFactories work.
  */
-class Q_DECL_EXPORT OutputPortFactory : public AbstractPluginFactory
+class KETAROLLER_EXPORT OutputPortFactory : public AbstractPluginFactory
 {
     Q_OBJECT
 public:

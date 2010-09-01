@@ -25,6 +25,8 @@
 
 #include <QtCore/QObject>
 
+#include <ketaroller-export.h>
+
 namespace KetaRoller {
 
 /**
@@ -38,7 +40,7 @@ namespace KetaRoller {
  * Please read @ref plugin_factory_model_sec "the plugin factory model" if you're interested in knowing
  * how PluginFactories work.
  */
-class AbstractPluginFactory : public QObject
+class KETAROLLER_EXPORT AbstractPluginFactory : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(AbstractPluginFactory)

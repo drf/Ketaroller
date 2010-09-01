@@ -29,6 +29,8 @@
 
 #include <QVariantMap>
 
+#include <ketaroller-export.h>
+
 namespace KetaRoller {
 class InputPort;
 
@@ -53,7 +55,7 @@ class InputDevicePrivate;
  * @sa KetaRoller::InputPort
  *
  */
-class Q_DECL_EXPORT InputDevice : public AbstractDevice
+class KETAROLLER_EXPORT InputDevice : public AbstractDevice
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(InputDevice)
@@ -188,7 +190,7 @@ Q_SIGNALS:
  * Please read @ref plugin_factory_model_sec "the plugin factory model" if you're interested in knowing
  * how PluginFactories work.
  */
-class Q_DECL_EXPORT InputDeviceFactory : public AbstractPluginFactory
+class KETAROLLER_EXPORT InputDeviceFactory : public AbstractPluginFactory
 {
     Q_OBJECT
 public:
@@ -203,17 +205,5 @@ public:
 Q_DECLARE_INTERFACE(KetaRoller::InputDevice, "org.KetaRoller.InputDevice/0.1")
 Q_DECLARE_INTERFACE(KetaRoller::InputDeviceFactory, "org.KetaRoller.InputDeviceFactory/0.1")
 Q_DECLARE_OPERATORS_FOR_FLAGS(KetaRoller::InputDevice::PortRemovalModes)
-
-#define KETAROLLER_INPUT_DEVICE_PLUGIN_FACTORY(type, _gen) \
-class Q_DECL_EXPORT _gen##Factory : public KetaRoller::InputDeviceFactory \
-{ \
-    Q_OBJECT \
-    Q_INTERFACES(KetaRoller::InputDeviceFactory) \
-    Q_DISABLE_COPY(_gen##Factory) \
-public: \
-    _gen##Factory(QObject* parent = 0) : KetaRoller::InputDeviceFactory(parent) {} \
-    ~_gen##Factory() {} \
-    virtual KetaRoller::InputDevice* newInstance(QObject* parent) { return new _gen(parent); } \
-};
 
 #endif // INPUTDEVICE_H

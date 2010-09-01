@@ -4,6 +4,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-ketaroller.h.in
                ${CMAKE_CURRENT_BINARY_DIR}/config-ketaroller.h
                @ONLY)
 
+add_definitions(-DBUILD_KETAROLLER_LIB)
+
 set(ketarollerlib_SRCS
     AbstractDevice.cpp
     AbstractPluginFactory.cpp

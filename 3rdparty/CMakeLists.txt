@@ -2,8 +2,6 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/oscpack
 )
 
-add_definitions(-fPIC)
-
 if (WIN32)
     find_library(WINMM_LIBRARY winmm)
     find_library(WS2_32_LIBRARY ws2_32)
@@ -15,6 +13,7 @@ elseif (APPLE)
     find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 
     add_definitions(-D__MACOSX_CORE__)
+    add_definitions(-fPIC)
 else ()
     find_package(Alsa REQUIRED)
     find_package(PThread REQUIRED)
@@ -22,6 +21,7 @@ else ()
     include_directories(${ALSA_INCLUDE_DIR} ${PTHREAD_INCLUDE_DIR})
 
     add_definitions(-D__LINUX_ALSASEQ__)
+    add_definitions(-fPIC)
 endif ()
 
 add_subdirectory(oscpack)

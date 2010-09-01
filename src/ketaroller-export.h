@@ -20,21 +20,9 @@
 
 */
 
-#include <config-ketaroller.h>
 
-#include <QtGlobal>
-#include <QDebug>
-
-namespace KetaRoller {
-QDir pluginPath()
-{
-#ifdef Q_OS_WIN32
-    QDir plDir = QDir::current();
-    plDir.cd("plugins");
-    qDebug() << "Plugins are in " << plDir.absolutePath();
-    return plDir;
+#ifdef BUILD_KETAROLLER_LIB
+#   define KETAROLLER_EXPORT Q_DECL_EXPORT
 #else
-    return QDir(PLUGIN_INSTALL_DIRECTORY);
+#   define KETAROLLER_EXPORT Q_DECL_IMPORT
 #endif
-}
-}

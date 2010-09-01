@@ -26,6 +26,7 @@
 #include <QObject>
 #include <QVariantMap>
 
+#include <ketaroller-export.h>
 
 namespace KetaRoller {
 
@@ -52,7 +53,7 @@ class OutputPort;
  * To have your InputDevice created and ready to go. All of the loading functions are guaranteed to return
  * an object which is already ready to be used.
  */
-class Q_DECL_EXPORT PluginLoader : public QObject
+class KETAROLLER_EXPORT PluginLoader : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(PluginLoader)

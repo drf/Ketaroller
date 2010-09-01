@@ -28,6 +28,8 @@
 #include <QtCore/QList>
 #include <QVariantMap>
 
+#include <ketaroller-export.h>
+
 
 namespace KetaRoller {
 
@@ -76,7 +78,7 @@ class InputPortPrivate;
  * @sa OutputPort
  * @sa OutputDevice
  */
-class Q_DECL_EXPORT InputPort : public Port
+class KETAROLLER_EXPORT InputPort : public Port
 {
     Q_DECLARE_PRIVATE(InputPort)
     Q_DISABLE_COPY(InputPort)

@@ -25,6 +25,8 @@
 
 #include <QtCore/qglobal.h>
 
+#include <ketaroller-export.h>
+
 namespace KetaRoller {
 
 class AbstractDevice;
@@ -39,7 +41,7 @@ class PortPrivate;
  * Please read @ref routing_model_sec "routing in KetaRoller" to learn more about
  * Ports and Devices.
  */
-class Q_DECL_EXPORT Port
+class KETAROLLER_EXPORT Port
 {
     Q_DECLARE_PRIVATE(Port)
     Q_DISABLE_COPY(Port)
