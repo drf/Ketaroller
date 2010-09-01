@@ -15,7 +15,9 @@ set(midi_input_device_plugin_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/MIDIInputDeviceFactory.cpp
 )
 
-automoc4_add_library(ketaroller_midi_input_device SHARED ${midi_input_device_plugin_SRCS})
+qt4_automoc(${midi_input_device_plugin_SRCS})
+
+add_library(ketaroller_midi_input_device SHARED ${midi_input_device_plugin_SRCS})
 target_link_libraries(ketaroller_midi_input_device ketaroller rtmidi ${QT_QTCORE_LIBRARY})
 
 add_ketaroller_plugin("MIDI" "MIDIOutputPort.h" "OutputPort" "MIDIOutputPort")
@@ -25,7 +27,9 @@ set(midi_output_port_plugin_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/MIDIOutputPortFactory.cpp
 )
 
-automoc4_add_library(ketaroller_midi_output_port SHARED ${midi_output_port_plugin_SRCS})
+qt4_automoc(${midi_output_port_plugin_SRCS})
+
+add_library(ketaroller_midi_output_port SHARED ${midi_output_port_plugin_SRCS})
 target_link_libraries(ketaroller_midi_output_port ketaroller rtmidi ${QT_QTCORE_LIBRARY})
 
 install(TARGETS ketaroller_midi_input_device DESTINATION ${PLUGIN_INSTALL_DIR}/ketaroller)

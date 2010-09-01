@@ -49,3 +49,5 @@ void AbstractDevice::init(const QVariantMap& args)
 }
 
 }
+
+#include "AbstractDevice.moc"

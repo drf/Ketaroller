@@ -68,3 +68,5 @@ void OutputPort::sendToDevice(const QGenericArgument& arg)
 }
 
 }
+
+#include "OutputPort.moc"

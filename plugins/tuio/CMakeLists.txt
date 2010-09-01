@@ -15,7 +15,9 @@ set(tuio_input_device_plugin_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/TUIOInputDeviceFactory.cpp
 )
 
-automoc4_add_library(ketaroller_tuio_input_device SHARED ${tuio_input_device_plugin_SRCS})
+qt4_automoc(${tuio_input_device_plugin_SRCS})
+
+add_library(ketaroller_tuio_input_device SHARED ${tuio_input_device_plugin_SRCS})
 target_link_libraries(ketaroller_tuio_input_device ketaroller tuio ${QT_QTGUI_LIBRARY})
 
 add_ketaroller_plugin("TUIO" "TuioOutputPort.h" "OutputPort" "TuioOutputPort")
@@ -25,7 +27,9 @@ set(tuio_output_port_plugin_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/TUIOOutputPortFactory.cpp
 )
 
-automoc4_add_library(ketaroller_tuio_output_port SHARED ${tuio_output_port_plugin_SRCS})
+qt4_automoc(${tuio_output_port_plugin_SRCS})
+
+add_library(ketaroller_tuio_output_port SHARED ${tuio_output_port_plugin_SRCS})
 target_link_libraries(ketaroller_tuio_output_port ketaroller tuio ${QT_QTGUI_LIBRARY})
 
 install(TARGETS ketaroller_tuio_input_device DESTINATION ${PLUGIN_INSTALL_DIR}/ketaroller)

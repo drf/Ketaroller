@@ -80,7 +80,7 @@ public:
 
 void PluginLoader::Private::refreshPluginList()
 {
-    QDir dir(PLUGIN_INSTALL_DIRECTORY);
+    QDir dir = pluginPath();
 
     dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 

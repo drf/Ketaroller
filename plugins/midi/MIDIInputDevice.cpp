@@ -77,3 +77,5 @@ void MIDIInputDevice::getMessage()
         port->putData(Q_ARG(MIDIMessage, message));
     }
 }
+
+#include "MIDIInputDevice.moc"

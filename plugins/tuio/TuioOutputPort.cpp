@@ -47,3 +47,5 @@ FiducialObject TuioOutputPort::lastMessage() const
 {
     return m_lastMessages.last();
 }
+
+#include "TuioOutputPort.moc"

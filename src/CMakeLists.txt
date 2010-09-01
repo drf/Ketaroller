@@ -14,7 +14,11 @@ set(ketarollerlib_SRCS
     OutputDevice.cpp
     #GesturedInputDevice.cpp
     PluginLoader.cpp
+
+    config-ketaroller.cpp
 )
 
-automoc4_add_library(ketaroller SHARED ${ketarollerlib_SRCS})
+qt4_automoc(${ketarollerlib_SRCS})
+
+add_library(ketaroller SHARED ${ketarollerlib_SRCS})
 target_link_libraries(ketaroller ${QT_QTCORE_LIBRARY})
