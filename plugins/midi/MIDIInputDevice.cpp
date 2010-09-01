@@ -65,6 +65,8 @@ bool MIDIInputDevice::validatePort(KetaRoller::InputPort* port)
         qDebug() << "This device is capable of handling MIDI ports only";
         return false;
     }
+
+    return true;
 }
 
 void MIDIInputDevice::getMessage()
