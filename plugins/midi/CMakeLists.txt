@@ -19,7 +19,11 @@ qt4_automoc(${midi_input_device_plugin_SRCS})
 add_library(ketaroller_midi_input_device SHARED ${midi_input_device_plugin_SRCS})
 target_link_libraries(ketaroller_midi_input_device ketaroller rtmidi ${QT_QTCORE_LIBRARY})
 
-install(TARGETS ketaroller_midi_input_device LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR} COMPONENT midiplugins)
+if (WIN32)
+    install(TARGETS ketaroller_midi_input_device RUNTIME DESTINATION ${PLUGIN_INSTALL_DIR} COMPONENT midiplugins)
+else (WIN32)
+    install(TARGETS ketaroller_midi_input_device LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR} COMPONENT midiplugins)
+endif (WIN32)
 
 
 ### MIDI output port
@@ -36,4 +40,8 @@ qt4_automoc(${midi_output_port_plugin_SRCS})
 add_library(ketaroller_midi_output_port SHARED ${midi_output_port_plugin_SRCS})
 target_link_libraries(ketaroller_midi_output_port ketaroller rtmidi ${QT_QTCORE_LIBRARY})
 
-install(TARGETS ketaroller_midi_output_port LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR} COMPONENT midiplugins)
+if (WIN32)
+    install(TARGETS ketaroller_midi_output_port RUNTIME DESTINATION ${PLUGIN_INSTALL_DIR} COMPONENT midiplugins)
+else (WIN32)
+    install(TARGETS ketaroller_midi_output_port LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR} COMPONENT midiplugins)
+endif (WIN32)

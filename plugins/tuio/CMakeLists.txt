@@ -21,7 +21,11 @@ qt4_automoc(${tuio_input_device_plugin_SRCS})
 add_library(ketaroller_tuio_input_device SHARED ${tuio_input_device_plugin_SRCS})
 target_link_libraries(ketaroller_tuio_input_device ketaroller tuio ${QT_QTGUI_LIBRARY})
 
-install(TARGETS ketaroller_tuio_input_device LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR} COMPONENT tuioplugins)
+if (WIN32)
+    install(TARGETS ketaroller_tuio_input_device RUNTIME DESTINATION ${PLUGIN_INSTALL_DIR} COMPONENT tuioplugins)
+else (WIN32)
+    install(TARGETS ketaroller_tuio_input_device LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR} COMPONENT tuioplugins)
+endif (WIN32)
 
 
 ### TUIO Output Port
@@ -38,4 +42,8 @@ qt4_automoc(${tuio_output_port_plugin_SRCS})
 add_library(ketaroller_tuio_output_port SHARED ${tuio_output_port_plugin_SRCS})
 target_link_libraries(ketaroller_tuio_output_port ketaroller tuio ${QT_QTGUI_LIBRARY})
 
-install(TARGETS ketaroller_tuio_output_port LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR} COMPONENT tuioplugins)
+if (WIN32)
+    install(TARGETS ketaroller_tuio_output_port RUNTIME DESTINATION ${PLUGIN_INSTALL_DIR} COMPONENT tuioplugins)
+else (WIN32)
+    install(TARGETS ketaroller_tuio_output_port LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR} COMPONENT tuioplugins)
+endif (WIN32)

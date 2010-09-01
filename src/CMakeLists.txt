@@ -38,6 +38,12 @@ qt4_automoc(${ketarollerlib_SRCS})
 add_library(ketaroller SHARED ${ketarollerlib_SRCS})
 target_link_libraries(ketaroller ${QT_QTCORE_LIBRARY})
 
-install(TARGETS ketaroller LIBRARY DESTINATION ${LIB_INSTALL_DIR} COMPONENT mainlibrary)
+if (WIN32)
+    install(TARGETS ketaroller RUNTIME DESTINATION ${LIB_INSTALL_DIR} COMPONENT mainlibrary
+                               ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT headers)
+else (WIN32)
+    install(TARGETS ketaroller LIBRARY DESTINATION ${LIB_INSTALL_DIR} COMPONENT mainlibrary
+                               ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT headers)
+endif (WIN32)
 
 install(FILES ${ketarollerlib_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT headers)

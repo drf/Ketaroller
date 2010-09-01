@@ -2,9 +2,15 @@ INCLUDE(InstallRequiredSystemLibraries)
 
 # Install the shared Qt distribution as well if we're on Windows
 if (WIN32)
-    install(FILES ${QT_QTCORE_LIBRARY} DESTINATION ${LIB_INSTALL_DIR} COMPONENT mainlibrary)
-    install(FILES ${QT_QTGUI_LIBRARY} DESTINATION ${LIB_INSTALL_DIR} COMPONENT tuioplugins)
-    install(FILES ${QT_QTTEST_LIBRARY} DESTINATION ${LIB_INSTALL_DIR} COMPONENT tests)
+    if (CMAKE_BUILD_TYPE STREQUAL "Release")
+        install(FILES ${QT_LIBRARY_DIR}/../bin/QtCore4.dll DESTINATION ${LIB_INSTALL_DIR} COMPONENT mainlibrary)
+        install(FILES ${QT_LIBRARY_DIR}/../bin/QtGui4.dll DESTINATION ${LIB_INSTALL_DIR} COMPONENT tuioplugins)
+        install(FILES ${QT_LIBRARY_DIR}/../bin/QtTest4.dll DESTINATION ${LIB_INSTALL_DIR} COMPONENT tests)
+    else (CMAKE_BUILD_TYPE STREQUAL "Release")
+        install(FILES ${QT_LIBRARY_DIR}/../bin/QtCored4.dll DESTINATION ${LIB_INSTALL_DIR} COMPONENT mainlibrary)
+        install(FILES ${QT_LIBRARY_DIR}/../bin/QtGuid4.dll DESTINATION ${LIB_INSTALL_DIR} COMPONENT tuioplugins)
+        install(FILES ${QT_LIBRARY_DIR}/../bin/QtTestd4.dll DESTINATION ${LIB_INSTALL_DIR} COMPONENT tests)
+    endif (CMAKE_BUILD_TYPE STREQUAL "Release")
 endif (WIN32)
 
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An advanced signal router for musical devices")
