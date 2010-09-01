@@ -1,5 +1,12 @@
 INCLUDE(InstallRequiredSystemLibraries)
 
+# Install the shared Qt distribution as well if we're on Windows
+if (WIN32)
+    install(FILES ${QT_QTCORE_LIBRARY} DESTINATION ${LIB_INSTALL_DIR} COMPONENT mainlibrary)
+    install(FILES ${QT_QTGUI_LIBRARY} DESTINATION ${LIB_INSTALL_DIR} COMPONENT tuioplugins)
+    install(FILES ${QT_QTTEST_LIBRARY} DESTINATION ${LIB_INSTALL_DIR} COMPONENT tests)
+endif (WIN32)
+
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An advanced signal router for musical devices")
 SET(CPACK_PACKAGE_VENDOR "Dario Freddi, Luca Mucci")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt")
@@ -25,11 +32,55 @@ ELSE(WIN32 AND NOT UNIX)
   SET(CPACK_SOURCE_STRIP_FILES "")
 ENDIF(WIN32 AND NOT UNIX)
 #SET(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
-INCLUDE(CPack)
 
 if (APPLE)
     set(CPACK_SET_DESTDIR ON)
     set(CPACK_PACKAGE_RELOCATABLE OFF)
 endif (APPLE)
 
+#define components
+set(CPACK_COMPONENTS_ALL mainlibrary headers tuioplugins midiplugins tests)
+
+#name components
+set(CPACK_COMPONENT_MAINLIBRARY_DISPLAY_NAME "KetaRoller main components")
+set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "Development files")
+set(CPACK_COMPONENT_TUIOPLUGINS_DISPLAY_NAME "TUIO plugins for KetaRoller")
+set(CPACK_COMPONENT_MIDIPLUGINS_DISPLAY_NAME "MIDI plugins for KetaRoller")
+set(CPACK_COMPONENT_TESTS_DISPLAY_NAME "Tests and examples")
+
+#components description
+set(CPACK_COMPONENT_MAINLIBRARY_DESCRIPTION
+   "The main KetaRoller library and its dependencies")
+set(CPACK_COMPONENT_HEADERS_DESCRIPTION
+   "Header files for KetaRoller - needed if you need to create your own plugin and/or application")
+set(CPACK_COMPONENT_TUIOPLUGINS_DESCRIPTION
+   "TUIO i/o support for KetaRoller")
+set(CPACK_COMPONENT_MIDIPLUGINS_DESCRIPTION
+   "MIDI i/o support for KetaRoller")
+set(CPACK_COMPONENT_TESTS_DESCRIPTION
+   "A set of small application to test KetaRoller's functionalities")
+
+set(CPACK_COMPONENT_HEADERS_DEPENDS mainlibrary)
+set(CPACK_COMPONENT_MIDIPLUGINS_DEPENDS mainlibrary)
+set(CPACK_COMPONENT_TUIOPLUGINS_DEPENDS mainlibrary)
+set(CPACK_COMPONENT_TESTS_DEPENDS mainlibrary midiplugins tuioplugins)
+
+#groups
+set(CPACK_COMPONENT_MIDIPLUGINS_GROUP "Plugins")
+set(CPACK_COMPONENT_TUIOPLUGINS_GROUP "Plugins")
+
+#groups description
+set(CPACK_COMPONENT_GROUP_DEVELOPMENT_DESCRIPTION
+   "Various I/O plugins for KetaRoller")
+
+#installation types
+set(CPACK_ALL_INSTALL_TYPES Full User Developer Minimal)
+
+set(CPACK_COMPONENT_MAINLIBRARY_INSTALL_TYPES Full User Developer Minimal)
+set(CPACK_COMPONENT_HEADERS_INSTALL_TYPES Full Developer)
+set(CPACK_COMPONENT_TUIOPLUGINS_INSTALL_TYPES Full User Developer)
+set(CPACK_COMPONENT_MIDIPLUGINS_INSTALL_TYPES Full User Developer)
+set(CPACK_COMPONENT_MAINLIBRARY_INSTALL_TYPES Full Developer)
+
+# Leave this as the last declaration, always!!!
 include(CPack)

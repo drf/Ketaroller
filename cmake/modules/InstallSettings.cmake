@@ -8,17 +8,17 @@ set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 if (WIN32)
 # use relative install prefix to avoid hardcoded install paths in cmake_install.cmake files
 
-   set(LIB_INSTALL_DIR      "lib${LIB_SUFFIX}" )            # The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+   set(LIB_INSTALL_DIR      "" )            # The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})
 
    set(EXEC_INSTALL_PREFIX  "" )        # Base directory for executables and libraries
    set(SHARE_INSTALL_PREFIX "share" )   # Base directory for files which go to share/
-   set(BIN_INSTALL_DIR      "bin"   )   # The install dir for executables (default ${EXEC_INSTALL_PREFIX}/bin)
+   set(BIN_INSTALL_DIR      ""   )   # The install dir for executables (default ${EXEC_INSTALL_PREFIX}/bin)
    set(SBIN_INSTALL_DIR     "sbin"  )   # The install dir for system executables (default ${EXEC_INSTALL_PREFIX}/sbin)
 
    set(LIBEXEC_INSTALL_DIR  "${BIN_INSTALL_DIR}"          ) # The subdirectory relative to the install prefix where libraries will be installed (default is ${BIN_INSTALL_DIR})
    set(INCLUDE_INSTALL_DIR  "include"                     ) # The subdirectory to the header prefix
 
-   set(PLUGIN_INSTALL_DIR       "lib${LIB_SUFFIX}/kde4"   ) #                "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)
+   set(PLUGIN_INSTALL_DIR       "plugins"                 ) # "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)
    set(CONFIG_INSTALL_DIR       "share/config"            ) # The config file install dir
    set(DATA_INSTALL_DIR         "share/apps"              ) # The parent directory where applications can install their data
    set(HTML_INSTALL_DIR         "share/doc/HTML"          ) # The HTML install dir for documentation
@@ -80,7 +80,7 @@ else (WIN32)
    _set_fancy(LIBEXEC_INSTALL_DIR  "${LIB_INSTALL_DIR}/kde4/libexec"         "The subdirectory relative to the install prefix where libraries will be installed (default is ${LIB_INSTALL_DIR}/kde4/libexec)")
    _set_fancy(INCLUDE_INSTALL_DIR  "${CMAKE_INSTALL_PREFIX}/include"         "The subdirectory to the header prefix")
 
-   _set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)")
+   _set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/ketaroller"          "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)")
    _set_fancy(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"         "The config file install dir")
    _set_fancy(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"           "The parent directory where applications can install their data")
    _set_fancy(HTML_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/doc/HTML"       "The HTML install dir for documentation")

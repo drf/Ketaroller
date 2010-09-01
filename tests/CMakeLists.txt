@@ -8,6 +8,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/3rdparty/tuio
 )
 
+### Plugin load test
+
 set(plugin_load_test_SRCS
     testpluginload.cpp
 )
@@ -21,6 +23,11 @@ target_link_libraries(plugin-load-test
     ${QT_QTTEST_LIBRARY}
     ketaroller
 )
+
+install(TARGETS plugin-load-test RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT tests)
+
+
+### MIDI ports test
 
 set(midi_ports_test_SRCS
     testmidiports.cpp
@@ -38,6 +45,11 @@ target_link_libraries(midi-ports-test
     ketaroller
 )
 
+install(TARGETS midi-ports-test RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT tests)
+
+
+### TUIO ports test
+
 set(tuio_ports_test_SRCS
     testtuioports.cpp
     ../plugins/tuio/TuioOutputPort.cpp
@@ -54,6 +66,10 @@ target_link_libraries(tuio-ports-test
     ketaroller
     tuio
 )
+
+install(TARGETS tuio-ports-test RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT tests)
+
+### CTest targets
 
 add_test(PluginLoaderMIDITest ${CMAKE_CURRENT_BINARY_DIR}/plugin-load-test)
 add_test(MIDICommunicationTest ${CMAKE_CURRENT_BINARY_DIR}/midi-ports-test)

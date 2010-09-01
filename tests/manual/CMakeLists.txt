@@ -4,6 +4,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/3rdparty/tuio
 )
 
+### Reactivision test
+
 set(tuio_reactivision_manual_test_SRCS
     tuioreactivisionmanualtest.cpp
     ../../plugins/tuio/FiducialObject.cpp
@@ -19,6 +21,11 @@ target_link_libraries(tuio-reactivision-manual-test
     ketaroller
     tuio
 )
+
+install(TARGETS tuio-reactivision-manual-test RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT tests)
+
+
+### Ports to fiducial test
 
 set(tuio_ports_to_fiducial_test_SRCS
     tuioportstofiducialstest.cpp
@@ -36,3 +43,5 @@ target_link_libraries(tuio-ports-to-fiducial-test
     ketaroller
     tuio
 )
+
+install(TARGETS tuio-ports-to-fiducial-test RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT tests)

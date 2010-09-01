@@ -20,7 +20,24 @@ set(ketarollerlib_SRCS
     config-ketaroller.cpp
 )
 
+set(ketarollerlib_HDRS
+    AbstractDevice.h
+    AbstractPluginFactory.h
+    InputDevice.h
+    Port.h
+    InputPort.h
+    OutputPort.h
+    OutputDevice.h
+    PluginLoader.h
+
+    ketaroller-export.h
+)
+
 qt4_automoc(${ketarollerlib_SRCS})
 
 add_library(ketaroller SHARED ${ketarollerlib_SRCS})
 target_link_libraries(ketaroller ${QT_QTCORE_LIBRARY})
+
+install(TARGETS ketaroller LIBRARY DESTINATION ${LIB_INSTALL_DIR} COMPONENT mainlibrary)
+
+install(FILES ${ketarollerlib_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT headers)
