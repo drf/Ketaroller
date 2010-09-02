@@ -26,7 +26,7 @@
 #include <QtGui>
 #include <QtTest/QtTest>
 
-#include <OutputDevice.h>
+#include <KetaRoller/OutputDevice>
 
 class FiducialObject;
 class MIDIMessage;

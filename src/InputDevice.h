@@ -23,9 +23,8 @@
 #ifndef INPUTDEVICE_H
 #define INPUTDEVICE_H
 
-#include "AbstractDevice.h"
-
-#include "AbstractPluginFactory.h"
+#include <KetaRoller/AbstractDevice>
+#include <KetaRoller/AbstractPluginFactory>
 
 #include <QVariantMap>
 

@@ -23,8 +23,8 @@
 #ifndef KETAROLLER_OUTPUTDEVICE_H
 #define KETAROLLER_OUTPUTDEVICE_H
 
-#include <AbstractDevice.h>
-#include "AbstractPluginFactory.h"
+#include <KetaRoller/AbstractDevice>
+#include <KetaRoller/AbstractPluginFactory>
 
 #include <QVariantMap>
 

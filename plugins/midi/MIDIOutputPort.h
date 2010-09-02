@@ -23,7 +23,7 @@
 #ifndef MIDIOUTPUTPORT_H
 #define MIDIOUTPUTPORT_H
 
-#include <OutputPort.h>
+#include <KetaRoller/OutputPort>
 
 #include "MIDIMessage.h"
 

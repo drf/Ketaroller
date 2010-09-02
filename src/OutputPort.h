@@ -23,8 +23,8 @@
 #ifndef KETAROLLER_OUTPUTPORT_H
 #define KETAROLLER_OUTPUTPORT_H
 
-#include <Port.h>
-#include "AbstractPluginFactory.h"
+#include <KetaRoller/Port>
+#include <KetaRoller/AbstractPluginFactory>
 
 #include <QtPlugin>
 #include <QDebug>

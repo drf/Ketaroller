@@ -21,8 +21,9 @@
 */
 
 #include "testpluginload.h"
-#include <PluginLoader.h>
-#include <InputDevice.h>
+
+#include <KetaRoller/PluginLoader>
+#include <KetaRoller/InputDevice>
 
 void TestPluginLoad::initTestCase()
 {

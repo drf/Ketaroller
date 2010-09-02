@@ -22,9 +22,10 @@
 
 #include "testmidiports.h"
 
-#include <PluginLoader.h>
+#include <KetaRoller/PluginLoader>
+#include <KetaRoller/InputPort>
+
 #include "../plugins/midi/MIDIOutputPort.h"
-#include <InputPort.h>
 
 #include <vector>
 

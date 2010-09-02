@@ -25,7 +25,7 @@
 
 #include <QtCore/QPointF>
 
-#include <OutputPort.h>
+#include <KetaRoller/OutputPort>
 #include "FiducialObject.h"
 
 /**

@@ -22,8 +22,8 @@
 
 #include "testtuioports.h"
 
-#include <PluginLoader.h>
-#include <InputPort.h>
+#include <KetaRoller/PluginLoader>
+#include <KetaRoller/InputPort>
 
 #include "../plugins/tuio/TuioOutputPort.h"
 #include <TuioObject.h>

@@ -22,10 +22,10 @@
 
 #include "tuioreactivisionmanualtest.h"
 
-#include <InputDevice.h>
-#include <InputPort.h>
-#include <OutputPort.h>
-#include <PluginLoader.h>
+#include <KetaRoller/InputDevice>
+#include <KetaRoller/InputPort>
+#include <KetaRoller/OutputPort>
+#include <KetaRoller/PluginLoader>
 
 #define REACTIVISION_OBJECT_ID 2
 #include "../../plugins/tuio/FiducialObject.h"

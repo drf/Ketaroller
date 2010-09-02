@@ -23,10 +23,11 @@
 #ifndef KETAROLLER_INPUTPORT_H
 #define KETAROLLER_INPUTPORT_H
 
-#include <Port.h>
-#include <OutputPort.h>
+#include <KetaRoller/Port>
+#include <KetaRoller/OutputPort>
+
 #include <QtCore/QList>
-#include <QVariantMap>
+#include <QtCore/QVariantMap>
 
 #include <ketaroller-export.h>
 

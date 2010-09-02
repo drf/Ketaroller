@@ -23,7 +23,7 @@
 #ifndef TUIOINPUTDEVICE_H
 #define TUIOINPUTDEVICE_H
 
-#include "InputDevice.h"
+#include <KetaRoller/InputDevice>
 
 #include "TuioListener.h"
 

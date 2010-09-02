@@ -47,3 +47,5 @@ else (WIN32)
 endif (WIN32)
 
 install(FILES ${ketarollerlib_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT headers)
+
+add_subdirectory(KetaRoller)

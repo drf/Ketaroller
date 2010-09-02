@@ -25,10 +25,11 @@
 
 #include <cstdlib>
 #include "RtMidi.h"
-#include "InputDevice.h"
 #include "MIDIMessage.h"
 
 #include <QtCore/QThread>
+
+#include <KetaRoller/InputDevice>
 
 /**
  * @brief Class for MIDI input devices
