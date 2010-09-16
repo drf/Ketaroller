@@ -58,6 +58,10 @@ ENDIF(WIN32 AND NOT UNIX)
 if (APPLE)
     set(CPACK_SET_DESTDIR ON)
     set(CPACK_PACKAGE_RELOCATABLE OFF)
+    set(CPACK_BUNDLE_NAME "KetaRoller")
+    set(CPACK_BUNDLE_PLIST ${CMAKE_SOURCE_DIR}/Info.plist)
+    set(CPACK_BUNDLE_ICON ${CMAKE_BINARY_DIR}/green.icns)
+    set(CPACK_BUNDLE_STARTUP_COMMAND "")
 endif (APPLE)
 
 #define components

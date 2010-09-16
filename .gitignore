@@ -8,3 +8,5 @@ moc_*
 .kdev4/
 apidocs/
 installatio/
+*.user
+qtcreator-build/
