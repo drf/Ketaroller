@@ -128,6 +128,7 @@ void TuioInputDevice::onPortRemoved(KetaRoller::InputPort* port)
 
 void TuioInputDevice::addTuioCursor(TUIO::TuioCursor* tcur)
 {
+    return;
     QTouchEvent::TouchPoint touchPoint = tuioCursorToTouchPoint(tcur);
 
     const QPointF normPos(tcur->getX(), tcur->getY());
@@ -173,6 +174,7 @@ void TuioInputDevice::refresh(TUIO::TuioTime ftime)
 
 void TuioInputDevice::removeTuioCursor(TUIO::TuioCursor* tcur)
 {
+    return;
     QTouchEvent::TouchPoint touchPoint = tuioCursorToTouchPoint(tcur);
 
     touchPoint.setState(Qt::TouchPointReleased);
@@ -207,6 +209,7 @@ void TuioInputDevice::removeTuioObject(TUIO::TuioObject* tobj)
 
 void TuioInputDevice::updateTuioCursor(TUIO::TuioCursor* tcur)
 {
+    return;
     QTouchEvent::TouchPoint touchPoint = tuioCursorToTouchPoint(tcur);
 
     if (tcur->getMotionSpeed() > 0) {

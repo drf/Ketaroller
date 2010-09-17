@@ -2,46 +2,40 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/3rdparty/tuio
+    ${CMAKE_SOURCE_DIR}/3rdparty/rtmidi
+
 )
 
-### Reactivision test
+function(add_ketaroller_manual_test _NAME)
+    ketaroller_extract_libraries(_srcs _libs ${ARGN})
 
-set(tuio_reactivision_manual_test_SRCS
-    tuioreactivisionmanualtest.cpp
-    ../../plugins/tuio/FiducialObject.cpp
-)
+    set(_target_SRCS
+        ${_NAME}.cpp
+        ${_srcs}
+    )
 
-qt4_automoc(${tuio_reactivision_manual_test_SRCS})
+    qt4_automoc(${_target_SRCS})
 
-add_executable(tuio-reactivision-manual-test ${tuio_reactivision_manual_test_SRCS})
+    add_executable(${_NAME} ${_target_SRCS})
 
-target_link_libraries(tuio-reactivision-manual-test
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTTEST_LIBRARY}
-    ketaroller
-    tuio
-)
+    target_link_libraries(${_NAME}
+        ${QT_QTCORE_LIBRARY}
+        ${QT_QTTEST_LIBRARY}
+        ketaroller
+        ${_libs}
+    )
 
-install(TARGETS tuio-reactivision-manual-test RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT tests)
+    install(TARGETS ${_NAME} RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT tests)
+endfunction(add_ketaroller_manual_test _NAME)
 
+add_ketaroller_manual_test(tuioreactivisionmanualtest
+                           tuioreactivisionmanualtest.cpp
+                           ../../plugins/tuio/FiducialObject.cpp
+                           LIBRARIES tuio)
+add_ketaroller_manual_test(tuioportstofiducialstest
+                           ../../plugins/tuio/FiducialObject.cpp
+                           LIBRARIES tuio)
 
-### Ports to fiducial test
-
-set(tuio_ports_to_fiducial_test_SRCS
-    tuioportstofiducialstest.cpp
-    ../../plugins/tuio/FiducialObject.cpp
-)
-
-
-qt4_automoc(${tuio_ports_to_fiducial_test_SRCS})
-
-add_executable(tuio-ports-to-fiducial-test ${tuio_ports_to_fiducial_test_SRCS})
-
-target_link_libraries(tuio-ports-to-fiducial-test
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTTEST_LIBRARY}
-    ketaroller
-    tuio
-)
-
-install(TARGETS tuio-ports-to-fiducial-test RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT tests)
+add_ketaroller_manual_test(midimanualtest
+                           ../../plugins/midi/MIDIMessage.cpp
+                           LIBRARIES rtmidi)

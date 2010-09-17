@@ -8,71 +8,56 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/3rdparty/tuio
 )
 
+MACRO (KETAROLLER_EXTRACT_LIBRARIES _ketaroller_files _ketaroller_libraries)
+  SET(${_ketaroller_files})
+  SET(${_ketaroller_libraries})
+  SET(_KETAROLLER_DOING_LIBRARIES FALSE)
+  FOREACH(_currentArg ${ARGN})
+    IF ("${_currentArg}" STREQUAL "LIBRARIES")
+      SET(_KETAROLLER_DOING_LIBRARIES TRUE)
+    ELSE ("${_currentArg}" STREQUAL "LIBRARIES")
+      IF(_KETAROLLER_DOING_LIBRARIES)
+        LIST(APPEND ${_ketaroller_libraries} "${_currentArg}")
+      ELSE(_KETAROLLER_DOING_LIBRARIES)
+        LIST(APPEND ${_ketaroller_files} "${_currentArg}")
+      ENDIF(_KETAROLLER_DOING_LIBRARIES)
+    ENDIF ("${_currentArg}" STREQUAL "LIBRARIES")
+  ENDFOREACH(_currentArg)
+ENDMACRO (KETAROLLER_EXTRACT_LIBRARIES)
+
+function(add_ketaroller_test _NAME _PRETTY_NAME)
+    ketaroller_extract_libraries(_srcs _libs ${ARGN})
+
+    set(_target_SRCS
+        ${_NAME}.cpp
+        ${_srcs}
+    )
+
+    qt4_automoc(${_target_SRCS})
+
+    add_executable(${_NAME} ${_target_SRCS})
+
+    target_link_libraries(${_NAME}
+        ${QT_QTCORE_LIBRARY}
+        ${QT_QTTEST_LIBRARY}
+        ketaroller
+        ${_libs}
+    )
+
+    install(TARGETS ${_NAME} RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT tests)
+
+    add_test(${_PRETTY_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_NAME})
+endfunction(add_ketaroller_test _NAME _PRETTY_NAME)
+
 ### Plugin load test
 
-set(plugin_load_test_SRCS
-    testpluginload.cpp
-)
-
-qt4_automoc(${plugin_load_test_SRCS})
-
-add_executable(plugin-load-test ${plugin_load_test_SRCS})
-
-target_link_libraries(plugin-load-test
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTTEST_LIBRARY}
-    ketaroller
-)
-
-install(TARGETS plugin-load-test RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT tests)
-
-
-### MIDI ports test
-
-set(midi_ports_test_SRCS
-    testmidiports.cpp
-    ../plugins/midi/MIDIOutputPort.cpp
-    ../plugins/midi/MIDIMessage.cpp
-)
-
-qt4_automoc(${midi_ports_test_SRCS})
-
-add_executable(midi-ports-test ${midi_ports_test_SRCS})
-
-target_link_libraries(midi-ports-test
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTTEST_LIBRARY}
-    ketaroller
-)
-
-install(TARGETS midi-ports-test RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT tests)
-
-
-### TUIO ports test
-
-set(tuio_ports_test_SRCS
-    testtuioports.cpp
-    ../plugins/tuio/TuioOutputPort.cpp
-    ../plugins/tuio/FiducialObject.cpp
-)
-
-qt4_automoc(${tuio_ports_test_SRCS})
-
-add_executable(tuio-ports-test ${tuio_ports_test_SRCS})
-
-target_link_libraries(tuio-ports-test
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTTEST_LIBRARY}
-    ketaroller
-    tuio
-)
-
-install(TARGETS tuio-ports-test RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT tests)
-
-### CTest targets
-
-add_test(PluginLoaderMIDITest ${CMAKE_CURRENT_BINARY_DIR}/plugin-load-test)
-add_test(MIDICommunicationTest ${CMAKE_CURRENT_BINARY_DIR}/midi-ports-test)
-add_test(TuioCommunicationTest ${CMAKE_CURRENT_BINARY_DIR}/tuio-ports-test)
+add_ketaroller_test(testpluginload PluginLoaderMIDITest)
+add_ketaroller_test(testmidiports MIDICommunicationTest
+                    ../plugins/midi/MIDIOutputPort.cpp
+                    ../plugins/midi/MIDIMessage.cpp)
+add_ketaroller_test(testtuioports TuioCommunicationTest
+                    ../plugins/tuio/TuioOutputPort.cpp
+                    ../plugins/tuio/FiducialObject.cpp
+                    LIBRARIES tuio)
 
 add_subdirectory(manual)
