@@ -34,3 +34,37 @@ MIDITestOutputDevice::MIDITestOutputDevice(QObject* parent)
 {
     qDebug() << "A test output device has been created";
 }
+
+MIDITestOutputDevice::~MIDITestOutputDevice()
+{
+
+}
+
+void MIDITestOutputDevice::newDataFromPort(KetaRoller::OutputPort* port, const MIDIObject& obj)
+{
+
+}
+
+bool MIDITestOutputDevice::validatePort(KetaRoller::OutputPort* port)
+{
+
+}
+
+
+void MIDITestOutputDevice::init(const QVariantMap& args)
+{
+    KetaRoller::AbstractDevice::init(args);
+}
+
+void MIDIManualTest::initTestCase()
+{
+
+}
+
+void MIDIManualTest::testCatchMessage()
+{
+
+}
+
+QTEST_MAIN(MIDIManualTest)
+#include "midimanualtest.moc"

@@ -182,7 +182,7 @@ InputDevice* PluginLoader::loadInputDevice(PluginLoader::Type type, const QVaria
 
     InputDevice *device = inputFactory->newInstance(this);
 
-    device->init();
+    device->init(args);
 
     return device;
 }
@@ -207,7 +207,7 @@ OutputDevice* PluginLoader::loadOutputDevice(PluginLoader::Type type, const QVar
 
     OutputDevice *device = outputFactory->newInstance(this);
 
-    device->init();
+    device->init(args);
 
     return device;
 }
