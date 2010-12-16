@@ -187,10 +187,8 @@ InputDevice* PluginLoader::loadInputDevice(PluginLoader::Type type, const QVaria
     return device;
 }
 
-OutputDevice* PluginLoader::loadOutputDevice(PluginLoader::Type type, const QVariantMap& args)
+OutputDevice* PluginLoader::loadOutputDevice(const QString &pluginBaseName, const QVariantMap& args)
 {
-    QString pluginBaseName = QLatin1String("ketaroller_") + d->mapTypeToName(type) + QLatin1String("_output_device");
-
     AbstractPluginFactory *factory = d->loadPlugin(pluginBaseName);
 
     if (!factory) {
@@ -233,6 +231,17 @@ OutputPort* PluginLoader::loadOutputPort(PluginLoader::Type type)
     OutputPort *port = outputPortFactory->newInstance(this);
 
     return port;
+}
+
+QStringList PluginLoader::listOutputDevices() const
+{
+    QStringList retlist;
+    foreach (const QFileInfo &info, d->pluginList) {
+        if (info.baseName().contains("output_device")) {
+            retlist.append(info.baseName());
+        }
+    }
+    return retlist;
 }
 
 }

@@ -106,16 +106,22 @@ public:
     /**
      * @brief Loads a new instance of an OutputDevice of the specified type
      *
-     * This function creates a new instance of an OutputDevice of the specified @c type. The returned OutputDevice
+     * This function creates a new instance of an OutputDevice from the library named @c name. @c Name is a
+     * plugin name which can be retrieved from @c listOutputDevices. The returned OutputDevice
      * is guaranteed to be already ready to be used.
      *
-     * @param type The type of this OutputDevice
+     * @param name The name of this OutputDevice
      * @param args A set of arbitrary arguments to be passed to the new OutputDevice. Please see
      *             @ref plugins_init_arguments_sec "Plugin arguments" for learning more on this.
      *
      * @returns A ready to be used OutputDevice, or 0 if loading the plugin was unsuccessful
      */
-    OutputDevice *loadOutputDevice(Type type, const QVariantMap &args = QVariantMap());
+    OutputDevice *loadOutputDevice(const QString &name, const QVariantMap &args = QVariantMap());
+
+    /**
+     * Lists output devices available on the system.
+     */
+    QStringList listOutputDevices() const;
 
     /**
      * Base destructor
