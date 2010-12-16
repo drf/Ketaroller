@@ -54,7 +54,8 @@ bool GrabberWidget::event(QEvent* event)
             gestureEvent->accept(gesture);
 
             if (gesture->state() == Qt::GestureFinished) {
-                //
+                // Stream the gesture
+                emit gestureRecognized(gesture);
             }
         }
     }
@@ -67,11 +68,6 @@ bool GrabberWidget::event(QEvent* event)
 TuioInputDevice::TuioInputDevice(QObject* parent)
         : InputDevice(parent)
 {
-//     if (QApplication::instance()->) {
-//         m_widget = new GrabberWidget();
-//         m_widget->setHidden(true);
-//     }
-//     m_widget->grabGesture();
 }
 
 TuioInputDevice::~TuioInputDevice()
@@ -94,22 +90,41 @@ void TuioInputDevice::init(const QVariantMap& args)
 
     connect(this, SIGNAL(portAdded(KetaRoller::InputPort*)), this, SLOT(onPortAdded(KetaRoller::InputPort*)));
     connect(this, SIGNAL(portRemoved(KetaRoller::InputPort*)), this, SLOT(onPortRemoved(KetaRoller::InputPort*)));
+
+    if (args.value("EnableGestures", false).toBool()) {
+        qDebug() << "Gesture support enabled";
+        m_widget = new GrabberWidget();
+        m_widget.data()->setHidden(true);
+        connect(m_widget.data(), SIGNAL(gestureRecognized(QGesture*)), this, SLOT(onGestureRecognized(QGesture*)));
+    } else {
+        qDebug() << "Gesture support disabled";
+    }
 }
 
 bool TuioInputDevice::validatePort(KetaRoller::InputPort* port)
 {
-    if (port->type() != KetaRoller::InputPort::TUIOType) {
-        qDebug() << "This device is capable of handling TUIO ports only";
-        return false;
-    }
+    if (port->type() == KetaRoller::InputPort::TUIOType) {
+        if (!port->args().contains("TuioFiducialID") || port->args().value("TuioFiducialID").type() != QVariant::Int) {
+            qDebug() << "Missing Fiducial ID argument or wrong argument supplied";
+            return false;
+        }
 
-    if (!port->args().contains("TuioFiducialID") || port->args().value("TuioFiducialID").type() != QVariant::Int) {
-        qDebug() << "Missing Fiducial ID argument or wrong argument supplied";
-        return false;
-    }
+        if (m_portForSymbol.contains(port->args().value("TuioFiducialID").toInt())) {
+            qDebug() << "There's already an existing port handling fiducial " << port->args().value("TuioFiducialID").toInt();
+            return false;
+        }
+    } else if (port->type() == KetaRoller::InputPort::GestureType) {
+        if (!port->args().contains("GestureType")) {
+            qDebug() << "Missing gesture type";
+            return false;
+        }
 
-    if (m_portForSymbol.contains(port->args().value("TuioFiducialID").toInt())) {
-        qDebug() << "There's already an existing port handling fiducial " << port->args().value("TuioFiducialID").toInt();
+        if (m_portForGesture.contains((Qt::GestureType)port->args().value("GestureType").toUInt())) {
+            qDebug() << "There's already an existing port handling gesture " << port->args().value("GestureType").toUInt();
+            return false;
+        }
+    } else {
+        qDebug() << "This device is capable of handling TUIO or Gesture ports only";
         return false;
     }
 
@@ -118,17 +133,34 @@ bool TuioInputDevice::validatePort(KetaRoller::InputPort* port)
 
 void TuioInputDevice::onPortAdded(KetaRoller::InputPort* port)
 {
-    m_portForSymbol.insert(port->args().value("TuioFiducialID").toInt(), port);
+    if (port->type() == KetaRoller::InputPort::TUIOType) {
+        m_portForSymbol.insert(port->args().value("TuioFiducialID").toInt(), port);
+    } else {
+        m_portForGesture.insert((Qt::GestureType)port->args().value("GestureType").toUInt(), port);
+        if (!m_widget.isNull()) {
+            m_widget.data()->grabGesture((Qt::GestureType)port->args().value("GestureType").toUInt());
+        }
+    }
 }
 
 void TuioInputDevice::onPortRemoved(KetaRoller::InputPort* port)
 {
-    m_portForSymbol.remove(port->args().value("TuioFiducialID").toInt());
+    if (port->type() == KetaRoller::InputPort::TUIOType) {
+        m_portForSymbol.remove(port->args().value("TuioFiducialID").toInt());
+    } else {
+        m_portForGesture.remove((Qt::GestureType)port->args().value("GestureType").toUInt());
+        if (!m_widget.isNull()) {
+            m_widget.data()->ungrabGesture((Qt::GestureType)port->args().value("GestureType").toUInt());
+        }
+    }
 }
 
 void TuioInputDevice::addTuioCursor(TUIO::TuioCursor* tcur)
 {
-    return;
+    if (m_widget.isNull()) {
+        return;
+    }
+
     QTouchEvent::TouchPoint touchPoint = tuioCursorToTouchPoint(tcur);
 
     const QPointF normPos(tcur->getX(), tcur->getY());
@@ -153,7 +185,7 @@ void TuioInputDevice::addTuioCursor(TUIO::TuioCursor* tcur)
                                          0,
                                          m_touchPoints.value(tcur->getSessionID()));
 
-    QCoreApplication::instance()->postEvent(m_widget, touchEvent);
+    QCoreApplication::instance()->postEvent(m_widget.data(), touchEvent);
 }
 
 void TuioInputDevice::addTuioObject(TUIO::TuioObject* tobj)
@@ -174,7 +206,10 @@ void TuioInputDevice::refresh(TUIO::TuioTime ftime)
 
 void TuioInputDevice::removeTuioCursor(TUIO::TuioCursor* tcur)
 {
-    return;
+    if (m_widget.isNull()) {
+        return;
+    }
+
     QTouchEvent::TouchPoint touchPoint = tuioCursorToTouchPoint(tcur);
 
     touchPoint.setState(Qt::TouchPointReleased);
@@ -190,7 +225,7 @@ void TuioInputDevice::removeTuioCursor(TUIO::TuioCursor* tcur)
                                          0,
                                          m_touchPoints.value(tcur->getSessionID()));
 
-    QCoreApplication::instance()->postEvent(m_widget, touchEvent);
+    QCoreApplication::instance()->postEvent(m_widget.data(), touchEvent);
 
     m_touchPoints.remove(tcur->getSessionID());
 }
@@ -209,7 +244,10 @@ void TuioInputDevice::removeTuioObject(TUIO::TuioObject* tobj)
 
 void TuioInputDevice::updateTuioCursor(TUIO::TuioCursor* tcur)
 {
-    return;
+    if (m_widget.isNull()) {
+        return;
+    }
+
     QTouchEvent::TouchPoint touchPoint = tuioCursorToTouchPoint(tcur);
 
     if (tcur->getMotionSpeed() > 0) {
@@ -231,7 +269,7 @@ void TuioInputDevice::updateTuioCursor(TUIO::TuioCursor* tcur)
                                          0,
                                          m_touchPoints.value(tcur->getSessionID()));
 
-    QCoreApplication::instance()->postEvent(m_widget, touchEvent);
+    QCoreApplication::instance()->postEvent(m_widget.data(), touchEvent);
 }
 
 void TuioInputDevice::updateTuioObject(TUIO::TuioObject* tobj)
@@ -248,6 +286,10 @@ void TuioInputDevice::updateTuioObject(TUIO::TuioObject* tobj)
 
 QTouchEvent::TouchPoint TuioInputDevice::tuioCursorToTouchPoint(TUIO::TuioCursor* tcur)
 {
+    if (m_widget.isNull()) {
+        return QTouchEvent::TouchPoint();
+    }
+
     const QPointF normPos(tcur->getX(), tcur->getY());
     const QPointF screenPos(m_screenRect.width() * normPos.x(), m_screenRect.height() * normPos.y());
 
@@ -260,14 +302,25 @@ QTouchEvent::TouchPoint TuioInputDevice::tuioCursorToTouchPoint(TUIO::TuioCursor
     touchPoint.setScreenRect(m_screenRect);
     touchPoint.setScreenPos(screenPos);
 
-    const QPoint pos((int)screenPos.x() - m_widget->geometry().x(),
-                     (int)screenPos.y() - m_widget->geometry().y());
+    const QPoint pos((int)screenPos.x() - m_widget.data()->geometry().x(),
+                     (int)screenPos.y() - m_widget.data()->geometry().y());
 
     touchPoint.setPos(pos);
     touchPoint.setSceneRect(QRectF());
     touchPoint.setScenePos(pos);
 
     return touchPoint;
+}
+
+void TuioInputDevice::onGestureRecognized(QGesture* gesture)
+{
+    KetaRoller::InputPort *port = m_portForGesture.value(gesture->gestureType(), 0);
+    if (!port) {
+        qDebug() << "Recognized a gesture for an unregistered gesture type";
+        return;
+    }
+
+    port->putData(Q_ARG(QGesture*, gesture));
 }
 
 #include "TuioInputDevice.moc"

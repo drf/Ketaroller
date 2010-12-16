@@ -41,6 +41,8 @@ namespace TUIO {
 class TuioClient;
 }
 
+class QGesture;
+
 class Q_DECL_EXPORT GrabberWidget : public QWidget
 {
     Q_OBJECT
@@ -49,6 +51,9 @@ public:
     virtual ~GrabberWidget();
 
     virtual bool event(QEvent* event);
+
+Q_SIGNALS:
+    void gestureRecognized(QGesture *gesture);
 };
 
 /**
@@ -104,12 +109,13 @@ protected:
 private slots:
     void onPortAdded(KetaRoller::InputPort*);
     void onPortRemoved(KetaRoller::InputPort*);
+    void onGestureRecognized(QGesture*);
 
 private:
     QHash< qint64, QList< QTouchEvent::TouchPoint > > m_touchPoints;
     QHash< qint32, KetaRoller::InputPort* > m_portForSymbol;
     QHash< Qt::GestureType, KetaRoller::InputPort* > m_portForGesture;
-    QWidget *m_widget;
+    QWeakPointer< GrabberWidget > m_widget;
     QRect m_screenRect;
     TUIO::TuioClient *m_tuioClient;
 
