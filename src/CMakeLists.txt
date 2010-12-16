@@ -14,6 +14,7 @@ set(ketarollerlib_SRCS
     InputPort.cpp
     OutputPort.cpp
     OutputDevice.cpp
+    GestureOutputPort.cpp
     #GesturedInputDevice.cpp
     PluginLoader.cpp
 
