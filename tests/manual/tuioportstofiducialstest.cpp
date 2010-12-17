@@ -109,7 +109,7 @@ void TuioPortsToFiducialsTest::initTestCase()
         m_outputs.insert(port, i);
     }
 
-    for (int i = 30; i < 33; ++i) {
+    for (int i = 0; i < 3; ++i) {
         QVariantMap args;
         args.insert("TuioFiducialID", i);
 
@@ -119,11 +119,11 @@ void TuioPortsToFiducialsTest::initTestCase()
 
         QVERIFY(m_device->addOutgoingPort(input));
 
-        if (i == 30) {
+        if (i == 0) {
             input->addOutput(m_outputs.key(0));
             input->addOutput(m_outputs.key(1));
         } else {
-            input->addOutput(m_outputs.key(i-30+1));
+            input->addOutput(m_outputs.key(i-2+1));
         }
 
         m_inputs.insert(input, i);
