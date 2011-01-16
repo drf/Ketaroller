@@ -32,6 +32,7 @@
 #include <QGraphicsRectItem>
 #include <QGesture>
 #include <QDebug>
+#include <QMainWindow>
 #include <TuioClient.h>
 #include <InputPort.h>
 
@@ -79,7 +80,9 @@ TuioInputDevice::TuioInputDevice(QObject* parent)
 
 TuioInputDevice::~TuioInputDevice()
 {
-
+    if (!m_window.isNull()) {
+        m_window.data()->deleteLater();
+    }
 }
 
 void TuioInputDevice::init(const QVariantMap& args)
@@ -100,8 +103,10 @@ void TuioInputDevice::init(const QVariantMap& args)
 
     if (args.value("EnableGestures", false).toBool()) {
         qDebug() << "Gesture support enabled";
-        m_widget = new GrabberWidget();
-        m_widget.data()->setHidden(true);
+        m_window = new QMainWindow;
+        m_widget = new GrabberWidget(m_window.data());
+        m_window.data()->setCentralWidget(m_widget.data());
+        m_window.data()->showMaximized();
         m_screenRect = QApplication::desktop()->rect();
         connect(m_widget.data(), SIGNAL(gestureRecognized(QGesture*)), this, SLOT(onGestureRecognized(QGesture*)));
     } else {

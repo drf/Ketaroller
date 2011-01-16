@@ -42,6 +42,7 @@ class TuioClient;
 }
 
 class QGesture;
+class QMainWindow;
 
 class Q_DECL_EXPORT GrabberWidget : public QWidget
 {
@@ -116,6 +117,7 @@ private:
     QHash< qint32, KetaRoller::InputPort* > m_portForSymbol;
     QHash< Qt::GestureType, KetaRoller::InputPort* > m_portForGesture;
     QWeakPointer< GrabberWidget > m_widget;
+    QWeakPointer< QMainWindow > m_window;
     QRect m_screenRect;
     TUIO::TuioClient *m_tuioClient;
 
