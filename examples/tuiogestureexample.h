@@ -5,6 +5,7 @@
 
 #include <OutputDevice.h>
 
+class QTouchEvent;
 class TuioGestureExample;
 class QGesture;
 
@@ -26,6 +27,7 @@ public:
 
 public slots:
     void newDataFromPort(KetaRoller::OutputPort *port, QGesture *gesture);
+    void newDataFromPort(KetaRoller::OutputPort *port, QTouchEvent *event);
 
 private:
     QHash<int, QTime> m_times;
@@ -46,7 +48,7 @@ public slots:
 
 private:
     KetaRoller::InputDevice *m_device;
-    TestOutputDevice *m_outputDevice;
+    KetaRoller::OutputDevice *m_outputDevice;
 };
 
 #endif // TUIOGESTUREEXAMPLE_H
