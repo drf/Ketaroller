@@ -85,6 +85,8 @@ public:
     */
     QPointF position() const;
 
+    uint id() const;
+
     /**
     * @returns The speed of the Fiducial on the table X-axis.
     */

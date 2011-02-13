@@ -26,6 +26,7 @@
 
 #include <OutputPort.h>
 
+class QTouchEvent;
 class QGesture;
 
 namespace KetaRoller {
@@ -50,6 +51,7 @@ public slots:
     * @param gesture A Gesture passed by the input.
     */
     void receiveData(QGesture *gesture);
+    void receiveData(QTouchEvent *event);
 };
 
 }

@@ -20,57 +20,51 @@
 
 */
 
-#ifndef TUIOREACTIVISIONMANUALTEST_H
-#define TUIOREACTIVISIONMANUALTEST_H
 
-#include <QtGui>
-#include <QtTest/QtTest>
+#ifndef BCTOUTPUTDEVICE_H
+#define BCTOUTPUTDEVICE_H
 
 #include <KetaRoller/OutputDevice>
 
-class FiducialObject;
+#include <midi/MIDIMessage.h>
+#include <tuio/FiducialObject.h>
+
+#include <QGesture>
+#include <QLineF>
+
+class QTouchEvent;
+class QGesture;
+
 namespace KetaRoller {
-class InputDevice;
-class InputPort;
-class OutputPort;
+    class OutputPort;
 }
 
-class TestOutputDevice : public KetaRoller::OutputDevice
+class BctOutputDevice : public KetaRoller::OutputDevice
 {
     Q_OBJECT
+    Q_DISABLE_COPY(BctOutputDevice)
+
 public:
-    TestOutputDevice(QObject* parent = 0);
-    virtual ~TestOutputDevice();
+    explicit BctOutputDevice(QObject* parent = 0);
+    virtual ~BctOutputDevice();
 
-    virtual void init(const QVariantMap& args = QVariantMap());
     virtual bool validatePort(KetaRoller::OutputPort* port);
+    virtual void init(const QVariantMap& args = QVariantMap());
 
-public slots:
+public Q_SLOTS:
     void newDataFromPort(KetaRoller::OutputPort *port, const FiducialObject &obj);
-
-signals:
-    void fiducialIsOn();
-    void fiducialHasChanged(FiducialObject);
-    void fiducialIsOff();
+    void newDataFromPort(KetaRoller::OutputPort *port, const MIDIMessage &obj);
+    void newDataFromPort(KetaRoller::OutputPort *port, QGesture *gesture);
+    void newDataFromPort(KetaRoller::OutputPort *port, QTouchEvent *event);
 
 private:
-    QTime m_time;
+    QRect m_screenRect;
+    QPointF m_center;
+    QHash< uint, FiducialObject > m_lastFiducialPos;
+    QPointF m_lastHotspot;
+    QTime m_swipeDuration;
+
+    void evaluateSwipe(QLineF swipeLine);
 };
 
-class TuioReactivisionManualTest : public QObject
-{
-    Q_OBJECT
-private slots:
-    void initTestCase();
-    void testCatchFiducial();
-    void testUpdateFiducial();
-    void testReleaseFiducial();
-
-private:
-    KetaRoller::InputDevice *m_device;
-    KetaRoller::InputPort *m_input;
-    KetaRoller::OutputPort *m_output;
-    TestOutputDevice *m_outputDevice;
-};
-
-#endif // TUIOREACTIVISIONMANUALTEST_H
+#endif // BCTOUTPUTDEVICE_H

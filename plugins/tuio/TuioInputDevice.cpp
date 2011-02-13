@@ -38,6 +38,7 @@
 
 GrabberWidget::GrabberWidget(QWidget* parent, Qt::WindowFlags f)
         : QWidget(parent, f)
+        , m_catchEvent(false)
 {
     setAttribute(Qt::WA_AcceptTouchEvents, true);
 }
@@ -49,22 +50,39 @@ GrabberWidget::~GrabberWidget()
 
 bool GrabberWidget::event(QEvent* event)
 {
+    if (event->type() == QEvent::TouchBegin) {
+        qDebug() << "Touch event started";
+    }
     if (event->type() == QEvent::TouchBegin || event->type() == QEvent::TouchUpdate) {
-        qDebug() << "Got touch event";
+//        qDebug() << "Got touch event";
         QTouchEvent *touchEvent = dynamic_cast< QTouchEvent* >(event);
-        qDebug() << touchEvent->touchPoints().last().pos();
+//        qDebug() << touchEvent->touchPoints().last().pos();
         touchEvent->accept();
         return true;
-    }
-    if (event->type() == QEvent::Gesture) {
+    } else if (event->type() == QEvent::TouchEnd && m_catchEvent) {
+        qDebug() << "Touch event ended";
+        QTouchEvent *touchEvent = dynamic_cast< QTouchEvent* >(event);
+//        qDebug() << touchEvent->touchPoints().last().pos();
+        touchEvent->accept();
+        if (m_catchEvent) {
+            emit lastTouchEventRecognized(touchEvent);
+            m_catchEvent = false;
+        }
+    } else if (event->type() == QEvent::Gesture) {
         qDebug() << "Got gesture";
         QGestureEvent *gestureEvent = dynamic_cast< QGestureEvent* >(event);
 
         Q_FOREACH (QGesture *gesture, gestureEvent->gestures()) {
+            qDebug() << "Gesture is on with " << gesture->state();
             gestureEvent->accept(gesture);
 
-	        // Stream the gesture
-		    emit gestureRecognized(gesture);
+            // Stream the gesture
+            emit gestureRecognized(gesture);
+
+            if (gesture->gestureType() == Qt::SwipeGesture && gesture->state() == Qt::GestureCanceled) {
+                qDebug() << "Catching last touch event";
+                m_catchEvent = true;
+            }
         }
     }
 
@@ -109,6 +127,8 @@ void TuioInputDevice::init(const QVariantMap& args)
         m_window.data()->showMaximized();
         m_screenRect = QApplication::desktop()->rect();
         connect(m_widget.data(), SIGNAL(gestureRecognized(QGesture*)), this, SLOT(onGestureRecognized(QGesture*)));
+        connect(m_widget.data(), SIGNAL(lastTouchEventRecognized(QTouchEvent*)),
+                this, SLOT(onLastTouchEventRecognized(QTouchEvent*)));
     } else {
         qDebug() << "Gesture support disabled";
     }
@@ -147,7 +167,7 @@ bool TuioInputDevice::validatePort(KetaRoller::InputPort* port)
 void TuioInputDevice::onPortAdded(KetaRoller::InputPort* port)
 {
     if (port->type() == KetaRoller::InputPort::TUIOType) {
-	    qDebug() << "Add port" << port->args().value("TuioFiducialID").toInt();
+        qDebug() << "Add port" << port->args().value("TuioFiducialID").toInt();
         m_portForSymbol.insert(port->args().value("TuioFiducialID").toInt(), port);
     } else {
         qDebug() << "Add gesture port";
@@ -268,8 +288,6 @@ void TuioInputDevice::updateTuioCursor(TUIO::TuioCursor* tcur)
         return;
     }
 
-    qDebug() << "Update cursor";
-
     QTouchEvent::TouchPoint touchPoint = tuioCursorToTouchPoint(tcur);
 
     if (tcur->getMotionSpeed() > 0) {
@@ -313,6 +331,7 @@ QTouchEvent::TouchPoint TuioInputDevice::tuioCursorToTouchPoint(TUIO::TuioCursor
     }
 
     const QPointF normPos(tcur->getX(), tcur->getY());
+    //qDebug() << "TUIOCUR" << tcur->getX() <<  tcur->getY();
     const QPointF screenPos(m_screenRect.width() * normPos.x(), m_screenRect.height() * normPos.y());
 
     QTouchEvent::TouchPoint touchPoint(tcur->getSessionID());
@@ -331,7 +350,6 @@ QTouchEvent::TouchPoint TuioInputDevice::tuioCursorToTouchPoint(TUIO::TuioCursor
     touchPoint.setSceneRect(m_screenRect);
     touchPoint.setScenePos(pos);
 
-    qDebug() << touchPoint.scenePos() << touchPoint.screenPos() << touchPoint.normalizedPos();
     return touchPoint;
 }
 
@@ -344,6 +362,17 @@ void TuioInputDevice::onGestureRecognized(QGesture* gesture)
     }
 
     port->putData(Q_ARG(QGesture*, gesture));
+}
+
+void TuioInputDevice::onLastTouchEventRecognized(QTouchEvent *event)
+{
+    KetaRoller::InputPort *port = m_portForGesture.value(Qt::SwipeGesture, 0);
+    if (!port) {
+        qDebug() << "Recognized a gesture for an unregistered gesture type";
+        return;
+    }
+
+    port->putData(Q_ARG(QTouchEvent*, event));
 }
 
 #include "TuioInputDevice.moc"

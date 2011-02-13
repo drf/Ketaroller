@@ -41,6 +41,7 @@ public:
         , angle(tobj->getAngle())
         , angledeg(tobj->getAngleDegrees())
         , state(tobj->getTuioState())
+        , id(tobj->getSymbolID())
         , tuioObject(tobj)
     {
     }
@@ -55,6 +56,7 @@ public:
         , angle(other.angle)
         , angledeg(other.angledeg)
         , state(other.state)
+        , id(other.id)
         , event(other.event)
         , tuioObject(other.tuioObject)
     {
@@ -76,6 +78,7 @@ public:
     float angledeg;
 
     uint state;
+    uint id;
     FiducialEvent event;
 
     TUIO::TuioObject *tuioObject;
@@ -122,6 +125,11 @@ float FiducialObject::angle() const
 float FiducialObject::angleDegrees() const
 {
     return d->angledeg;
+}
+
+uint FiducialObject::id() const
+{
+    return d->id;
 }
 
 float FiducialObject::motionAcceleration() const

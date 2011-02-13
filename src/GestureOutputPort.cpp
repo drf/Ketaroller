@@ -42,4 +42,12 @@ void GestureOutputPort::receiveData(QGesture* gesture)
     sendToDevice(Q_ARG(QGesture*, gesture));
 }
 
+void GestureOutputPort::receiveData(QTouchEvent* event)
+{
+     qDebug() << "Processing Last touch event message...";
+
+    // Send message to device - act as a transparent proxy
+    sendToDevice(Q_ARG(QTouchEvent*, event));
+}
+
 #include "GestureOutputPort.moc"

@@ -55,6 +55,10 @@ public:
 
 Q_SIGNALS:
     void gestureRecognized(QGesture *gesture);
+    void lastTouchEventRecognized(QTouchEvent *event);
+
+private:
+    bool m_catchEvent;
 };
 
 /**
@@ -111,6 +115,7 @@ private slots:
     void onPortAdded(KetaRoller::InputPort*);
     void onPortRemoved(KetaRoller::InputPort*);
     void onGestureRecognized(QGesture*);
+    void onLastTouchEventRecognized(QTouchEvent*);
 
 private:
     QHash< qint64, QList< QTouchEvent::TouchPoint > > m_touchPoints;
