@@ -142,6 +142,7 @@ private:
 class Q_DECL_EXPORT MIDIControlChangeEvent : public MIDIMessage
 {
 public:
+    MIDIControlChangeEvent(const MIDIMessage &message);
     ~MIDIControlChangeEvent();
 
     /**

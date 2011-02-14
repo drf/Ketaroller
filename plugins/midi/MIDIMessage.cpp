@@ -178,6 +178,12 @@ quint16 MIDINoteOffEvent::velocity() const
 
 ///// Control Change
 
+MIDIControlChangeEvent::MIDIControlChangeEvent(const MIDIMessage& message)
+        : MIDIMessage(message)
+{
+
+}
+
 MIDIControlChangeEvent::MIDIControlChangeEvent(quint16 data1, quint16 data2)
         : MIDIMessage(MIDIMessage::ControlChangeEvent, data1, data2)
 {

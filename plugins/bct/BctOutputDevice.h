@@ -32,6 +32,9 @@
 #include <QGesture>
 #include <QLineF>
 
+class QUdpSocket;
+class QTcpSocket;
+class QHostAddress;
 class QTouchEvent;
 class QGesture;
 
@@ -39,17 +42,54 @@ namespace KetaRoller {
     class OutputPort;
 }
 
+class ModelDescription {
+public:
+    QString name;
+    QHash< int, QString > parameters;
+};
+
 class BctOutputDevice : public KetaRoller::OutputDevice
 {
     Q_OBJECT
     Q_DISABLE_COPY(BctOutputDevice)
 
 public:
+    enum FiducialEvent {
+        NoEvent = 0,
+        Angle = 1,
+        Position = 2
+    };
+
+    class Mapping {
+    public:
+        FiducialEvent event;
+        int tree;
+        int param;
+        double min;
+        double max;
+    };
+
+    class OnOffMapping {
+    public:
+        int paramOn;
+        int paramOff;
+    };
+
     explicit BctOutputDevice(QObject* parent = 0);
     virtual ~BctOutputDevice();
 
     virtual bool validatePort(KetaRoller::OutputPort* port);
     virtual void init(const QVariantMap& args = QVariantMap());
+
+    void startConnection(const QHostAddress &address, int port = 6984);
+    QHash< int, ModelDescription > models() const;
+
+    bool loadModel(int id);
+    bool startPlaying();
+
+    void mapMidiCC(quint16 ccName, int tree, int param, double min, double max);
+    void mapFiducialEvent(quint16 fiducialId, FiducialEvent event, int tree, int param, double min, double max);
+    void mapNoteOnOff(int tree, int paramOn, int paramOff);
 
 public Q_SLOTS:
     void newDataFromPort(KetaRoller::OutputPort *port, const FiducialObject &obj);
@@ -57,14 +97,32 @@ public Q_SLOTS:
     void newDataFromPort(KetaRoller::OutputPort *port, QGesture *gesture);
     void newDataFromPort(KetaRoller::OutputPort *port, QTouchEvent *event);
 
+private Q_SLOTS:
+    void sendAllNoteOn();
+    void sendAllNoteOff();
+
+Q_SIGNALS:
+    void connectionEstabilished();
+    void connectionDropped();
+
 private:
+    qint64 m_udpTimestamp;
     QRect m_screenRect;
     QPointF m_center;
     QHash< uint, FiducialObject > m_lastFiducialPos;
     QPointF m_lastHotspot;
     QTime m_swipeDuration;
+    QHash< int, ModelDescription > m_models;
+    QWeakPointer< QTcpSocket > m_tcpSocket;
+    QWeakPointer< QUdpSocket > m_udpSocket;
+    QList< int > m_loadedModels;
+
+    QHash< int, Mapping > m_midiMappings;
+    QHash< int, Mapping > m_fiducialMappings;
+    QHash< int, OnOffMapping > m_onOffMappings;
 
     void evaluateSwipe(QLineF swipeLine);
+    void sendUdpMessage(int tree, int control, double value);
 };
 
 #endif // BCTOUTPUTDEVICE_H
