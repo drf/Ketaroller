@@ -127,13 +127,10 @@ void FiducialWidget::onModelBoxChanged(int index)
         foreach (QComboBox *box, QList< QComboBox* >() << m_ui->angleBox << m_ui->positionBox) {
             box->setEnabled(true);
             box->addItem("Nessuno", -1);
-            for (QHash< int, ModelDescription >::const_iterator i = m_availableModels.constBegin();
-                 i != m_availableModels.constEnd(); ++i) {
-                for (QHash< int, QString >::const_iterator j = i.value().parameters.constBegin();
-                     j != i.value().parameters.constEnd(); ++j) {
-                    if (j.key() > 2) {
-                        box->addItem(j.value(), j.key());
-                    }
+            for (QHash< int, QString >::const_iterator j = m_availableModels[modelIndex].parameters.constBegin();
+                    j != m_availableModels[modelIndex].parameters.constEnd(); ++j) {
+                if (j.key() > 3) {
+                    box->addItem(j.value(), j.key());
                 }
             }
         }

@@ -74,13 +74,15 @@ void MainWindow::onLoadModelsClicked(bool )
 void MainWindow::onStartBct(bool )
 {
     QHash< int, ModelDescription > loadedModels;
+    QList< int > ids;
     foreach (QListWidgetItem *item, m_ui->listWidget->selectedItems()) {
         int id = item->data(Qt::UserRole).toInt();
         qDebug() << "Loading model " << id;
-        if (m_outputDevice->loadModel(id)) {
-            loadedModels.insert(id, m_outputDevice->models().value(id));
-        }
+        ids << id;
+        loadedModels.insert(id, m_outputDevice->models().value(id));
     }
+
+    m_outputDevice->loadModels(ids);
 
     qDebug() << "Start playing" <<
     m_outputDevice->startPlaying();

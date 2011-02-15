@@ -137,7 +137,7 @@ void BctOutputDevice::mapMidiCC(quint16 ccName, int tree, int param)
     Mapping mapping;
     mapping.param = param;
     mapping.tree = tree;
-    m_fiducialMappings.insert(ccName, mapping);
+    m_midiMappings.insert(ccName, mapping);
 }
 
 void BctOutputDevice::unmapFiducial(quint16 fiducialId)
@@ -160,10 +160,16 @@ QHash< int, ModelDescription > BctOutputDevice::models() const
     return m_models;
 }
 
-bool BctOutputDevice::loadModel(int id)
+bool BctOutputDevice::loadModels(QList< int > ids)
 {
     if (!m_tcpSocket.isNull()) {
-        BctNetProtocol::tcpSender(m_tcpSocket.data(), QString("load %1").arg(id).toAscii());
+        QString loadcmd = "load";
+        foreach (int id, ids) {
+            loadcmd.append(" %1");
+            loadcmd = loadcmd.arg(id);
+        }
+
+        BctNetProtocol::tcpSender(m_tcpSocket.data(), loadcmd.toAscii());
         m_tcpSocket.data()->waitForReadyRead();
         return BctNetProtocol::tcpReceiver(m_tcpSocket.data()).toInt() >= 0;
     } else {
@@ -212,29 +218,35 @@ bool BctOutputDevice::startPlaying()
 void BctOutputDevice::newDataFromPort(KetaRoller::OutputPort* port, const FiducialObject& obj)
 {
     //if (obj.event() == FiducialObject::FiducialAddedEvent) {
-    m_lastFiducialPos.insert(obj.id(), obj);
     //}
     if (m_fiducialMappings.contains(obj.id())) {
         Mapping mapping = m_fiducialMappings[obj.id()];
 
-        if (mapping.paramOnAngle > 0) {
+        if (mapping.paramOnAngle > 0 && m_lastFiducialPos[obj.id()].angleDegrees() != obj.angleDegrees()) {
             double value;
             value = (double)obj.angleDegrees() / (double)360;
             sendUdpMessage(mapping.tree, mapping.paramOnAngle, value);
         }
-        if (mapping.paramOnPosition > 0) {
+        if (mapping.paramOnPosition > 0 && m_lastFiducialPos[obj.id()].position().x() != obj.position().x()) {
             double value;
             value = obj.position().x();
             sendUdpMessage(mapping.tree, mapping.paramOnPosition, value);
         }
+        m_lastFiducialPos.insert(obj.id(), obj);
     }
 }
 
 void BctOutputDevice::newDataFromPort(KetaRoller::OutputPort* port, const MIDIMessage& obj)
 {
     if (obj.type() == MIDIMessage::NoteOnEvent && m_midiOnOffTree > 0) {
+        MIDINoteOnEvent noteEvent = static_cast< MIDINoteOnEvent >(obj);
+        double value = ((double)((127-noteEvent.note()) - 69) / (double)12);
+        sendUdpMessage(m_midiOnOffTree, 3, value);
         sendUdpMessage(m_midiOnOffTree, 1, 1);
     } else if (obj.type() == MIDIMessage::NoteOffEvent && m_midiOnOffTree > 0) {
+        MIDINoteOffEvent noteEvent = static_cast< MIDINoteOffEvent >(obj);
+        double value = (double)(noteEvent.note() - 69) / (double)12;
+        sendUdpMessage(m_midiOnOffTree, 3, value);
         sendUdpMessage(m_midiOnOffTree, 2, 1);
     } else if (obj.type() == MIDIMessage::ControlChangeEvent) {
         MIDIControlChangeEvent ccEvent = static_cast< MIDIControlChangeEvent >(obj);
@@ -243,7 +255,7 @@ void BctOutputDevice::newDataFromPort(KetaRoller::OutputPort* port, const MIDIMe
             double value = (double)ccEvent.value() / (double)127;
             sendUdpMessage(mapping.tree, mapping.param, value);
         } else {
-            qDebug() << "No handler configured for this MIDI CC";
+            qDebug() << "No handler configured for this MIDI CC" << ccEvent.number();
         }
     }
 }

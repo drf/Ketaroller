@@ -109,13 +109,10 @@ void MIDIWidget::onModelBoxChanged(int index)
     if (model >= 0) {
         m_ui->paramBox->setEnabled(true);
         m_ui->paramBox->addItem("Nessuno", -1);
-        for (QHash< int, ModelDescription >::const_iterator i = m_availableModels.constBegin();
-                i != m_availableModels.constEnd(); ++i) {
-            for (QHash< int, QString >::const_iterator j = i.value().parameters.constBegin();
-                    j != i.value().parameters.constEnd(); ++j) {
-                if (j.key() > 2) {
-                    m_ui->paramBox->addItem(j.value(), j.key());
-                }
+        for (QHash< int, QString >::const_iterator j = m_availableModels[model].parameters.constBegin();
+             j != m_availableModels[model].parameters.constEnd(); ++j) {
+            if (j.key() > 3) {
+                m_ui->paramBox->addItem(j.value(), j.key());
             }
         }
     } else {

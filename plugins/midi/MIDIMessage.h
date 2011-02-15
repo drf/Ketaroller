@@ -98,6 +98,7 @@ class Q_DECL_EXPORT MIDINoteOnEvent : public MIDIMessage
 {
 public:
     MIDINoteOnEvent();
+    MIDINoteOnEvent(const MIDIMessage &message);
     ~MIDINoteOnEvent();
 
     /**
@@ -122,6 +123,7 @@ class Q_DECL_EXPORT MIDINoteOffEvent : public MIDIMessage
 {
 public:
     MIDINoteOffEvent();
+    MIDINoteOffEvent(const MIDIMessage &message);
     ~MIDINoteOffEvent();
 
     /**

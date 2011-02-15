@@ -34,7 +34,6 @@ struct DynData {
 
 void messageCallback( double deltatime, std::vector< unsigned char > *message, void *userData )
 {
-    qDebug() << "Callback";
     std::vector< unsigned char > realMessage;
     unsigned int nBytes = message->size();
     for ( unsigned int i=0; i<nBytes; i++ ) {

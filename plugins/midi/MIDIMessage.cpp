@@ -142,6 +142,12 @@ MIDINoteOnEvent::MIDINoteOnEvent()
 
 }
 
+MIDINoteOnEvent::MIDINoteOnEvent(const MIDIMessage& message)
+        : MIDIMessage(message)
+{
+
+}
+
 MIDINoteOnEvent::MIDINoteOnEvent(quint16 data1, quint16 data2)
         : MIDIMessage(MIDIMessage::NoteOnEvent, data1, data2)
 {
@@ -165,6 +171,12 @@ quint16 MIDINoteOnEvent::velocity() const
 
 MIDINoteOffEvent::MIDINoteOffEvent()
         : MIDIMessage()
+{
+
+}
+
+MIDINoteOffEvent::MIDINoteOffEvent(const MIDIMessage& message)
+        : MIDIMessage(message)
 {
 
 }

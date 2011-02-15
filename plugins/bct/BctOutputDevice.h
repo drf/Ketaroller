@@ -71,7 +71,7 @@ public:
     void startConnection(const QHostAddress &address, int port = 6984);
     QHash< int, ModelDescription > models() const;
 
-    bool loadModel(int id);
+    bool loadModels(QList< int > id);
     bool startPlaying();
 
     void mapMidiCC(quint16 ccName, int tree, int param);
