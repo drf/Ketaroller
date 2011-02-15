@@ -24,25 +24,37 @@
 */
 
 
-#ifndef MIDIWIDGET_H
-#define MIDIWIDGET_H
+#ifndef CONFIGWINDOW_H
+#define CONFIGWINDOW_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
+#include <BctOutputDevice.h>
+
+namespace KetaRoller {
+class InputDevice;}
 
 namespace Ui {
-    class MIDIWidget;
+    class ConfigGUI;
 }
 
-
-class MIDIWidget : public QWidget
+class ConfigWindow : public QWidget
 {
     Q_OBJECT
 public:
-    MIDIWidget(QWidget *parent = 0);
-    virtual ~MIDIWidget();
+    ConfigWindow(BctOutputDevice *device, const QHash< int, ModelDescription > &loadedModels,
+                 bool useMidi, int tuioPort, QWidget *parent = 0);
+    virtual ~ConfigWindow();
+
+public slots:
+    void onAddTuioClicked(bool);
+    void onAddMIDIClicked(bool);
 
 private:
-    Ui::MIDIWidget *m_ui;
+    Ui::ConfigGUI *m_ui;
+    BctOutputDevice *m_bctDevice;
+    QHash< int, ModelDescription > m_loadedModels;
+    QWeakPointer< KetaRoller::InputDevice > m_tuioInput;
 };
 
-#endif // MIDIWIDGET_H
+
+#endif // CONFIGWINDOW_H

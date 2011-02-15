@@ -12,12 +12,14 @@ set(bct_controller_SRCS
     MainWindow.cpp
     MIDIWidget.cpp
     FiducialWidget.cpp
+    ConfigWindow.cpp
 )
 
 set(bct_controller_UIS
     window1.ui
     midiWidget.ui
     fiducialWidget.ui
+    configUi.ui
 )
 
 qt4_wrap_ui(bct_controller_UIS_H ${bct_controller_UIS})

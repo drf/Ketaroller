@@ -30,6 +30,7 @@
 #include <KetaRoller/PluginLoader>
 #include <BctOutputDevice.h>
 #include <qhostaddress.h>
+#include "ConfigWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
@@ -71,13 +72,24 @@ void MainWindow::onLoadModelsClicked(bool )
 
 void MainWindow::onStartBct(bool )
 {
+    QHash< int, ModelDescription > loadedModels;
     foreach (QListWidgetItem *item, m_ui->listWidget->selectedItems()) {
-        qDebug() << "Loading model " << item->data(Qt::UserRole).toInt() <<
-        m_outputDevice->loadModel(item->data(Qt::UserRole).toInt());
+        int id = item->data(Qt::UserRole).toInt();
+        qDebug() << "Loading model " << id;
+        if (m_outputDevice->loadModel(id)) {
+            loadedModels.insert(id, m_outputDevice->models().value(id));
+        }
     }
 
     qDebug() << "Start playing" <<
     m_outputDevice->startPlaying();
+
+    // Create a new window
+    ConfigWindow *window = new ConfigWindow(m_outputDevice, loadedModels, m_ui->midiCheckBox->isChecked(),
+                                            m_ui->tuioCheckBox->isChecked() ? m_ui->tuioPortSpinBox->value() : -1);
+    window->show();
+
+    hide();
 }
 
 #include "MainWindow.moc"

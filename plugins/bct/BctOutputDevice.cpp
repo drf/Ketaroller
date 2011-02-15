@@ -34,7 +34,6 @@
 #include <QByteArray>
 #include <QTimer>
 #include <QDomDocument>
-#include <sys/socket.h>
 
 BctOutputDevice::BctOutputDevice(QObject* parent)
     : OutputDevice(parent)
@@ -199,9 +198,9 @@ bool BctOutputDevice::startPlaying()
             m_udpSocket.data()->deleteLater();
         }
 
-        QUdpSocket *udp = new QUdpSocket(this);
-        udp->connectToHost(m_tcpSocket.data()->peerAddress(), port);
-        udp->waitForConnected();
+        m_udpSocket = new QUdpSocket(this);
+        m_udpSocket.data()->connectToHost(m_tcpSocket.data()->peerAddress(), port);
+        m_udpSocket.data()->waitForConnected();
         qDebug() << "Udp connected";
         return true;
     } else {
