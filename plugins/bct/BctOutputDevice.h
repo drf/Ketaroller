@@ -54,25 +54,12 @@ class BctOutputDevice : public KetaRoller::OutputDevice
     Q_DISABLE_COPY(BctOutputDevice)
 
 public:
-    enum FiducialEvent {
-        NoEvent = 0,
-        Angle = 1,
-        Position = 2
-    };
-
     class Mapping {
     public:
-        FiducialEvent event;
         int tree;
         int param;
-        double min;
-        double max;
-    };
-
-    class OnOffMapping {
-    public:
-        int paramOn;
-        int paramOff;
+        int paramOnAngle;
+        int paramOnPosition;
     };
 
     explicit BctOutputDevice(QObject* parent = 0);
@@ -87,9 +74,12 @@ public:
     bool loadModel(int id);
     bool startPlaying();
 
-    void mapMidiCC(quint16 ccName, int tree, int param, double min, double max);
-    void mapFiducialEvent(quint16 fiducialId, FiducialEvent event, int tree, int param, double min, double max);
-    void mapNoteOnOff(int tree, int paramOn, int paramOff);
+    void mapMidiCC(quint16 ccName, int tree, int param);
+    void mapFiducial(quint16 fiducialId, int tree, int paramAngle = -1, int paramPosition = -1);
+    void mapMidiNoteOnOff(int tree);
+
+    void unmapMidiCC(quint16 ccName);
+    void unmapFiducial(quint16 fiducialId);
 
 public Q_SLOTS:
     void newDataFromPort(KetaRoller::OutputPort *port, const FiducialObject &obj);
@@ -98,8 +88,7 @@ public Q_SLOTS:
     void newDataFromPort(KetaRoller::OutputPort *port, QTouchEvent *event);
 
 private Q_SLOTS:
-    void sendAllNoteOn();
-    void sendAllNoteOff();
+    void processNoteOffStack();
 
 Q_SIGNALS:
     void connectionEstabilished();
@@ -116,10 +105,11 @@ private:
     QWeakPointer< QTcpSocket > m_tcpSocket;
     QWeakPointer< QUdpSocket > m_udpSocket;
     QList< int > m_loadedModels;
+    int m_midiOnOffTree;
+    QList< int > m_noteOffStack;
 
     QHash< int, Mapping > m_midiMappings;
     QHash< int, Mapping > m_fiducialMappings;
-    QHash< int, OnOffMapping > m_onOffMappings;
 
     void evaluateSwipe(QLineF swipeLine);
     void sendUdpMessage(int tree, int control, double value);

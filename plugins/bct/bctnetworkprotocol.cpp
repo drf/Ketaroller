@@ -3,6 +3,7 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <QIODevice>
+#include <QDebug>
 
 namespace BctNetProtocol
 {
@@ -20,13 +21,14 @@ namespace BctNetProtocol
         void tcpPacker(QByteArray *buff, const QByteArray &message)
         {
                 QDataStream wr(buff, QIODevice::WriteOnly);
-                wr.setVersion(QDataStream::Qt_4_0);
+                wr.setVersion(QDataStream::Qt_4_6);
 
                 // Leave 4 bytes empty
                 wr << (quint32)0;
 
+                qDebug() << QString(message);
                 // Add the message
-                wr << QString(*message);
+                wr << QString(message);
 
                 // Go to the beginning...
                 wr.device()->seek(0);
@@ -38,7 +40,7 @@ namespace BctNetProtocol
         QString tcpReceiver(QIODevice *socket)
         {
                 QDataStream inStream(socket);
-                inStream.setVersion(QDataStream::Qt_4_0);
+                inStream.setVersion(QDataStream::Qt_4_6);
 
                 if (socket->bytesAvailable() < (int)sizeof(quint32))
                         return QString("-1");

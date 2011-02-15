@@ -29,6 +29,7 @@ macro_log_feature(QT_QTGUI_FOUND "Qt4 QtGui Library"
 add_subdirectory(src)
 add_subdirectory(plugins)
 add_subdirectory(3rdparty)
+add_subdirectory(gui)
 
 if (QT_QTTEST_FOUND)
     add_subdirectory(tests)

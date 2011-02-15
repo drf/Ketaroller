@@ -41,6 +41,7 @@ BctOutputDevice::BctOutputDevice(QObject* parent)
     , m_udpTimestamp(0)
     , m_screenRect(QApplication::desktop()->rect())
     , m_center(0.5, 0.5)
+    , m_midiOnOffTree(-1)
 {
     m_swipeDuration.start();
 }
@@ -83,12 +84,14 @@ void BctOutputDevice::startConnection(const QHostAddress& address, int port)
 
     qDebug() << "Connected";
 
-    BctNetProtocol::tcpSender(m_tcpSocket.data(), QByteArray("list"));
+    BctNetProtocol::tcpSender(m_tcpSocket.data(), "list");
     m_tcpSocket.data()->waitForReadyRead();
 
     QDomDocument doc("mydocument");
+    QString result = BctNetProtocol::tcpReceiver(m_tcpSocket.data());
+    qDebug() << result;
 
-    if (!doc.setContent(BctNetProtocol::tcpReceiver(m_tcpSocket.data()))) {
+    if (!doc.setContent(result)) {
         qDebug() << "Could not create a document!";
         return;
     }
@@ -100,6 +103,7 @@ void BctOutputDevice::startConnection(const QHostAddress& address, int port)
         // Parse the element
         QString name = n.attribute("name");
         int id = n.attribute("id").toInt();
+        qDebug() << "Parsing an element model" << name << id;
 
         QHash< int, QString > parameters;
         QDomElement attr = n.firstChildElement("param");
@@ -116,51 +120,40 @@ void BctOutputDevice::startConnection(const QHostAddress& address, int port)
 
         n = n.nextSiblingElement("model");
     }
+
+    emit connectionEstabilished();
 }
-void BctOutputDevice::mapFiducialEvent(quint16 fiducialId, BctOutputDevice::FiducialEvent event,
-                                       int tree, int param, double min, double max)
+
+void BctOutputDevice::mapFiducial(quint16 fiducialId, int tree, int paramAngle, int paramPosition)
 {
     Mapping mapping;
-    mapping.event = event;
-    mapping.max = max;
-    mapping.min = min;
-    mapping.param = param;
+    mapping.paramOnAngle = paramAngle;
+    mapping.paramOnPosition = paramPosition;
     mapping.tree = tree;
     m_fiducialMappings.insert(fiducialId, mapping);
 }
 
-void BctOutputDevice::mapMidiCC(quint16 ccName, int tree, int param, double min, double max)
+void BctOutputDevice::mapMidiCC(quint16 ccName, int tree, int param)
 {
     Mapping mapping;
-    mapping.max = max;
-    mapping.min = min;
     mapping.param = param;
     mapping.tree = tree;
     m_fiducialMappings.insert(ccName, mapping);
 }
 
-void BctOutputDevice::mapNoteOnOff(int tree, int paramOn, int paramOff)
+void BctOutputDevice::unmapFiducial(quint16 fiducialId)
 {
-    OnOffMapping mapping;
-    mapping.paramOff = paramOff;
-    mapping.paramOn = paramOn;
-    m_onOffMappings.insert(tree, mapping);
+    m_fiducialMappings.remove(fiducialId);
 }
 
-void BctOutputDevice::sendAllNoteOn()
+void BctOutputDevice::unmapMidiCC(quint16 ccName)
 {
-    for (QHash< int, OnOffMapping >::const_iterator i = m_onOffMappings.constBegin();
-         i != m_onOffMappings.constEnd(); ++i) {
-        sendUdpMessage(i.key(), i.value().paramOn, 1);
-    }
+    m_midiMappings.remove(ccName);
 }
 
-void BctOutputDevice::sendAllNoteOff()
+void BctOutputDevice::mapMidiNoteOnOff(int tree)
 {
-    for (QHash< int, OnOffMapping >::const_iterator i = m_onOffMappings.constBegin();
-         i != m_onOffMappings.constEnd(); ++i) {
-        sendUdpMessage(i.key(), i.value().paramOff, 1);
-    }
+    m_midiOnOffTree = tree;
 }
 
 QHash< int, ModelDescription > BctOutputDevice::models() const
@@ -179,12 +172,23 @@ bool BctOutputDevice::loadModel(int id)
     }
 }
 
+void BctOutputDevice::processNoteOffStack()
+{
+    QList< int >::iterator i = m_noteOffStack.begin();
+    while (i != m_noteOffStack.end()) {
+        sendUdpMessage((*i), 2, 1);
+        i = m_noteOffStack.erase(i);
+    }
+}
+
 bool BctOutputDevice::startPlaying()
 {
-    if (!m_tcpSocket) {
-        BctNetProtocol::tcpSender(m_tcpSocket.data(), QByteArray("play"));
+    if (!m_tcpSocket.isNull()) {
+        BctNetProtocol::tcpSender(m_tcpSocket.data(), "play");
         m_tcpSocket.data()->waitForReadyRead();
-        int port = BctNetProtocol::tcpReceiver(m_tcpSocket.data()).toInt();
+        QString stringPort = BctNetProtocol::tcpReceiver(m_tcpSocket.data());
+        int port = stringPort.toInt();
+        qDebug() << "Go listen UDP on port" << port;
 
         if (port <= 0) {
             return false;
@@ -212,29 +216,31 @@ void BctOutputDevice::newDataFromPort(KetaRoller::OutputPort* port, const Fiduci
     //}
     if (m_fiducialMappings.contains(obj.id())) {
         Mapping mapping = m_fiducialMappings[obj.id()];
-        double value;
-        switch (mapping.event) {
-            case Angle:
-                value = mapping.min + ( (mapping.max - mapping.min) * qBound<double>(0, obj.angle(), 1) );
-                sendUdpMessage(mapping.tree, mapping.param, value);
-                break;
-            case Position:
-                break;
+
+        if (mapping.paramOnAngle > 0) {
+            double value;
+            value = (double)obj.angleDegrees() / (double)360;
+            sendUdpMessage(mapping.tree, mapping.paramOnAngle, value);
+        }
+        if (mapping.paramOnPosition > 0) {
+            double value;
+            value = obj.position().x();
+            sendUdpMessage(mapping.tree, mapping.paramOnPosition, value);
         }
     }
 }
 
 void BctOutputDevice::newDataFromPort(KetaRoller::OutputPort* port, const MIDIMessage& obj)
 {
-    if (obj.type() == MIDIMessage::NoteOnEvent) {
-        sendAllNoteOn();
-    } else if (obj.type() == MIDIMessage::NoteOffEvent) {
-        sendAllNoteOff();
+    if (obj.type() == MIDIMessage::NoteOnEvent && m_midiOnOffTree > 0) {
+        sendUdpMessage(m_midiOnOffTree, 1, 1);
+    } else if (obj.type() == MIDIMessage::NoteOffEvent && m_midiOnOffTree > 0) {
+        sendUdpMessage(m_midiOnOffTree, 2, 1);
     } else if (obj.type() == MIDIMessage::ControlChangeEvent) {
         MIDIControlChangeEvent ccEvent = static_cast< MIDIControlChangeEvent >(obj);
         if (m_midiMappings.contains(ccEvent.number())) {
             Mapping mapping = m_midiMappings[ccEvent.number()];
-            double value = mapping.min + (((mapping.max - mapping.min) / 127) * ccEvent.value());
+            double value = (double)ccEvent.value() / (double)127;
             sendUdpMessage(mapping.tree, mapping.param, value);
         } else {
             qDebug() << "No handler configured for this MIDI CC";
@@ -265,23 +271,30 @@ void BctOutputDevice::newDataFromPort(KetaRoller::OutputPort* port, QTouchEvent*
 
 void BctOutputDevice::evaluateSwipe(QLineF swipeLine)
 {
-    QLineF stringLine(m_lastFiducialPos.values().first().position(), m_center);
-    QPointF intersection;
-    if (swipeLine.intersect(stringLine, &intersection) == QLineF::BoundedIntersection) {
-        // Play
+    for (QHash< uint, FiducialObject >::const_iterator i = m_lastFiducialPos.constBegin(); i != m_lastFiducialPos.constEnd(); ++i) {
+        QLineF stringLine(i.value().position(), m_center);
+        QPointF intersection;
+        if (swipeLine.intersect(stringLine, &intersection) == QLineF::BoundedIntersection) {
+            // Play
+            QLineF trimmedLine = QLineF(m_center, intersection);
+            int stringLevel = qRound((trimmedLine.length() / stringLine.length())*100);
+
+            // Send note on to fiducial model
+            if (m_fiducialMappings.contains(i.key())) {
+                sendUdpMessage(m_fiducialMappings[i.key()].tree, 1, 1);
+                m_noteOffStack.append(i.key());
+            }
+        }
+    }
+    if (m_noteOffStack.isEmpty()) {
+        qDebug() << "Swipe out of bounds";
+        qDebug() << swipeLine;
+    } else {
         int duration = m_swipeDuration.restart();
         qreal length = swipeLine.length();
         uint speed = qBound(1, qRound((length / duration) * 10000), 100);
-        QLineF trimmedLine = QLineF(m_center, intersection);
-        int stringLevel = qRound((trimmedLine.length() / stringLine.length())*100);
-
-        sendAllNoteOn();
-
         // Now, depending on the speed, trigger a note off.
-        QTimer::singleShot(800 + (32*speed), this, SLOT(sendAllNoteOff()));
-    } else {
-        qDebug() << "Swipe out of bounds";
-        qDebug() << swipeLine << stringLine;
+        QTimer::singleShot(800 + (32*speed), this, SLOT(processNoteOffStack()));
     }
 }
 
