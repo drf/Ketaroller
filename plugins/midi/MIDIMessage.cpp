@@ -136,6 +136,12 @@ MIDIMessage::Type MIDIMessage::type() const
 
 ///// Note On
 
+MIDINoteOnEvent::MIDINoteOnEvent()
+        : MIDIMessage()
+{
+
+}
+
 MIDINoteOnEvent::MIDINoteOnEvent(quint16 data1, quint16 data2)
         : MIDIMessage(MIDIMessage::NoteOnEvent, data1, data2)
 {
@@ -157,6 +163,12 @@ quint16 MIDINoteOnEvent::velocity() const
 
 ///// Note Off
 
+MIDINoteOffEvent::MIDINoteOffEvent()
+        : MIDIMessage()
+{
+
+}
+
 MIDINoteOffEvent::MIDINoteOffEvent(quint16 data1, quint16 data2)
         : MIDIMessage(MIDIMessage::NoteOffEvent, data1, data2)
 {
@@ -177,6 +189,12 @@ quint16 MIDINoteOffEvent::velocity() const
 }
 
 ///// Control Change
+
+MIDIControlChangeEvent::MIDIControlChangeEvent()
+        : MIDIMessage()
+{
+
+}
 
 MIDIControlChangeEvent::MIDIControlChangeEvent(const MIDIMessage& message)
         : MIDIMessage(message)
@@ -204,6 +222,12 @@ quint16 MIDIControlChangeEvent::value() const
 }
 
 ///// Pitch Bend
+
+MIDIPitchBenderEvent::MIDIPitchBenderEvent()
+        : MIDIMessage()
+{
+
+}
 
 MIDIPitchBenderEvent::MIDIPitchBenderEvent(quint16 data1, quint16 data2)
         : MIDIMessage(MIDIMessage::PitchBendEvent, data1, data2)

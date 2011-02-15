@@ -94,6 +94,7 @@ ConfigWindow::ConfigWindow(BctOutputDevice* device, const QHash< int, ModelDescr
     }
 
     // Connect handlers
+    connect(m_ui->midiTreeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onMidiNoteOnOffAssociationChanged(int)));
     connect(m_ui->addTuioButton, SIGNAL(clicked(bool)), this, SLOT(onAddTuioClicked(bool)));
     connect(m_ui->addMIDIButton, SIGNAL(clicked(bool)), this, SLOT(onAddMIDIClicked(bool)));
 }
@@ -120,6 +121,15 @@ void ConfigWindow::onAddMIDIClicked(bool )
 {
     MIDIWidget *widget = new MIDIWidget(m_loadedModels, m_bctDevice, this);
     m_ui->midiLayout->insertWidget(1, widget);
+}
+
+void ConfigWindow::onMidiNoteOnOffAssociationChanged(int index)
+{
+    if (m_ui->midiTreeComboBox->itemData(m_ui->midiTreeComboBox->currentIndex()).toInt() > 0) {
+        m_bctDevice->mapMidiNoteOnOff(m_ui->midiTreeComboBox->itemData(m_ui->midiTreeComboBox->currentIndex()).toInt());
+    } else {
+        m_bctDevice->mapMidiNoteOnOff(-1);
+    }
 }
 
 #include "ConfigWindow.moc"

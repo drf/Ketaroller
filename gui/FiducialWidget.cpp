@@ -75,7 +75,7 @@ FiducialWidget::FiducialWidget(const QHash< int, ModelDescription > &availableMo
     connect(m_ui->modelBox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(onModelBoxChanged(int)));
     connect(m_ui->removeButton, SIGNAL(clicked(bool)),
-            this, SLOT(kill(bool)));
+            this, SLOT(kill()));
 }
 
 FiducialWidget::~FiducialWidget()

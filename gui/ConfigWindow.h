@@ -48,6 +48,7 @@ public:
 public slots:
     void onAddTuioClicked(bool);
     void onAddMIDIClicked(bool);
+    void onMidiNoteOnOffAssociationChanged(int);
 
 private:
     Ui::ConfigGUI *m_ui;

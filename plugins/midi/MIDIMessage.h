@@ -24,6 +24,7 @@
 #define MIDIMESSAGE_H
 
 #include <QtCore/QSharedDataPointer>
+#include <QMetaType>
 #include <vector>
 
 /**
@@ -96,6 +97,7 @@ private:
 class Q_DECL_EXPORT MIDINoteOnEvent : public MIDIMessage
 {
 public:
+    MIDINoteOnEvent();
     ~MIDINoteOnEvent();
 
     /**
@@ -119,6 +121,7 @@ private:
 class Q_DECL_EXPORT MIDINoteOffEvent : public MIDIMessage
 {
 public:
+    MIDINoteOffEvent();
     ~MIDINoteOffEvent();
 
     /**
@@ -142,6 +145,7 @@ private:
 class Q_DECL_EXPORT MIDIControlChangeEvent : public MIDIMessage
 {
 public:
+    MIDIControlChangeEvent();
     MIDIControlChangeEvent(const MIDIMessage &message);
     ~MIDIControlChangeEvent();
 
@@ -166,6 +170,7 @@ private:
 class Q_DECL_EXPORT MIDIPitchBenderEvent : public MIDIMessage
 {
 public:
+    MIDIPitchBenderEvent();
     MIDIPitchBenderEvent(const MIDIMessage &other);
     ~MIDIPitchBenderEvent();
 
@@ -199,5 +204,11 @@ public:
     */
     static MIDIMessage generateMidiMessage(std::vector<unsigned char> rawMessage);
 };
+
+Q_DECLARE_METATYPE(MIDIMessage)
+Q_DECLARE_METATYPE(MIDIPitchBenderEvent)
+Q_DECLARE_METATYPE(MIDIControlChangeEvent)
+Q_DECLARE_METATYPE(MIDINoteOffEvent)
+Q_DECLARE_METATYPE(MIDINoteOnEvent)
 
 #endif // MIDIMESSAGE_H

@@ -28,6 +28,23 @@
 
 #include <QtPlugin>
 
+struct DynData {
+    MIDIInputDevice *device;
+};
+
+void messageCallback( double deltatime, std::vector< unsigned char > *message, void *userData )
+{
+    qDebug() << "Callback";
+    std::vector< unsigned char > realMessage;
+    unsigned int nBytes = message->size();
+    for ( unsigned int i=0; i<nBytes; i++ ) {
+        realMessage.push_back((uchar)message->at(i));
+    }
+
+    DynData *data = (DynData*)userData;
+    data->device->getMessage(realMessage);
+}
+
 MIDIInputDevice::MIDIInputDevice(QObject* parent)
     : InputDevice(parent)
 {
@@ -42,6 +59,12 @@ void MIDIInputDevice::init(const QVariantMap& args)
 {
     Q_UNUSED(args)
 
+    qRegisterMetaType<MIDIMessage>();
+    qRegisterMetaType<MIDINoteOffEvent>();
+    qRegisterMetaType<MIDINoteOnEvent>();
+    qRegisterMetaType<MIDIControlChangeEvent>();
+    qRegisterMetaType<MIDIPitchBenderEvent>();
+
     // RtMidiIn constructor
     try {
       midiReceiver = new RtMidiIn();
@@ -50,13 +73,24 @@ void MIDIInputDevice::init(const QVariantMap& args)
       exit( EXIT_FAILURE );
     }
 
+    unsigned int nPorts = midiReceiver->getPortCount();
+    std::cout << "\nThere are " << nPorts << " MIDI input sources available.\n";
+
+    DynData *data = new DynData;
+    data->device = this;
+
+    midiReceiver->setCallback( &messageCallback, data );
+
     //Open RtMidiIn port
     try {
-      midiReceiver->openPort();
+      midiReceiver->openVirtualPort();
     } catch ( RtError &error ) {
       error.printMessage();
       delete midiReceiver;
     }
+
+    // Don't ignore sysex, timing, or active sensing messages.
+    midiReceiver->ignoreTypes(true, true, true);
 }
 
 bool MIDIInputDevice::validatePort(KetaRoller::InputPort* port)
@@ -69,10 +103,8 @@ bool MIDIInputDevice::validatePort(KetaRoller::InputPort* port)
     return true;
 }
 
-void MIDIInputDevice::getMessage()
+void MIDIInputDevice::getMessage(std::vector< unsigned char > rawMessage)
 {
-    std::vector<unsigned char> rawMessage;
-    stamp = midiReceiver->getMessage( &rawMessage );
     MIDIMessage message = MIDIMessageFactory::generateMidiMessage(rawMessage);
 
     foreach (KetaRoller::InputPort *port, inputPorts()) {

@@ -175,6 +175,7 @@ void BctOutputDevice::processNoteOffStack()
 {
     QList< int >::iterator i = m_noteOffStack.begin();
     while (i != m_noteOffStack.end()) {
+        
         sendUdpMessage((*i), 2, 1);
         i = m_noteOffStack.erase(i);
     }
@@ -281,7 +282,7 @@ void BctOutputDevice::evaluateSwipe(QLineF swipeLine)
             // Send note on to fiducial model
             if (m_fiducialMappings.contains(i.key())) {
                 sendUdpMessage(m_fiducialMappings[i.key()].tree, 1, 1);
-                m_noteOffStack.append(i.key());
+                m_noteOffStack.append(m_fiducialMappings[i.key()].tree);
             }
         }
     }

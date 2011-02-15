@@ -77,7 +77,7 @@ public:
     * When no MIDI messages are available, the function creates an empty object.
     *
     */
-    void getMessage();
+    void getMessage(std::vector< unsigned char > rawMessage);
 
 protected:
     /**

@@ -28,6 +28,8 @@
 
 #include "ui_midiWidget.h"
 
+#include <QDebug>
+
 MIDIWidget::MIDIWidget(const QHash< int, ModelDescription > &availableModels, BctOutputDevice *device, QWidget* parent)
     : QWidget(parent)
     , m_ui(new Ui::MIDIWidget)
@@ -66,11 +68,13 @@ void MIDIWidget::map()
     m_device->mapMidiCC(m_lastCC,
                         m_ui->modelBox->itemData(m_ui->modelBox->currentIndex()).toInt(),
                         m_ui->paramBox->itemData(m_ui->paramBox->currentIndex()).toInt());
+    qDebug() << "MIDI CC " << m_lastCC << " mapped";
 }
 
 void MIDIWidget::unmap()
 {
     m_device->unmapMidiCC(m_lastCC);
+    qDebug() << "MIDI CC " << m_lastCC << " unmapped";
 }
 
 void MIDIWidget::onCCNumberChanged(int cc)
