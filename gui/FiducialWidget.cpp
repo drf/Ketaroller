@@ -74,11 +74,21 @@ FiducialWidget::FiducialWidget(const QHash< int, ModelDescription > &availableMo
             this, SLOT(onPositionBoxChanged(int)));
     connect(m_ui->modelBox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(onModelBoxChanged(int)));
+    connect(m_ui->removeButton, SIGNAL(clicked(bool)),
+            this, SLOT(kill(bool)));
 }
 
 FiducialWidget::~FiducialWidget()
 {
 
+}
+
+void FiducialWidget::kill()
+{
+    unmapFiducial();
+    m_output->removeIncomingPort(m_outPort);
+    m_input->removeOutgoingPort(m_inPort, KetaRoller::InputDevice::DeleteAllOrphanOutputsMode);
+    delete m_inPort;
 }
 
 void FiducialWidget::mapFiducial()

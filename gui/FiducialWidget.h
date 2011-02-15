@@ -56,6 +56,12 @@ public:
     void unmapFiducial();
     void mapFiducial();
 
+private slots:
+    void onAngleBoxChanged(int);
+    void onPositionBoxChanged(int);
+    void onModelBoxChanged(int);
+    void kill();
+
 private:
     Ui::FiducialWidget *m_ui;
     int m_fiducialId;
@@ -66,10 +72,6 @@ private:
     KetaRoller::OutputPort *m_outPort;
     int m_lastModelIndex;
     bool m_fiducialIsMapped;
-public slots:
-    void onAngleBoxChanged(int);
-    void onPositionBoxChanged(int);
-    void onModelBoxChanged(int);
 };
 
 #endif // FIDUCIALWIDGET_H

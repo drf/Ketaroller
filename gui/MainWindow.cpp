@@ -61,6 +61,7 @@ void MainWindow::onLoadModelsClicked(bool )
 //     connect(m_outputDevice, SIGNAL(connectionEstabilished()), &e, SLOT(quit()));
 //     e.exec();
 
+    m_ui->listWidget->clear();
     QHash< int, ModelDescription > models = m_outputDevice->models();
     for (QHash< int, ModelDescription >::const_iterator i = models.constBegin(); i != models.constEnd(); ++i) {
         qDebug() << "Adding Item";

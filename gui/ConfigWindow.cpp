@@ -118,7 +118,7 @@ void ConfigWindow::onAddTuioClicked(bool )
 
 void ConfigWindow::onAddMIDIClicked(bool )
 {
-    MIDIWidget *widget = new MIDIWidget();
+    MIDIWidget *widget = new MIDIWidget(m_loadedModels, m_bctDevice, this);
     m_ui->midiLayout->insertWidget(1, widget);
 }
 

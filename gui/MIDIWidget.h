@@ -28,6 +28,7 @@
 #define MIDIWIDGET_H
 
 #include <QtGui/QWidget>
+#include <BctOutputDevice.h>
 
 namespace Ui {
     class MIDIWidget;
@@ -38,11 +39,23 @@ class MIDIWidget : public QWidget
 {
     Q_OBJECT
 public:
-    MIDIWidget(QWidget *parent = 0);
+    MIDIWidget(const QHash< int, ModelDescription > &availableModels, BctOutputDevice *device, QWidget *parent = 0);
     virtual ~MIDIWidget();
+
+    void map();
+    void unmap();
+
+private slots:
+    void onModelBoxChanged(int);
+    void onParamBoxChanged(int);
+    void onCCNumberChanged(int);
+    void kill(bool);
 
 private:
     Ui::MIDIWidget *m_ui;
+    BctOutputDevice *m_device;
+    QHash< int, ModelDescription > m_availableModels;
+    int m_lastCC;
 };
 
 #endif // MIDIWIDGET_H
