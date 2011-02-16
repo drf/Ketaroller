@@ -89,7 +89,8 @@ void MainWindow::onStartBct(bool )
 
     // Create a new window
     ConfigWindow *window = new ConfigWindow(m_outputDevice, loadedModels, m_ui->midiCheckBox->isChecked(),
-                                            m_ui->tuioCheckBox->isChecked() ? m_ui->tuioPortSpinBox->value() : -1);
+                                            m_ui->tuioCheckBox->isChecked() ? m_ui->tuioPortSpinBox->value() : -1,
+                                            m_ui->gesturesCheckbox->isChecked());
     window->show();
 
     hide();

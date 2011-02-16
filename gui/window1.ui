@@ -46,18 +46,18 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QFormLayout" name="formLayout_2">
           <property name="leftMargin">
-           <number>40</number>
+           <number>20</number>
           </property>
-          <item>
+          <item row="0" column="0">
            <widget class="QLabel" name="label">
             <property name="text">
              <string>Porta</string>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="0" column="1">
            <widget class="QSpinBox" name="tuioPortSpinBox">
             <property name="enabled">
              <bool>true</bool>
@@ -67,6 +67,23 @@
             </property>
             <property name="value">
              <number>3333</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="gesturesCheckbox">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Multitouch</string>
             </property>
            </widget>
           </item>
@@ -191,16 +208,32 @@
   <connection>
    <sender>tuioCheckBox</sender>
    <signal>toggled(bool)</signal>
+   <receiver>gesturesCheckbox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>100</x>
+     <y>73</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>127</x>
+     <y>129</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tuioCheckBox</sender>
+   <signal>toggled(bool)</signal>
    <receiver>tuioPortSpinBox</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>105</x>
-     <y>78</y>
+     <x>100</x>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
-     <x>156</x>
-     <y>106</y>
+     <x>151</x>
+     <y>101</y>
     </hint>
    </hints>
   </connection>

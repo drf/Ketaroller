@@ -36,7 +36,7 @@
 #include "MIDIWidget.h"
 
 ConfigWindow::ConfigWindow(BctOutputDevice* device, const QHash< int, ModelDescription >& loadedModels,
-                           bool useMidi, int tuioPort, QWidget* parent)
+                           bool useMidi, int tuioPort, bool useGestures, QWidget* parent)
     : QWidget(parent)
     , m_ui(new Ui::ConfigGUI)
     , m_bctDevice(device)
@@ -71,7 +71,9 @@ ConfigWindow::ConfigWindow(BctOutputDevice* device, const QHash< int, ModelDescr
         QVariantMap args;
         args.insert("TuioClientPort", tuioPort);
         // Enable gestures
-        args.insert("EnableGestures", true);
+        if (useGestures) {
+            args.insert("EnableGestures", true);
+        }
         m_tuioInput = KetaRoller::PluginLoader::instance()->loadInputDevice(KetaRoller::PluginLoader::TuioType, args);
 
         // Setup gestures

@@ -42,7 +42,7 @@ class ConfigWindow : public QWidget
     Q_OBJECT
 public:
     ConfigWindow(BctOutputDevice *device, const QHash< int, ModelDescription > &loadedModels,
-                 bool useMidi, int tuioPort, QWidget *parent = 0);
+                 bool useMidi, int tuioPort, bool useGestures, QWidget *parent = 0);
     virtual ~ConfigWindow();
 
 public slots:
