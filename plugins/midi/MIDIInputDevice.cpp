@@ -56,20 +56,23 @@ MIDIInputDevice::~MIDIInputDevice()
 
 void MIDIInputDevice::init(const QVariantMap& args)
 {
-    Q_UNUSED(args)
-
     qRegisterMetaType<MIDIMessage>();
     qRegisterMetaType<MIDINoteOffEvent>();
     qRegisterMetaType<MIDINoteOnEvent>();
     qRegisterMetaType<MIDIControlChangeEvent>();
     qRegisterMetaType<MIDIPitchBenderEvent>();
 
+    QString clientName = "KetaRoller";
+    if (args.contains("ClientName")) {
+        clientName = args.value("ClientName").toString();
+    }
+
     // RtMidiIn constructor
     try {
-      midiReceiver = new RtMidiIn();
+        midiReceiver = new RtMidiIn(QString("%1 Input Client").arg(clientName).toStdString());
     } catch ( RtError &error ) {
-      error.printMessage();
-      exit( EXIT_FAILURE );
+        error.printMessage();
+        exit( EXIT_FAILURE );
     }
 
     unsigned int nPorts = midiReceiver->getPortCount();
@@ -80,15 +83,14 @@ void MIDIInputDevice::init(const QVariantMap& args)
 
     midiReceiver->setCallback( &messageCallback, data );
 
-    //Open RtMidiIn port
     try {
-      midiReceiver->openVirtualPort();
+        midiReceiver->openVirtualPort(QString("%1 Input Port 0").arg(clientName).toStdString());
     } catch ( RtError &error ) {
-      error.printMessage();
-      delete midiReceiver;
+        error.printMessage();
+        delete midiReceiver;
     }
 
-    // Don't ignore sysex, timing, or active sensing messages.
+    // Ignore sysex, timing, or active sensing messages.
     midiReceiver->ignoreTypes(true, true, true);
 }
 

@@ -53,7 +53,9 @@ ConfigWindow::ConfigWindow(BctOutputDevice* device, const QHash< int, ModelDescr
 
     if (useMidi) {
         // Create in/outs
-        KetaRoller::InputDevice *midiIn = KetaRoller::PluginLoader::instance()->loadInputDevice(KetaRoller::PluginLoader::MIDIType);
+        QVariantMap args;
+        args["ClientName"] = "BCT Controller";
+        KetaRoller::InputDevice *midiIn = KetaRoller::PluginLoader::instance()->loadInputDevice(KetaRoller::PluginLoader::MIDIType, args);
         KetaRoller::InputPort *midiInPort = new KetaRoller::InputPort(KetaRoller::Port::MIDIType);
         midiIn->addOutgoingPort(midiInPort);
         KetaRoller::OutputPort *midiOutPort = KetaRoller::PluginLoader::instance()->loadOutputPort(KetaRoller::PluginLoader::MIDIType);
