@@ -30,6 +30,7 @@ add_subdirectory(src)
 add_subdirectory(plugins)
 add_subdirectory(3rdparty)
 add_subdirectory(gui)
+add_subdirectory(tuioredirector)
 
 if (QT_QTTEST_FOUND)
     add_subdirectory(tests)
